@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import './JayantiChatbot.css';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
+import OTPVerificationFlow from '@/components/OTPVerificationFlow';
+import DOMPurify from 'isomorphic-dompurify';
 
 const AnimatedBotIcon = ({ className = "w-[28px] h-[28px]" }) => (
     <svg viewBox="0 0 100 100" className={className} xmlns="http://www.w3.org/2000/svg">
@@ -50,13 +53,14 @@ const AnimatedBotIcon = ({ className = "w-[28px] h-[28px]" }) => (
 );
 
 export default function JayantiChatbot() {
+    const { user, isVerified, login } = useOTPAuth();
     const [isOpen, setIsOpen] = useState(false);
-    const [isVerified, setIsVerified] = useState(false);
     const [view, setView] = useState<'email' | 'otp' | 'chat'>('email');
     
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
+    // Legacy states, kept for chat logic if needed
+    const [name, setName] = useState(user?.name || '');
+    const [phone, setPhone] = useState(user?.phone || '');
+    const [email, setEmail] = useState(user?.email || '');
     const [otp, setOtp] = useState('');
     
     const [emailError, setEmailError] = useState('');
@@ -76,9 +80,7 @@ export default function JayantiChatbot() {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
     useEffect(() => {
-        const verified = localStorage.getItem('jayanti_verified') === 'true';
-        if (verified) {
-            setIsVerified(true);
+        if (isVerified) {
             setView('chat');
             loadHistory();
         }
@@ -88,7 +90,7 @@ export default function JayantiChatbot() {
             setShowTooltip(false);
         }, 6000);
         return () => clearTimeout(timer);
-    }, []);
+    }, [isVerified]);
 
     useEffect(() => {
         if (view === 'chat') {
@@ -178,8 +180,8 @@ export default function JayantiChatbot() {
             });
             const data = await res.json();
             if (data.success) {
-                setIsVerified(true);
-                localStorage.setItem('jayanti_verified', 'true');
+                const userObj = { name, email, phone, isVerified: true };
+                login(userObj);
                 setView('chat');
             } else {
                 setOtpError(data.message || 'Invalid OTP');
@@ -298,6 +300,9 @@ export default function JayantiChatbot() {
     const renderMessage = (text: string) => {
         let parsedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         parsedText = parsedText.replace(/\n/g, '<br>');
+        
+        // Sanitize the HTML to prevent Self-XSS
+        parsedText = DOMPurify.sanitize(parsedText, { ADD_ATTR: ['target'] });
         
         parsedText = parsedText.replace(
             /Talk to a Human on WhatsApp/gi,

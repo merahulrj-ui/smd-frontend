@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import JayantiChatbot from "@/components/JayantiChatbot";
 
 export const metadata: Metadata = {
   title: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
@@ -22,7 +21,6 @@ export default function RootLayout({
       </head>
       <body>
         {children}
-        <JayantiChatbot />
       </body>
     </html>
   );

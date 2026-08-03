@@ -53,7 +53,7 @@ export default function SidebarFilter({ subcategories = [], brands = [], isSearc
     router.push(window.location.pathname);
   };
 
-  const handleCheckboxChange = (type: 'subcats' | 'brands', value: string, isChecked: boolean) => {
+  const handleCheckboxChange = (type: 'subcats' | 'brands' | 'cats', value: string, isChecked: boolean) => {
     const current = type === 'subcats' ? currentSelections : currentBrands;
     let next;
     if (isChecked) {

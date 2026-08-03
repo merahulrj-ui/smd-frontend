@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 const levenshtein = (a: string, b: string) => {
     if (a.length === 0) return b.length;
@@ -29,7 +30,7 @@ const levenshtein = (a: string, b: string) => {
 const generateCarouselHtml = (products: any[]) => {
     let html = '<div class="jayanti-carousel-container"><div class="jayanti-carousel">';
     products.forEach(p => {
-        const imageUrl = p.image ? `http://localhost/smd2.0/public/${p.image}` : 'https://placehold.co/400x400/EFEFEF/AAAAAA&text=No+Image';
+        const imageUrl = p.image ? (p.image.startsWith('http') ? p.image : (p.image.includes('/') ? `/backend-media/${p.image}` : `/backend-media/images/${p.image}`)) : '/backend-media/images/placeholder.png';
         const productUrl = `/product/${p.slug}`;
         const name = p.name ? p.name.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
         const price = p.price > 0 ? '₹' + Number(p.price).toLocaleString('en-IN') : 'Price on Request';
@@ -59,8 +60,8 @@ const generateCarouselHtml = (products: any[]) => {
 };
 
 const searchProducts = async (query: string) => {
-    let correctedBrand = null;
-    let searchedKeyword = null;
+    let correctedBrand: string | null = null;
+    let searchedKeyword: string | null = null;
 
     if (/\b(top|offers|popular|best|trending|all)\b/i.test(query)) {
         const [rows]: any = await pool.query("SELECT * FROM products WHERE image IS NOT NULL AND image != '' AND image != 'images/placeholder.png' AND image != 'images/Med.jpg' ORDER BY RAND() LIMIT 5");
@@ -85,7 +86,7 @@ const searchProducts = async (query: string) => {
     if (keywords.length === 0) return { products: [], correctedBrand, searchedKeyword };
 
     let sql = "SELECT * FROM products WHERE image IS NOT NULL AND image != '' AND image != 'images/placeholder.png' AND image != 'images/Med.jpg' AND (";
-    const params = [];
+    const params: any[] = [];
     keywords.forEach((word, index) => {
         if (index > 0) sql += ' OR ';
         sql += '(name LIKE ? OR brand LIKE ? OR category LIKE ?)';
@@ -104,7 +105,7 @@ const searchProducts = async (query: string) => {
 
         brands.forEach((b: any) => {
             if (!b.brand) return;
-            const lev = levenshtein(searchedKeyword.toLowerCase(), b.brand.toLowerCase());
+            const lev = levenshtein(searchedKeyword!.toLowerCase(), b.brand.toLowerCase());
             if (lev <= 2) {
                 if (lev === 0) { closest = b.brand; shortest = 0; }
                 else if (lev <= shortest || shortest < 0) {
@@ -126,6 +127,13 @@ const searchProducts = async (query: string) => {
 
 export async function POST(request: Request) {
     try {
+        // 1. IP-based Rate Limiting (Max 20 chat messages per IP per 5 minutes)
+        const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+        const rateLimit = checkRateLimit(`chat_ip_${ip}`, 20, 5 * 60 * 1000);
+        if (!rateLimit.allowed) {
+            return NextResponse.json({ success: false, reply: 'You are sending messages too fast. Please wait a minute before sending another message.' }, { status: 429 });
+        }
+
         const body = await request.json();
         const { message: userMessage, history = [] } = body;
 
@@ -138,7 +146,7 @@ export async function POST(request: Request) {
         // 1. Check Cache ONLY if no products found in DB
         if (products.length === 0) {
             try {
-                const [cachedQAs]: any = await pool.query('SELECT answer FROM jayanti_qa_cache WHERE question = ? LIMIT 1', [userMessage.trim()]);
+                const [cachedQAs]: any = await pool.query('SELECT answer FROM jayanti_qa_caches WHERE question = ? LIMIT 1', [userMessage.trim()]);
                 if (cachedQAs.length > 0) {
                     const rawReply = cachedQAs[0].answer;
                     let reply = rawReply;
@@ -187,8 +195,8 @@ export async function POST(request: Request) {
                     replyText = isHindi ? `**${firstProduct.name}** ki details ye rahi:<br><br><em>${cleanDetails}</em>` : `Here are the details for **${firstProduct.name}**:<br><br><em>${cleanDetails}</em>`;
                     
                     try {
-                        const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_cache WHERE question = ? LIMIT 1', [userMessage.trim()]);
-                        if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_cache (question, answer) VALUES (?, ?)', [userMessage.trim(), replyText]);
+                        const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_caches WHERE question = ? LIMIT 1', [userMessage.trim()]);
+                        if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_caches (question, answer, created_at, updated_at) VALUES (?, ?, NOW(), NOW())', [userMessage.trim(), replyText]);
                     } catch(e) { }
 
                     return NextResponse.json({ success: true, reply: replyText, raw_reply: replyText, fast_track: true });
@@ -211,8 +219,8 @@ export async function POST(request: Request) {
             replyText += `<br><br>[CAROUSEL]<br><br><span style='font-size:12px; color:#64748b;'>${footerText}</span>`;
             
             try {
-                const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_cache WHERE question = ? LIMIT 1', [userMessage.trim()]);
-                if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_cache (question, answer) VALUES (?, ?)', [userMessage.trim(), replyText]);
+                const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_caches WHERE question = ? LIMIT 1', [userMessage.trim()]);
+                if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_caches (question, answer, created_at, updated_at) VALUES (?, ?, NOW(), NOW())', [userMessage.trim(), replyText]);
             } catch(e) { }
 
             const carouselHtml = generateCarouselHtml(products);
@@ -316,8 +324,8 @@ ${contextString}
             const rawReply = successResponse.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't process that.";
             
             try {
-                const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_cache WHERE question = ? LIMIT 1', [userMessage.trim()]);
-                if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_cache (question, answer) VALUES (?, ?)', [userMessage.trim(), rawReply]);
+                const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_caches WHERE question = ? LIMIT 1', [userMessage.trim()]);
+                if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_caches (question, answer, created_at, updated_at) VALUES (?, ?, NOW(), NOW())', [userMessage.trim(), rawReply]);
             } catch(e) { }
             
             // Escape HTML

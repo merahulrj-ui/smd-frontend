@@ -1,16 +1,33 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { decryptSession } from '@/lib/session';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // If accessing /admin but not /admin/login
   if (request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/admin/login')) {
-    
-    // Check for our secure cookie
     const sessionCookie = request.cookies.get('admin_session');
     
     if (!sessionCookie) {
-      // Redirect to login if not authenticated
       return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
+
+    const payload = await decryptSession(sessionCookie.value);
+    if (!payload) {
+        return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
+  }
+
+  // If accessing /api/admin
+  if (request.nextUrl.pathname.startsWith('/api/admin')) {
+    const sessionCookie = request.cookies.get('admin_session');
+    
+    if (!sessionCookie) {
+      return NextResponse.json({ success: false, message: 'Unauthorized access' }, { status: 401 });
+    }
+
+    const payload = await decryptSession(sessionCookie.value);
+    if (!payload) {
+        return NextResponse.json({ success: false, message: 'Invalid or expired session' }, { status: 401 });
     }
   }
 
@@ -18,7 +35,10 @@ export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === '/admin/login') {
     const sessionCookie = request.cookies.get('admin_session');
     if (sessionCookie) {
-      return NextResponse.redirect(new URL('/admin', request.url));
+      const payload = await decryptSession(sessionCookie.value);
+      if (payload) {
+        return NextResponse.redirect(new URL('/admin', request.url));
+      }
     }
   }
 
@@ -26,5 +46,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 };

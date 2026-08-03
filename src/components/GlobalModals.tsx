@@ -5,9 +5,12 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import ProductCard from '@/components/ProductCard';
 import { useTypewriterPlaceholder } from '@/hooks/useTypewriterPlaceholder';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
+import OTPVerificationFlow from '@/components/OTPVerificationFlow';
 
 export default function GlobalModals() {
   const typewriterPlaceholder = useTypewriterPlaceholder();
+  const { user, isVerified } = useOTPAuth();
   const { 
     isSearchOpen, setSearchOpen, 
     isSellerModalOpen, setSellerModalOpen,
@@ -21,6 +24,15 @@ export default function GlobalModals() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  
+  // Controlled inputs for OTP syncing
+  const [inquiryName, setInquiryName] = useState(user?.name || '');
+  const [inquiryEmail, setInquiryEmail] = useState(user?.email || '');
+  const [inquiryPhone, setInquiryPhone] = useState(user?.phone || '');
+  
+  const [sellerName, setSellerName] = useState(user?.name || '');
+  const [sellerEmail, setSellerEmail] = useState(user?.email || '');
+  const [sellerPhone, setSellerPhone] = useState(user?.phone || '');
   
   // Default Search State (Zero State)
   const [defaultSearches, setDefaultSearches] = useState<string[]>([]);
@@ -206,7 +218,7 @@ export default function GlobalModals() {
 
   return (
     <>
-      {/* Search Overlay matching smd2.0 */}
+      {/* Search Overlay */}
       <div 
         id="searchOverlay" 
         onClick={() => setSearchOpen(false)}
@@ -452,17 +464,17 @@ export default function GlobalModals() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Your Name*</label>
-                                <input type="text" name="name" required placeholder="John Doe" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="text" name="name" required value={inquiryName} onChange={e => setInquiryName(e.target.value)} placeholder="John Doe" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Official Email ID*</label>
-                                <input type="email" name="email" required placeholder="john@example.com" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="email" name="email" required value={inquiryEmail} onChange={e => setInquiryEmail(e.target.value)} readOnly={isVerified} placeholder="john@example.com" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Contact Number*</label>
-                                <input type="tel" name="phone" required placeholder="+91 98765 43210" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="tel" name="phone" required value={inquiryPhone} onChange={e => setInquiryPhone(e.target.value)} readOnly={isVerified} placeholder="+91 98765 43210" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Company Name*</label>
@@ -476,10 +488,23 @@ export default function GlobalModals() {
                             defaultValue={inquiryState.type === 'Pricing Request' ? `Hello, I would like to request wholesale pricing and packaging details for "${inquiryState.productName}".` : `Hello, I would like to get more information regarding the product "${inquiryState.productName}".`}></textarea>
                         </div>
 
-                        <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 mt-2 flex items-center justify-center gap-2">
-                            <i className="fas fa-paper-plane"></i>
-                            Send Inquiry
-                        </button>
+                        {!isVerified ? (
+                            <div className="pt-2 border-t border-slate-100 mt-4">
+                                <OTPVerificationFlow 
+                                    onVerified={() => {}} 
+                                    title="Verify to Send Inquiry" 
+                                    description="We need to verify your email before sending the inquiry to prevent spam." 
+                                    compact={true} 
+                                    prefilledData={{ name: inquiryName, phone: inquiryPhone, email: inquiryEmail }}
+                                    hideInputs={true}
+                                />
+                            </div>
+                        ) : (
+                            <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 mt-2 flex items-center justify-center gap-2">
+                                <i className="fas fa-paper-plane"></i>
+                                Send Inquiry
+                            </button>
+                        )}
                     </form>
                 ) : (
                     <div id="inquiry-success-message" className="text-center py-10">
@@ -523,13 +548,13 @@ export default function GlobalModals() {
                           </div>
                           <div>
                               <label className="block text-sm font-semibold text-slate-700 mb-1.5">Official Email ID*</label>
-                              <input type="email" name="email" required placeholder="partner@smd.com" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                              <input type="email" name="email" required value={sellerEmail} onChange={e => setSellerEmail(e.target.value)} readOnly={isVerified} placeholder="partner@smd.com" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
                           </div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           <div>
                               <label className="block text-sm font-semibold text-slate-700 mb-1.5">Representative Name*</label>
-                              <input type="text" name="rep_name" required placeholder="E.g., Rahul Singh" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                              <input type="text" name="rep_name" required value={sellerName} onChange={e => setSellerName(e.target.value)} placeholder="E.g., Rahul Singh" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                           </div>
                           <div>
                               <label className="block text-sm font-semibold text-slate-700 mb-1.5">Representative Designation*</label>
@@ -543,7 +568,7 @@ export default function GlobalModals() {
                           </div>
                           <div>
                               <label className="block text-sm font-semibold text-slate-700 mb-1.5">Contact Number*</label>
-                              <input type="tel" name="contact" required placeholder="+91 99999 88888" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                              <input type="tel" name="contact" required value={sellerPhone} onChange={e => setSellerPhone(e.target.value)} readOnly={isVerified} placeholder="+91 99999 88888" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
                           </div>
                       </div>
                       
@@ -560,10 +585,23 @@ export default function GlobalModals() {
                           </label>
                       </div>
 
-                      <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 mt-2 flex items-center justify-center gap-2">
-                          <i className="fas fa-paper-plane"></i>
-                          Submit Seller Inquiry
-                      </button>
+                      {!isVerified ? (
+                          <div className="pt-2 border-t border-slate-100 mt-4">
+                              <OTPVerificationFlow 
+                                  onVerified={() => {}} 
+                                  title="Verify to Submit Application" 
+                                  description="Please verify your email to become a registered seller." 
+                                  compact={true} 
+                                  prefilledData={{ name: sellerName, phone: sellerPhone, email: sellerEmail }}
+                                  hideInputs={true}
+                              />
+                          </div>
+                      ) : (
+                          <button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 rounded-xl transition-all hover:shadow-lg hover:-translate-y-0.5 mt-2 flex items-center justify-center gap-2">
+                              <i className="fas fa-paper-plane"></i>
+                              Submit Seller Inquiry
+                          </button>
+                      )}
                   </form>
               </div>
           </div>

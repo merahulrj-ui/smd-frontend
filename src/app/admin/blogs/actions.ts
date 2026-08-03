@@ -2,8 +2,10 @@
 
 import pool from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { isAdmin } from '@/lib/adminAuth';
 
 export async function deleteBlogAction(id: number) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     try {
         await pool.query('DELETE FROM blog WHERE id = ?', [id]);
         revalidatePath('/admin/blogs');
@@ -15,6 +17,7 @@ export async function deleteBlogAction(id: number) {
 }
 
 export async function toggleBlogStatusAction(id: number, currentStatus: string) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     try {
         const newStatus = currentStatus === 'published' ? 'draft' : 'published';
         await pool.query('UPDATE blog SET status = ? WHERE id = ?', [newStatus, id]);
@@ -27,6 +30,7 @@ export async function toggleBlogStatusAction(id: number, currentStatus: string) 
 }
 
 export async function saveBlogAction(formData: FormData) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     const id = formData.get('id') as string;
     const title = formData.get('title') as string;
     const author = formData.get('author') as string;

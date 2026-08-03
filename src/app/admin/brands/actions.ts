@@ -4,8 +4,10 @@ import pool from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { writeFile } from 'fs/promises';
 import path from 'path';
+import { isAdmin } from '@/lib/adminAuth';
 
 export async function saveBrandAction(formData: FormData) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     const id = formData.get('id') as string;
     const name = formData.get('name') as string;
     
@@ -16,8 +18,11 @@ export async function saveBrandAction(formData: FormData) {
         const file = formData.get('logo') as File;
         
         if (file && file.size > 0) {
+            const ext = path.extname(file.name).toLowerCase();
+            if (!['.jpg', '.jpeg', '.png', '.webp'].includes(ext)) {
+                return { error: 'Images must be JPG, PNG, or WEBP.' };
+            }
             const buffer = Buffer.from(await file.arrayBuffer());
-            const ext = path.extname(file.name) || '.jpg';
             const filename = 'brand_' + Date.now() + ext;
             const dest = path.join(process.cwd(), 'public', 'backend-media', 'images', filename);
             await writeFile(dest, buffer);
@@ -38,6 +43,7 @@ export async function saveBrandAction(formData: FormData) {
 }
 
 export async function deleteBrandAction(id: number) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     try {
         await pool.query('DELETE FROM brands WHERE id = ?', [id]);
         revalidatePath('/admin/brands');

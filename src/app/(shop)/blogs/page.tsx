@@ -26,10 +26,10 @@ export default async function BlogsPage() {
           <p className="text-center text-slate-500">No blogs published yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogs.map(blog => (
+            {blogs.map((blog: any) => (
               <Link href={`/blogs/${blog.id}`} key={blog.id} className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
                 {blog.blog_image && (
-                  <img src={`/backend-media/${blog.blog_image}`} alt={blog.title} className="w-full h-48 object-cover" />
+                  <img src={blog.blog_image.startsWith('http') ? blog.blog_image : (blog.blog_image.includes('/') ? `/backend-media/${blog.blog_image}` : `/backend-media/images/${blog.blog_image}`)} alt={blog.title} className="w-full h-48 object-cover" onError={(e: any) => e.target.src='/backend-media/images/placeholder.png'} />
                 )}
                 <div className="p-6">
                   <div className="text-xs text-primary font-semibold mb-2 uppercase tracking-wide">

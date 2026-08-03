@@ -2,8 +2,10 @@
 
 import pool from '@/lib/db';
 import bcrypt from 'bcryptjs';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { encryptSession } from '@/lib/session';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 export async function loginAction(formData: FormData) {
   const username = formData.get('username') as string;
@@ -14,6 +16,15 @@ export async function loginAction(formData: FormData) {
   }
 
   try {
+    // Rate Limiting (Max 5 attempts per 15 minutes per IP)
+    const headersList = await headers();
+    const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown';
+    const rateLimit = checkRateLimit(`login_ip_${ip}`, 5, 15 * 60 * 1000);
+    
+    if (!rateLimit.allowed) {
+      return { error: 'Too many login attempts. Please try again in 15 minutes.' };
+    }
+
     const [rows] = await pool.query(
       'SELECT id, username, password FROM admin_users WHERE username = ? LIMIT 1',
       [username]
@@ -38,11 +49,14 @@ export async function loginAction(formData: FormData) {
       return { error: 'Invalid username or password' };
     }
 
-    // Set secure cookie
+    // Set secure cookie using JWT
     const cookieStore = await cookies();
-    cookieStore.set('admin_session', JSON.stringify({ id: admin.id, username: admin.username }), {
+    const sessionToken = await encryptSession({ id: admin.id, username: admin.username });
+    
+    cookieStore.set('admin_session', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       maxAge: 60 * 60 * 24, // 1 day
       path: '/'
     });

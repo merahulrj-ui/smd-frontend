@@ -2,8 +2,10 @@
 
 import pool from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { isAdmin } from '@/lib/adminAuth';
 
 export async function saveCategoryAction(formData: FormData) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     const id = formData.get('id') as string;
     const name = formData.get('name') as string;
     
@@ -24,6 +26,7 @@ export async function saveCategoryAction(formData: FormData) {
 }
 
 export async function deleteCategoryAction(id: number) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     try {
         await pool.query('DELETE FROM categories WHERE id = ?', [id]);
         revalidatePath('/admin/categories');
@@ -37,6 +40,7 @@ export async function deleteCategoryAction(id: number) {
 }
 
 export async function saveSubCategoryAction(formData: FormData) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     const id = formData.get('id') as string;
     const name = formData.get('name') as string;
     const category_id = formData.get('category_id') as string;
@@ -58,6 +62,7 @@ export async function saveSubCategoryAction(formData: FormData) {
 }
 
 export async function deleteSubCategoryAction(id: number) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     try {
         await pool.query('DELETE FROM sub_categories WHERE id = ?', [id]);
         revalidatePath('/admin/categories');

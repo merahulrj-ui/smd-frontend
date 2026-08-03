@@ -62,85 +62,118 @@ export default function CategoriesClient({ dbCategories, dbSubCategories }: { db
         });
     };
 
+    const [activeCatId, setActiveCatId] = useState<number | null>(dbCategories.length > 0 ? dbCategories[0].id : null);
+
+    const activeCat = dbCategories.find(c => c.id === activeCatId);
+    const filteredSubCats = dbSubCategories.filter(s => s.category_id === activeCatId);
+
     return (
         <div className={isPending ? 'opacity-50 pointer-events-none transition-opacity' : 'transition-opacity'}>
             <div className="flex justify-between items-center bg-white/80 backdrop-blur-xl p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 mb-6 flex-wrap gap-4">
                 <h2 className="text-xl font-bold text-slate-800 m-0">Categories Manager</h2>
-                <button onClick={() => handleOpenCat()} className="px-5 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-semibold hover:bg-teal-700 shadow-sm shadow-teal-500/20 transition-all"><i className="fas fa-plus"></i> Add Category</button>
+                <div className="flex gap-3">
+                    <button onClick={() => handleOpenCat()} className="px-5 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-semibold hover:bg-teal-700 shadow-sm shadow-teal-500/20 transition-all"><i className="fas fa-folder-plus mr-2"></i> Add Category</button>
+                    {activeCatId && (
+                        <button onClick={() => { setEditingSub({ category_id: activeCatId }); setIsSubModalOpen(true); }} className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 shadow-sm shadow-emerald-500/20 transition-all"><i className="fas fa-sitemap mr-2"></i> Add Sub-Category</button>
+                    )}
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                {/* Master Categories Box */}
-                <div className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 self-start">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-lg font-bold text-slate-800 m-0"><i className="fas fa-tags text-teal-500 mr-2"></i> Master Categories</h3>
-                        <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">{dbCategories.length} Total</span>
+            <div className="flex flex-col lg:flex-row bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 overflow-hidden min-h-[600px] mb-8">
+                {/* Master Categories Pane (Left) */}
+                <div className="w-full lg:w-1/3 border-r border-slate-100 bg-slate-50/50 flex flex-col">
+                    <div className="p-5 border-b border-slate-100 bg-white/50 flex justify-between items-center sticky top-0">
+                        <h3 className="text-base font-bold text-slate-800 m-0"><i className="fas fa-tags text-teal-500 mr-2"></i> Master Categories</h3>
+                        <span className="bg-slate-200 text-slate-600 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">{dbCategories.length}</span>
                     </div>
                     
-                    <div className="overflow-x-auto w-full rounded-2xl border border-slate-100">
-                        <table className="w-full text-left text-sm text-slate-600 border-collapse">
-                            <thead>
-                                <tr>
-                                    <th className="bg-slate-50/80 font-semibold py-3 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-slate-500 w-[10%]">ID</th>
-                                    <th className="bg-slate-50/80 font-semibold py-3 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-slate-500">Category Name</th>
-                                    <th className="bg-slate-50/80 font-semibold py-3 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-slate-500 text-right w-[30%]">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {dbCategories.map((cat: any) => (
-                                    <tr key={cat.id} className="border-b border-slate-50 hover:bg-slate-50/80 transition-colors">
-                                        <td className="py-4 px-5 font-bold text-slate-400">#{cat.id}</td>
-                                        <td className="py-4 px-5 font-bold text-slate-800">{cat.name}</td>
-                                        <td className="py-4 px-5 text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <button onClick={() => handleOpenCat(cat)} className="bg-slate-100 text-slate-500 w-8 h-8 rounded-full flex items-center justify-center hover:bg-teal-50 hover:text-teal-600 transition-all shadow-sm"><i className="fas fa-edit"></i></button>
-                                                <button onClick={() => handleDeleteCat(cat.id)} className="bg-slate-100 text-slate-500 w-8 h-8 rounded-full flex items-center justify-center hover:bg-rose-50 hover:text-rose-600 transition-all shadow-sm"><i className="fas fa-trash"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="overflow-y-auto flex-1 p-3 flex flex-col gap-1 max-h-[70vh]">
+                        {dbCategories.map((cat: any) => {
+                            const isActive = activeCatId === cat.id;
+                            return (
+                                <div 
+                                    key={cat.id} 
+                                    onClick={() => setActiveCatId(cat.id)}
+                                    className={`group flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all duration-200 ${isActive ? 'bg-white shadow-sm border-l-4 border-teal-500 my-1' : 'hover:bg-slate-100 border-l-4 border-transparent'}`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${isActive ? 'bg-teal-50 text-teal-600' : 'bg-slate-100 text-slate-400'}`}>
+                                            #{cat.id}
+                                        </span>
+                                        <span className={`font-semibold ${isActive ? 'text-teal-700' : 'text-slate-700 group-hover:text-slate-900'}`}>{cat.name}</span>
+                                    </div>
+                                    
+                                    <div className={`flex items-center gap-1 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`}>
+                                        <button onClick={(e) => { e.stopPropagation(); handleOpenCat(cat); }} className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:bg-teal-50 hover:text-teal-600 transition-colors" title="Edit">
+                                            <i className="fas fa-pen text-xs"></i>
+                                        </button>
+                                        <button onClick={(e) => { e.stopPropagation(); handleDeleteCat(cat.id); }} className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Delete">
+                                            <i className="fas fa-trash text-xs"></i>
+                                        </button>
+                                        <i className={`fas fa-chevron-right text-xs ml-2 ${isActive ? 'text-teal-400' : 'text-slate-300'}`}></i>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
-                {/* Sub Categories Box */}
-                <div className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 self-start">
-                    <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-lg font-bold text-slate-800 m-0"><i className="fas fa-sitemap text-emerald-500 mr-2"></i> Sub-Categories</h3>
-                        <div className="flex gap-3 items-center">
-                            <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">{dbSubCategories.length} Total</span>
-                            <button onClick={() => handleOpenSub()} className="px-3 py-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-lg text-xs font-bold transition-all"><i className="fas fa-plus"></i> Add New</button>
-                        </div>
-                    </div>
-                    
-                    <div className="overflow-x-auto w-full rounded-2xl border border-slate-100">
-                        <table className="w-full text-left text-sm text-slate-600 border-collapse">
-                            <thead>
-                                <tr>
-                                    <th className="bg-slate-50/80 font-semibold py-3 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-slate-500 w-[10%]">ID</th>
-                                    <th className="bg-slate-50/80 font-semibold py-3 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-slate-500">Sub-Category</th>
-                                    <th className="bg-slate-50/80 font-semibold py-3 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-slate-500">Parent</th>
-                                    <th className="bg-slate-50/80 font-semibold py-3 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-slate-500 text-right w-[20%]">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {dbSubCategories.map((sub: any) => (
-                                    <tr key={sub.id} className="border-b border-slate-50 hover:bg-slate-50/80 transition-colors">
-                                        <td className="py-4 px-5 font-bold text-slate-400">#{sub.id}</td>
-                                        <td className="py-4 px-5 font-bold text-emerald-600">{sub.name}</td>
-                                        <td className="py-4 px-5"><span className="bg-teal-50/50 text-teal-700 px-2.5 py-1 rounded-md text-xs font-semibold border border-teal-100">{sub.category_name}</span></td>
-                                        <td className="py-4 px-5 text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <button onClick={() => handleOpenSub(sub)} className="bg-slate-100 text-slate-500 w-8 h-8 rounded-full flex items-center justify-center hover:bg-teal-50 hover:text-teal-600 transition-all shadow-sm"><i className="fas fa-edit"></i></button>
-                                                <button onClick={() => handleDeleteSub(sub.id)} className="bg-slate-100 text-slate-500 w-8 h-8 rounded-full flex items-center justify-center hover:bg-rose-50 hover:text-rose-600 transition-all shadow-sm"><i className="fas fa-trash"></i></button>
+                {/* Sub Categories Pane (Right) */}
+                <div className="w-full lg:w-2/3 flex flex-col bg-white">
+                    {activeCatId ? (
+                        <>
+                            <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur-sm z-10">
+                                <div>
+                                    <h3 className="text-xl font-bold text-slate-800 m-0 mb-1">{activeCat?.name}</h3>
+                                    <p className="text-sm text-slate-500 m-0"><i className="fas fa-sitemap mr-1.5 text-emerald-500"></i> {filteredSubCats.length} Sub-categories</p>
+                                </div>
+                            </div>
+                            
+                            <div className="p-6 overflow-y-auto max-h-[70vh]">
+                                {filteredSubCats.length === 0 ? (
+                                    <div className="text-center py-16 px-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-300 mx-auto mb-4 shadow-sm">
+                                            <i className="fas fa-folder-open text-2xl"></i>
+                                        </div>
+                                        <h4 className="text-lg font-bold text-slate-700 m-0 mb-1">No Sub-categories</h4>
+                                        <p className="text-sm text-slate-500 m-0 mb-6">This category doesn't have any sub-categories yet.</p>
+                                        <button onClick={() => { setEditingSub({ category_id: activeCatId }); setIsSubModalOpen(true); }} className="px-5 py-2 bg-white text-emerald-600 border border-emerald-200 rounded-lg text-sm font-bold hover:bg-emerald-50 transition-colors shadow-sm">
+                                            <i className="fas fa-plus mr-1.5"></i> Add First Sub-category
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {filteredSubCats.map((sub: any) => (
+                                            <div key={sub.id} className="group p-4 rounded-xl border border-slate-100 bg-white hover:border-emerald-200 hover:shadow-md hover:shadow-emerald-500/5 transition-all duration-300 flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                                                        <i className="fas fa-cube"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">ID: #{sub.id}</div>
+                                                        <div className="font-bold text-slate-800">{sub.name}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button onClick={() => handleOpenSub(sub)} className="w-8 h-8 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-emerald-50 hover:text-emerald-600 transition-colors" title="Edit">
+                                                        <i className="fas fa-pen text-xs"></i>
+                                                    </button>
+                                                    <button onClick={() => handleDeleteSub(sub.id)} className="w-8 h-8 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Delete">
+                                                        <i className="fas fa-trash text-xs"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex-1 flex flex-col items-center justify-center p-8 text-slate-400 bg-slate-50/50">
+                            <i className="fas fa-mouse-pointer text-4xl mb-4 opacity-50"></i>
+                            <p className="font-medium">Select a master category from the left pane</p>
+                        </div>
+                    )}
                 </div>
             </div>
 

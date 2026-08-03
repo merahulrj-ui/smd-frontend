@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 import MobileDrawer from "@/components/MobileDrawer";
 import GlobalModals from "@/components/GlobalModals";
+import JayantiChatbot from "@/components/JayantiChatbot";
 import { UIProvider } from "@/context/UIContext";
 
 export default function ShopLayout({
@@ -27,6 +28,7 @@ export default function ShopLayout({
 
         <Footer />
         <BottomNav />
+        <JayantiChatbot />
     </UIProvider>
   );
 }

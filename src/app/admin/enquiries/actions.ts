@@ -3,8 +3,10 @@
 import pool from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import nodemailer from 'nodemailer';
+import { isAdmin } from '@/lib/adminAuth';
 
 export async function deleteEnquiryAction(id: number) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     try {
         await pool.query('DELETE FROM enquiries WHERE id = ?', [id]);
         revalidatePath('/admin/enquiries');
@@ -16,6 +18,7 @@ export async function deleteEnquiryAction(id: number) {
 }
 
 export async function replyEnquiryAction(formData: FormData) {
+    if (!(await isAdmin())) return { error: 'Unauthorized access' };
     const id = formData.get('id') as string;
     const email = formData.get('email') as string;
     const subject = formData.get('subject') as string;
@@ -27,13 +30,20 @@ export async function replyEnquiryAction(formData: FormData) {
 
     try {
         // You should move these credentials to .env.local for production
+        const smtpUser = process.env.SMTP_USER;
+        const smtpPass = process.env.SMTP_PASS;
+
+        if (process.env.NODE_ENV === 'production' && (!smtpUser || !smtpPass)) {
+            throw new Error('SMTP credentials are not configured in production.');
+        }
+
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST || 'smtp.gmail.com',
             port: Number(process.env.SMTP_PORT) || 587,
             secure: false,
             auth: {
-                user: process.env.SMTP_USER || 'your-email@gmail.com',
-                pass: process.env.SMTP_PASS || 'your-app-password',
+                user: smtpUser || 'development-user',
+                pass: smtpPass || 'development-pass',
             },
         });
 

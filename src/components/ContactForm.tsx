@@ -1,9 +1,16 @@
 "use client";
 import { useState } from 'react';
+import { useOTPAuth } from '@/hooks/useOTPAuth';
+import OTPVerificationFlow from '@/components/OTPVerificationFlow';
 
 export default function ContactForm() {
+  const { user, isVerified } = useOTPAuth();
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState(user?.phone || '');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,6 +46,8 @@ export default function ContactForm() {
               type="text" 
               name="name" 
               required 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="E.g., John Doe" 
               className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all placeholder-slate-400 font-medium"
             />
@@ -50,8 +59,11 @@ export default function ContactForm() {
               type="email" 
               name="email" 
               required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              readOnly={isVerified}
               placeholder="E.g., john@example.com" 
-              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all placeholder-slate-400 font-medium"
+              className={`w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all placeholder-slate-400 font-medium ${isVerified ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : ''}`}
             />
         </div>
         
@@ -61,8 +73,11 @@ export default function ContactForm() {
               type="tel" 
               name="phone" 
               required 
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              readOnly={isVerified}
               placeholder="E.g., +91 98765 43210" 
-              className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all placeholder-slate-400 font-medium"
+              className={`w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all placeholder-slate-400 font-medium ${isVerified ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : ''}`}
             />
         </div>
         
@@ -76,18 +91,31 @@ export default function ContactForm() {
               className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all placeholder-slate-400 font-medium resize-none"
             ></textarea>
         </div>
-        
-        <button 
-          type="submit" 
-          disabled={loading}
-          className="mt-2 w-full bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
-        >
-          {loading ? (
-             <><i className="fas fa-spinner fa-spin"></i> Sending...</>
-          ) : (
-             <><i className="fas fa-paper-plane"></i> Send Message</>
-          )}
-        </button>
+
+        {!isVerified ? (
+            <div className="mt-2 pt-2 border-t border-slate-100">
+                <OTPVerificationFlow 
+                    onVerified={() => {}} 
+                    title="Verify to Send Message" 
+                    description="We need to verify your email to prevent spam." 
+                    compact={true} 
+                    prefilledData={{ name, phone, email }}
+                    hideInputs={true}
+                />
+            </div>
+        ) : (
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="mt-2 w-full bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
+            >
+              {loading ? (
+                 <><i className="fas fa-spinner fa-spin"></i> Sending...</>
+              ) : (
+                 <><i className="fas fa-paper-plane"></i> Send Message</>
+              )}
+            </button>
+        )}
         
         {status === 'success' && (
           <div className="mt-2 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">

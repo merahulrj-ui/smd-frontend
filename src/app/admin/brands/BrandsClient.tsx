@@ -70,7 +70,7 @@ export default function BrandsClient({ dbBrands }: { dbBrands: any[] }) {
                                     <td className="py-4 px-5">
                                         <div className="w-12 h-12 rounded-lg bg-white border border-slate-200 p-1 flex items-center justify-center">
                                           {brand.logo ? (
-                                            <img src={`/backend-media/${brand.logo}`} className="max-w-full max-h-full object-contain" />
+                                            <img src={brand.logo.startsWith('http') ? brand.logo : (brand.logo.includes('/') ? `/backend-media/${brand.logo}` : `/backend-media/images/${brand.logo}`)} className="max-w-full max-h-full object-contain" onError={(e: any) => e.target.src='/backend-media/images/placeholder.png'} />
                                           ) : (
                                             <i className="fas fa-image text-slate-300 text-xl"></i>
                                           )}
@@ -106,7 +106,7 @@ export default function BrandsClient({ dbBrands }: { dbBrands: any[] }) {
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Brand Logo</label>
                                 {editingBrand?.logo && (
-                                    <div className="mb-2 w-12 h-12 rounded border p-1"><img src={`/backend-media/${editingBrand.logo}`} className="max-w-full max-h-full" /></div>
+                                    <div className="mb-2 w-12 h-12 rounded border p-1"><img src={editingBrand.logo.startsWith('http') ? editingBrand.logo : (editingBrand.logo.includes('/') ? `/backend-media/${editingBrand.logo}` : `/backend-media/images/${editingBrand.logo}`)} className="max-w-full max-h-full" onError={(e: any) => e.target.src='/backend-media/images/placeholder.png'} /></div>
                                 )}
                                 <input type="file" name="logo" accept="image/*" className="w-full text-sm" />
                             </div>

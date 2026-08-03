@@ -47,7 +47,7 @@ export async function GET() {
       topSearches,
       brands: brands.map((b: any) => ({
         name: b.name,
-        logo: b.logo ? `http://localhost/smd2.0/public/uploads/brands/${b.logo}` : null
+        logo: b.logo ? (b.logo.startsWith('http') ? b.logo : (b.logo.includes('/') ? `/backend-media/${b.logo}` : `/backend-media/images/${b.logo}`)) : null
       })),
       topProducts: products
     });

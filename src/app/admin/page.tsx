@@ -60,6 +60,7 @@ export default async function AdminDashboard({
   let allCategories = [];
   let allBrands = [];
   let allSubCategories: any[] = [];
+  let allCategoryObjects: any[] = [];
 
   try {
     // Run ALL queries in parallel instead of sequentially — massive speed boost
@@ -73,6 +74,7 @@ export default async function AdminDashboard({
       [catRows],
       [brandRows],
       [subCatRows],
+      [catObjectsRows],
     ] = await Promise.all([
       pool.query(query, queryParams),
       pool.query(countQuery, queryParams.slice(0, -2)),
@@ -83,6 +85,7 @@ export default async function AdminDashboard({
       pool.query('SELECT DISTINCT category FROM products WHERE category IS NOT NULL AND category != "" ORDER BY category ASC'),
       pool.query('SELECT DISTINCT brand FROM products WHERE brand IS NOT NULL AND brand != "" ORDER BY brand ASC'),
       pool.query('SELECT sc.id, sc.name, c.name as category_name FROM sub_categories sc JOIN categories c ON sc.category_id = c.id ORDER BY sc.name ASC'),
+      pool.query('SELECT id, name FROM categories ORDER BY name ASC'),
     ]) as any[];
 
     products = (prodRows as any[]);
@@ -94,6 +97,7 @@ export default async function AdminDashboard({
     allCategories = (catRows as any[]).map((r: any) => r.category);
     allBrands = (brandRows as any[]).map((r: any) => r.brand);
     allSubCategories = subCatRows as any[];
+    allCategoryObjects = catObjectsRows as any[];
 
     // Enquiries count (separate try-catch because table might not exist)
     try {
@@ -172,6 +176,7 @@ export default async function AdminDashboard({
         allCategories={allCategories}
         allBrands={allBrands}
         allSubCategories={allSubCategories}
+        allCategoryObjects={allCategoryObjects}
         page={page}
         totalPages={totalPages}
       />

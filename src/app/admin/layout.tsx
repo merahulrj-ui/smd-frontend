@@ -21,6 +21,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/enquiries', icon: 'fa-envelope-open-text', label: 'Enquiries & Logs' },
     { href: '/admin/blogs', icon: 'fa-newspaper', label: 'Blogs Manager' },
     { href: '/admin/reviews', icon: 'fa-star-half-alt', label: 'Reviews List' },
+    { href: '/admin/jayanti-logs', icon: 'fa-robot', label: 'Jayanti Logs' },
   ];
 
   return (

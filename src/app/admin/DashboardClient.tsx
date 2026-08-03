@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { updateProductStatusAction, updateProductCategoryAction, deleteProductsAction, saveProductAction } from './actions';
+import { updateProductStatusAction, updateProductCategoryAction, deleteProductsAction, saveProductAction, quickAddBrandAction, quickAddCategoryAction, quickAddSubCategoryAction, quickDeleteBrandAction, quickDeleteCategoryAction, quickDeleteSubCategoryAction } from './actions';
 
 const inquiryData = [
   { name: 'Mon', inquiries: 4 },
@@ -35,6 +35,7 @@ export default function AdminDashboardClient({
   allCategories,
   allBrands,
   allSubCategories = [],
+  allCategoryObjects = [],
   page,
   totalPages
 }: any) {
@@ -50,8 +51,19 @@ export default function AdminDashboardClient({
   const [activeTab, setActiveTab] = useState('basic');
   const [specs, setSpecs] = useState<{name: string, description: string}[]>([]);
   const [filteredSubCats, setFilteredSubCats] = useState<any[]>([]);
+  
+  const [localBrands, setLocalBrands] = useState<string[]>(allBrands || []);
+  const [localCategories, setLocalCategories] = useState<string[]>(allCategories || []);
+  const [localAllSubCats, setLocalAllSubCats] = useState<any[]>(allSubCategories || []);
+  
+  const [isAddBrandModalOpen, setIsAddBrandModalOpen] = useState(false);
+  const [isAddingBrand, setIsAddingBrand] = useState(false);
 
+  const [isAddCatModalOpen, setIsAddCatModalOpen] = useState(false);
+  const [isAddingCat, setIsAddingCat] = useState(false);
 
+  const [isAddSubCatModalOpen, setIsAddSubCatModalOpen] = useState(false);
+  const [isAddingSubCat, setIsAddingSubCat] = useState(false);
   useEffect(() => {
     const saved = localStorage.getItem('adminProductsView');
     if (saved) setViewMode(saved);
@@ -113,7 +125,7 @@ export default function AdminDashboardClient({
       setEditingProduct(product);
       setActiveTab('basic');
       if (product.category) {
-        setFilteredSubCats(allSubCategories.filter((sc: any) => sc.category_name === product.category));
+        setFilteredSubCats(localAllSubCats.filter((sc: any) => sc.category_name === product.category));
       } else {
         setFilteredSubCats([]);
       }
@@ -135,7 +147,7 @@ export default function AdminDashboardClient({
 
   const handleCatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const cat = e.target.value;
-      setFilteredSubCats(allSubCategories.filter((sc: any) => sc.category_name === cat));
+      setFilteredSubCats(localAllSubCats.filter((sc: any) => sc.category_name === cat));
   };
 
 
@@ -158,6 +170,109 @@ export default function AdminDashboardClient({
               alert(res.error);
           } else {
               setIsModalOpen(false);
+          }
+      });
+  };
+
+  const handleQuickAddBrand = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setIsAddingBrand(true);
+      const formData = new FormData(e.currentTarget);
+      startTransition(async () => {
+          const res = await quickAddBrandAction(formData);
+          setIsAddingBrand(false);
+          if (res.error) {
+              alert(res.error);
+          } else if (res.brandName) {
+              setLocalBrands(prev => [...prev, res.brandName]);
+              // Also update the selected brand in the editingProduct so the select gets it
+              setEditingProduct((prev: any) => ({ ...prev, brand: res.brandName }));
+              setIsAddBrandModalOpen(false);
+          }
+      });
+  };
+
+  const handleQuickAddCategory = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setIsAddingCat(true);
+      const formData = new FormData(e.currentTarget);
+      startTransition(async () => {
+          const res = await quickAddCategoryAction(formData);
+          setIsAddingCat(false);
+          if (res.error) {
+              alert(res.error);
+          } else if (res.categoryName) {
+              setLocalCategories(prev => [...prev, res.categoryName]);
+              setEditingProduct((prev: any) => ({ ...prev, category: res.categoryName }));
+              setIsAddCatModalOpen(false);
+          }
+      });
+  };
+
+
+  const handleDeleteBrand = async () => {
+      const brand = editingProduct?.brand;
+      if (!brand) return;
+      if (!confirm(`Delete brand '${brand}' permanently?`)) return;
+      startTransition(async () => {
+          await quickDeleteBrandAction(brand);
+          setLocalBrands(prev => prev.filter(b => b !== brand));
+          setEditingProduct((prev: any) => ({ ...prev, brand: '' }));
+      });
+  };
+
+  const handleDeleteCategory = async () => {
+      const cat = editingProduct?.category;
+      if (!cat) return;
+      if (!confirm(`Delete category '${cat}' permanently?`)) return;
+      startTransition(async () => {
+          await quickDeleteCategoryAction(cat);
+          setLocalCategories(prev => prev.filter(c => c !== cat));
+          setEditingProduct((prev: any) => ({ ...prev, category: '' }));
+          setFilteredSubCats([]);
+      });
+  };
+
+  const handleDeleteSubCategory = async () => {
+      const subCatId = editingProduct?.sub_category_id;
+      if (!subCatId) return;
+      if (!confirm(`Delete this sub-category permanently?`)) return;
+      startTransition(async () => {
+          await quickDeleteSubCategoryAction(parseInt(subCatId));
+          setLocalAllSubCats(prev => prev.filter(sc => sc.id != subCatId));
+          setFilteredSubCats(prev => prev.filter(sc => sc.id != subCatId));
+          setEditingProduct((prev: any) => ({ ...prev, sub_category_id: '' }));
+      });
+  };
+
+  const handleQuickAddSubCategory = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const currentCat = editingProduct?.category;
+      if (!currentCat) {
+          alert('Please select a parent Category first!');
+          return;
+      }
+      const catObj = allCategoryObjects.find((c: any) => c.name === currentCat);
+      if (!catObj) {
+          alert('Parent category ID not found. Ensure the category is saved in the database.');
+          return;
+      }
+
+      setIsAddingSubCat(true);
+      const formData = new FormData(e.currentTarget);
+      formData.append('category_id', catObj.id.toString());
+      
+      startTransition(async () => {
+          const res = await quickAddSubCategoryAction(formData);
+          setIsAddingSubCat(false);
+          if (res.error) {
+              alert(res.error);
+          } else if (res.subCategoryName) {
+              const newSubCat = { id: res.subCategoryId, name: res.subCategoryName, category_name: currentCat };
+              setLocalAllSubCats(prev => [...prev, newSubCat]);
+              setFilteredSubCats(prev => [...prev, newSubCat]);
+              setEditingProduct((prev: any) => ({ ...prev, sub_category_id: res.subCategoryId.toString() }));
+              setIsAddSubCatModalOpen(false);
           }
       });
   };
@@ -262,15 +377,15 @@ export default function AdminDashboardClient({
             <table className="w-full text-left text-sm text-slate-600 border-collapse min-w-[800px]">
                 <thead>
                     <tr>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-center" width="5%">
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-center" style={{ width: '5%' }}>
                           <input type="checkbox" onChange={toggleSelectAll} checked={products.length > 0 && selectedIds.length === products.length} className="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" />
                         </th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" width="8%">ID</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" width="8%">Image</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" width="32%">Product Details</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" width="20%">Category</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" width="15%">Pricing</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" width="12%">Actions</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '8%' }}>ID</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '8%' }}>Image</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '32%' }}>Product Details</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '20%' }}>Category</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '15%' }}>Pricing</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '12%' }}>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -325,34 +440,55 @@ export default function AdminDashboardClient({
             </table>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-6 mt-6">
-          {products.map((prod: any) => (
-            <div key={prod.id} className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 overflow-hidden relative group hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300">
-              <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur rounded p-1 shadow-sm border border-slate-100">
-                <input type="checkbox" checked={selectedIds.includes(prod.id)} onChange={() => toggleSelect(prod.id)} className="w-4 h-4 cursor-pointer m-0 block" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-6 mt-6">
+          {products.map((prod: any) => {
+            const discount = prod.mrp > prod.price && prod.price > 0 ? Math.round(((prod.mrp - prod.price) / prod.mrp) * 100) : 0;
+            return (
+            <div key={prod.id} className="border border-slate-200 rounded-xl p-3 flex flex-col hover:border-teal-500 transition-colors bg-white h-full relative group shrink-0 shadow-sm hover:shadow-md">
+              <div className="absolute top-3 left-3 z-20 bg-white/90 backdrop-blur rounded p-1 shadow-sm border border-slate-100">
+                <input type="checkbox" checked={selectedIds.includes(prod.id)} onChange={() => toggleSelect(prod.id)} className="w-4 h-4 cursor-pointer m-0 block rounded border-slate-300 text-teal-600 focus:ring-teal-500" />
               </div>
-              <div className="w-full h-48 bg-white flex items-center justify-center p-4 cursor-pointer">
-                <img src={prod.image ? `/backend-media/${prod.image}` : '/backend-media/images/placeholder.png'} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300" />
+              {discount > 0 && (
+                <span className="absolute top-3 right-3 bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10 shadow-sm">
+                  {discount}% OFF
+                </span>
+              )}
+              
+              <div className="flex items-center justify-center mb-3 relative overflow-hidden group-hover:scale-105 transition-transform duration-300 h-[150px] w-full shrink-0 pt-6">
+                <img src={prod.image ? `/backend-media/${prod.image}` : '/backend-media/images/placeholder.png'} className="w-full h-full object-contain" />
               </div>
-              <div className="p-5 border-t border-slate-50">
-                <h3 className="text-sm font-bold text-slate-800 line-clamp-2 mb-1 min-h-[40px] m-0">{prod.name}</h3>
-                <p className="text-xs text-slate-500 mb-3 truncate m-0 mt-1">{prod.brand || 'Generic'}</p>
-                <div className="flex items-center gap-2 mb-4 h-6">
-                  {prod.category && <span className="bg-teal-50/80 text-teal-700 px-2 py-0.5 rounded text-[10px] font-semibold truncate max-w-full"><i className="fas fa-tag"></i> {prod.category}</span>}
+              
+              <div className="mb-2 shrink-0">
+                <h5 className="text-[13px] text-slate-700 font-semibold leading-snug line-clamp-2 group-hover:text-teal-600 transition-colors min-h-[36px]">
+                  {prod.name}
+                </h5>
+              </div>
+              
+              <div className="mt-auto flex flex-col gap-3">
+                <div className="flex items-center gap-2 min-h-[20px]">
+                  {prod.price > 0 ? (
+                    <>
+                      <span className="text-teal-700 font-bold text-sm">₹{prod.price}</span>
+                      {prod.mrp > prod.price && (
+                        <span className="text-slate-400 text-xs line-through">₹{prod.mrp}</span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-teal-700 font-bold text-sm">Price on Request</span>
+                  )}
                 </div>
-                <div className="flex items-end justify-between">
-                  <div>
-                    <div className="text-[10px] text-slate-400 line-through">₹{prod.mrp}</div>
-                    <div className="text-lg font-extrabold text-teal-600">₹{prod.price}</div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => handleOpenEdit(prod)} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-teal-50 hover:text-teal-600 flex items-center justify-center transition-colors shadow-sm"><i className="fas fa-edit"></i></button>
-                    <button onClick={() => handleDeleteSingle(prod.id)} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-rose-50 hover:text-rose-600 flex items-center justify-center transition-colors shadow-sm"><i className="fas fa-trash"></i></button>
-                  </div>
+                
+                <div className="flex gap-2 w-full mt-1">
+                  <button onClick={() => handleOpenEdit(prod)} className="flex-1 h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 font-semibold text-xs hover:text-teal-600 hover:border-teal-600 hover:bg-teal-50 transition-all active:scale-95">
+                    <i className="fas fa-edit mr-1.5"></i> Edit
+                  </button>
+                  <button onClick={() => handleDeleteSingle(prod.id)} className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-rose-600 hover:border-rose-600 hover:bg-rose-50 transition-all active:scale-95" title="Delete">
+                    <i className="fas fa-trash text-xs"></i>
+                  </button>
                 </div>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       )}
       </div>
@@ -422,22 +558,51 @@ export default function AdminDashboardClient({
                                   <input type="text" name="name" required defaultValue={editingProduct?.name || ''} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                               </div>
                               <div>
-                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Category</label>
-                                  <select name="category" defaultValue={editingProduct?.category || ''} onChange={handleCatChange} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white">
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex justify-between items-center">
+                                    <span>Category</span>
+                                    <div className="flex gap-3 items-center">
+                                        {editingProduct?.category && <button type="button" onClick={handleDeleteCategory} disabled={isPending} className="text-xs text-rose-500 hover:text-rose-700 disabled:opacity-50"><i className="fas fa-trash-alt"></i></button>}
+                                        <button type="button" onClick={() => setIsAddCatModalOpen(true)} className="text-xs text-teal-600 font-bold hover:underline">+ Add New</button>
+                                    </div>
+                                  </label>
+                                  <select name="category" value={editingProduct?.category || ''} onChange={(e) => {
+                                      handleCatChange(e);
+                                      setEditingProduct((prev: any) => ({ ...prev, category: e.target.value, sub_category_id: '' }));
+                                  }} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white">
                                       <option value="">Select Category...</option>
-                                      {allCategories.map((c: string) => <option key={c} value={c}>{c}</option>)}
+                                      {localCategories.map((c: string) => <option key={c} value={c}>{c}</option>)}
                                   </select>
                               </div>
                               <div>
-                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Sub Category</label>
-                                  <select name="sub_category_id" defaultValue={editingProduct?.sub_category_id || ''} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white">
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex justify-between items-center">
+                                    <span>Sub Category</span>
+                                    <div className="flex gap-3 items-center">
+                                        {editingProduct?.sub_category_id && <button type="button" onClick={handleDeleteSubCategory} disabled={isPending} className="text-xs text-rose-500 hover:text-rose-700 disabled:opacity-50"><i className="fas fa-trash-alt"></i></button>}
+                                        <button type="button" onClick={() => {
+                                            if(!editingProduct?.category) { alert('Please select a Category first'); return; }
+                                            setIsAddSubCatModalOpen(true);
+                                        }} className="text-xs text-teal-600 font-bold hover:underline">+ Add New</button>
+                                    </div>
+                                  </label>
+                                  <select name="sub_category_id" value={editingProduct?.sub_category_id || ''} onChange={(e) => setEditingProduct((prev: any) => ({ ...prev, sub_category_id: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white">
                                       <option value="">Select Sub Category...</option>
                                       {filteredSubCats.map((sc: any) => <option key={sc.id} value={sc.id}>{sc.name}</option>)}
                                   </select>
                               </div>
                               <div>
-                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Brand</label>
-                                  <input type="text" name="brand" defaultValue={editingProduct?.brand || ''} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex justify-between items-center">
+                                    <span>Brand</span>
+                                    <div className="flex gap-3 items-center">
+                                        {editingProduct?.brand && <button type="button" onClick={handleDeleteBrand} disabled={isPending} className="text-xs text-rose-500 hover:text-rose-700 disabled:opacity-50"><i className="fas fa-trash-alt"></i></button>}
+                                        <button type="button" onClick={() => setIsAddBrandModalOpen(true)} className="text-xs text-teal-600 font-bold hover:underline">+ Add New</button>
+                                    </div>
+                                  </label>
+                                  <div className="relative">
+                                    <input type="text" name="brand" list="brands-list" value={editingProduct?.brand || ''} onChange={(e) => setEditingProduct((prev: any) => ({ ...prev, brand: e.target.value }))} placeholder="Type or select brand..." className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                    <datalist id="brands-list">
+                                        {localBrands.map((b: string) => <option key={b} value={b} />)}
+                                    </datalist>
+                                  </div>
                               </div>
                               <div>
                                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Stock Quantity*</label>
@@ -533,6 +698,87 @@ export default function AdminDashboardClient({
                       </div>
                   </form>
               </div>
+
+              {/* Quick Add Brand Mini-Modal */}
+              {isAddBrandModalOpen && (
+                  <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-[10010] flex items-center justify-center p-6 rounded-3xl animate-fade-in">
+                      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md border border-slate-100 overflow-hidden">
+                          <div className="bg-slate-50 p-4 border-b border-slate-100 flex justify-between items-center">
+                              <h3 className="font-bold text-slate-800 m-0">Quick Add Brand</h3>
+                              <button type="button" onClick={() => setIsAddBrandModalOpen(false)} className="text-slate-400 hover:text-slate-600"><i className="fas fa-times"></i></button>
+                          </div>
+                          <form onSubmit={handleQuickAddBrand} className="p-5 space-y-4">
+                              <div>
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Brand Name*</label>
+                                  <input type="text" name="name" required placeholder="e.g. Philips" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 outline-none bg-slate-50 focus:bg-white" />
+                              </div>
+                              <div>
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Brand Logo (Optional)</label>
+                                  <input type="file" name="logo" accept="image/*" className="w-full text-sm" />
+                              </div>
+                              <div className="pt-2">
+                                  <button type="submit" disabled={isAddingBrand} className="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl hover:bg-slate-900 transition-colors disabled:opacity-50">
+                                      {isAddingBrand ? 'Adding...' : 'Add Brand & Select'}
+                                  </button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              )}
+
+              {/* Quick Add Category Mini-Modal */}
+              {isAddCatModalOpen && (
+                  <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-[10010] flex items-center justify-center p-6 rounded-3xl animate-fade-in">
+                      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md border border-slate-100 overflow-hidden">
+                          <div className="bg-slate-50 p-4 border-b border-slate-100 flex justify-between items-center">
+                              <h3 className="font-bold text-slate-800 m-0">Quick Add Category</h3>
+                              <button type="button" onClick={() => setIsAddCatModalOpen(false)} className="text-slate-400 hover:text-slate-600"><i className="fas fa-times"></i></button>
+                          </div>
+                          <form onSubmit={handleQuickAddCategory} className="p-5 space-y-4">
+                              <div>
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Category Name*</label>
+                                  <input type="text" name="name" required placeholder="e.g. Defibrillators" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 outline-none bg-slate-50 focus:bg-white" />
+                              </div>
+                              <div>
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Category Image (Optional)</label>
+                                  <input type="file" name="image" accept="image/*" className="w-full text-sm" />
+                              </div>
+                              <div className="pt-2">
+                                  <button type="submit" disabled={isAddingCat} className="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl hover:bg-slate-900 transition-colors disabled:opacity-50">
+                                      {isAddingCat ? 'Adding...' : 'Add Category & Select'}
+                                  </button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              )}
+
+              {/* Quick Add SubCategory Mini-Modal */}
+              {isAddSubCatModalOpen && (
+                  <div className="absolute inset-0 bg-white/95 backdrop-blur-sm z-[10010] flex items-center justify-center p-6 rounded-3xl animate-fade-in">
+                      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md border border-slate-100 overflow-hidden">
+                          <div className="bg-slate-50 p-4 border-b border-slate-100 flex justify-between items-center">
+                              <h3 className="font-bold text-slate-800 m-0">Quick Add Sub-Category</h3>
+                              <button type="button" onClick={() => setIsAddSubCatModalOpen(false)} className="text-slate-400 hover:text-slate-600"><i className="fas fa-times"></i></button>
+                          </div>
+                          <form onSubmit={handleQuickAddSubCategory} className="p-5 space-y-4">
+                              <div>
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Sub-Category Name*</label>
+                                  <input type="text" name="name" required placeholder="e.g. ECG Machines" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 outline-none bg-slate-50 focus:bg-white" />
+                              </div>
+                              <div>
+                                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Image (Optional)</label>
+                                  <input type="file" name="image" accept="image/*" className="w-full text-sm" />
+                              </div>
+                              <div className="pt-2">
+                                  <button type="submit" disabled={isAddingSubCat} className="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl hover:bg-slate-900 transition-colors disabled:opacity-50">
+                                      {isAddingSubCat ? 'Adding...' : 'Add Sub-Category & Select'}
+                                  </button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              )}
           </div>
         </div>
       )}
