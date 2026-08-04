@@ -1,11 +1,38 @@
 import Link from 'next/link';
+import pool from '@/lib/db';
 
 export const metadata = {
   title: 'About Us - SMD MEDICARE',
   description: 'Learn about SMD Medicare\'s decade-long journey in diagnostic excellence, our mission, vision, and the team dedicated to providing quality healthcare solutions in India.'
 };
 
-export default function AboutPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function AboutPage() {
+  let categories = [];
+  try {
+    const query = `
+      SELECT name, slug 
+      FROM categories 
+      WHERE status = 1 
+      ORDER BY CASE 
+        WHEN name = 'Medical Equipment' THEN 1
+        WHEN name = 'Hospital Furniture' THEN 2
+        WHEN name = 'Medical Devices' THEN 3
+        WHEN name = 'Diagnostics' THEN 4
+        WHEN name = 'Consumables' THEN 5
+        WHEN name = 'Orthopedics' THEN 6
+        WHEN name = 'Dental' THEN 7
+        ELSE 8 
+      END, id ASC 
+      LIMIT 8
+    `;
+    const [rows] = await pool.query(query) as any[];
+    categories = rows || [];
+  } catch (error) {
+    console.error("Failed to fetch categories for about page", error);
+  }
+
   return (
     <div className="bg-slate-50 min-h-screen pb-10 pt-[76px]">
       {/* Breadcrumbs */}
@@ -78,26 +105,19 @@ export default function AboutPage() {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-teal-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-3 relative z-10">Recombinant Antigen</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed relative z-10">Providing high-quality antigens for various diagnostic kits and research purposes.</p>
-              </div>
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-3 relative z-10">Surgical Instruments</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed relative z-10">A comprehensive range of precision-engineered instruments for all surgical needs.</p>
-              </div>
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-3 relative z-10">Diagnostics</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed relative z-10">Reliable and accurate diagnostic kits and equipment for labs and clinics.</p>
-              </div>
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-3 relative z-10">Consumables</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed relative z-10">A wide variety of medical consumables to support daily healthcare operations.</p>
-              </div>
+              {categories.length > 0 ? categories.map((cat: any, idx: number) => {
+                const colors = ['bg-teal-50', 'bg-blue-50', 'bg-indigo-50', 'bg-purple-50', 'bg-rose-50', 'bg-emerald-50', 'bg-sky-50', 'bg-amber-50'];
+                const bgColor = colors[idx % colors.length];
+                return (
+                  <Link href={`/category/${cat.slug}`} key={cat.slug} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:border-blue-300 transition-all relative overflow-hidden group block">
+                      <div className={`absolute top-0 right-0 w-24 h-24 ${bgColor} rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110`}></div>
+                      <h3 className="text-lg font-bold text-slate-900 mb-3 relative z-10 group-hover:text-blue-600 transition-colors">{cat.name}</h3>
+                      <p className="text-slate-600 text-sm leading-relaxed relative z-10">Explore our premium range of {cat.name.toLowerCase()} for clinical and medical use.</p>
+                  </Link>
+                )
+              }) : (
+                <div className="col-span-full text-center text-slate-500 py-8">Categories loading...</div>
+              )}
           </div>
       </section>
 
