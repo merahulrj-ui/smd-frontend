@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { sendMail } from '@/lib/mail';
 import { checkRateLimit } from '@/lib/rateLimit';
-import DOMPurify from 'isomorphic-dompurify';
+const sanitize = (str: string) => str ? str.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
 
 export async function POST(req: Request) {
   try {
@@ -32,8 +32,8 @@ export async function POST(req: Request) {
     }
 
     // 4. Input Sanitization (XSS Protection)
-    const safeName = DOMPurify.sanitize(name);
-    const safeMessage = DOMPurify.sanitize(message);
+    const safeName = sanitize(name);
+    const safeMessage = sanitize(message);
     
     // Insert into enquiries table as a general contact
     await pool.query(

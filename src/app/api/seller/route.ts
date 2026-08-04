@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { sendMail } from '@/lib/mail';
 import { checkRateLimit } from '@/lib/rateLimit';
-import DOMPurify from 'isomorphic-dompurify';
+const sanitize = (str: string) => str ? str.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
 
 export async function POST(req: Request) {
   try {
@@ -36,10 +36,10 @@ export async function POST(req: Request) {
     }
 
     // 3. Input Sanitization (XSS Prevention)
-    const safeCompanyName = DOMPurify.sanitize(company_name || '');
-    const safeRepName = DOMPurify.sanitize(rep_name || '');
-    const safeRepDesignation = DOMPurify.sanitize(rep_designation || '');
-    const safeGst = DOMPurify.sanitize(gst || '');
+    const safeCompanyName = sanitize(company_name || '');
+    const safeRepName = sanitize(rep_name || '');
+    const safeRepDesignation = sanitize(rep_designation || '');
+    const safeGst = sanitize(gst || '');
 
     await pool.query(
       'INSERT INTO seller_inquiries (company_name, rep_name, rep_designation, email, gst_number, contact_no) VALUES (?, ?, ?, ?, ?, ?)',

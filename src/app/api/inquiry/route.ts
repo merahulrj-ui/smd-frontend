@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { sendMail } from '@/lib/mail';
 import { checkRateLimit } from '@/lib/rateLimit';
-import DOMPurify from 'isomorphic-dompurify';
+const sanitize = (str: string) => str ? str.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
 
 export async function POST(req: Request) {
   try {
@@ -30,11 +30,11 @@ export async function POST(req: Request) {
     }
 
     // 3. Input Sanitization (XSS Prevention)
-    const safeName = DOMPurify.sanitize(name || '');
-    const safeCompany = DOMPurify.sanitize(company || '');
-    const safeMessage = DOMPurify.sanitize(message || '');
-    const safeProductName = DOMPurify.sanitize(product_name || '');
-    const safeInquiryType = DOMPurify.sanitize(inquiry_type || 'enquiry');
+    const safeName = sanitize(name || '');
+    const safeCompany = sanitize(company || '');
+    const safeMessage = sanitize(message || '');
+    const safeProductName = sanitize(product_name || '');
+    const safeInquiryType = sanitize(inquiry_type || 'enquiry');
 
     // Append product name and company to message for context
     const fullMessage = `Product: ${safeProductName}\nCompany: ${safeCompany || 'N/A'}\n\n${safeMessage}`;
