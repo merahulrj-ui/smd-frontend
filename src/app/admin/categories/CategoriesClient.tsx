@@ -11,6 +11,8 @@ export default function CategoriesClient({ dbCategories, dbSubCategories }: { db
 
     const [isSubModalOpen, setIsSubModalOpen] = useState(false);
     const [editingSub, setEditingSub] = useState<any>(null);
+    const [faq, setFaq] = useState('');
+    const [howToUse, setHowToUse] = useState('');
 
     const handleOpenCat = (cat: any = null) => {
         setEditingCat(cat);
@@ -19,6 +21,8 @@ export default function CategoriesClient({ dbCategories, dbSubCategories }: { db
 
     const handleOpenSub = (sub: any = null) => {
         setEditingSub(sub);
+        setFaq(sub?.faq || '');
+        setHowToUse(sub?.how_to_use || '');
         setIsSubModalOpen(true);
     };
 
@@ -74,7 +78,7 @@ export default function CategoriesClient({ dbCategories, dbSubCategories }: { db
                 <div className="flex gap-3">
                     <button onClick={() => handleOpenCat()} className="px-5 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-semibold hover:bg-teal-700 shadow-sm shadow-teal-500/20 transition-all"><i className="fas fa-folder-plus mr-2"></i> Add Category</button>
                     {activeCatId && (
-                        <button onClick={() => { setEditingSub({ category_id: activeCatId }); setIsSubModalOpen(true); }} className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 shadow-sm shadow-emerald-500/20 transition-all"><i className="fas fa-sitemap mr-2"></i> Add Sub-Category</button>
+                        <button onClick={() => { handleOpenSub({ category_id: activeCatId }); }} className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 shadow-sm shadow-emerald-500/20 transition-all"><i className="fas fa-sitemap mr-2"></i> Add Sub-Category</button>
                     )}
                 </div>
             </div>
@@ -137,7 +141,7 @@ export default function CategoriesClient({ dbCategories, dbSubCategories }: { db
                                         </div>
                                         <h4 className="text-lg font-bold text-slate-700 m-0 mb-1">No Sub-categories</h4>
                                         <p className="text-sm text-slate-500 m-0 mb-6">This category doesn't have any sub-categories yet.</p>
-                                        <button onClick={() => { setEditingSub({ category_id: activeCatId }); setIsSubModalOpen(true); }} className="px-5 py-2 bg-white text-emerald-600 border border-emerald-200 rounded-lg text-sm font-bold hover:bg-emerald-50 transition-colors shadow-sm">
+                                        <button onClick={() => { handleOpenSub({ category_id: activeCatId }); }} className="px-5 py-2 bg-white text-emerald-600 border border-emerald-200 rounded-lg text-sm font-bold hover:bg-emerald-50 transition-colors shadow-sm">
                                             <i className="fas fa-plus mr-1.5"></i> Add First Sub-category
                                         </button>
                                     </div>
@@ -199,24 +203,59 @@ export default function CategoriesClient({ dbCategories, dbSubCategories }: { db
             {/* Sub Category Modal */}
             {isSubModalOpen && (
                 <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[10005] flex items-center justify-center p-4">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
-                        <div className="bg-gradient-to-r from-emerald-600 to-emerald-800 p-6 flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-white m-0">{editingSub ? 'Edit Sub-Category' : 'Add Sub-Category'}</h2>
+                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+                        <div className="bg-gradient-to-r from-emerald-600 to-emerald-800 p-6 flex items-center justify-between shrink-0">
+                            <h2 className="text-xl font-bold text-white m-0">{editingSub?.id ? 'Edit Sub-Category' : 'Add Sub-Category'}</h2>
                             <button onClick={() => setIsSubModalOpen(false)} className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30"><i className="fas fa-times"></i></button>
                         </div>
-                        <form onSubmit={handleSaveSub} className="p-6 space-y-4">
-                            <div>
-                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Sub-Category Name</label>
-                                <input type="text" name="name" required defaultValue={editingSub?.name || ''} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 focus:bg-white" />
+                        <form onSubmit={handleSaveSub} className="p-6 space-y-4 overflow-y-auto flex-1">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Sub-Category Name</label>
+                                    <input type="text" name="name" required defaultValue={editingSub?.name || ''} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 focus:bg-white" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Parent Category</label>
+                                    <select name="category_id" required defaultValue={editingSub?.category_id || ''} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 focus:bg-white">
+                                        <option value="">Select Category...</option>
+                                        {dbCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Parent Category</label>
-                                <select name="category_id" required defaultValue={editingSub?.category_id || ''} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 focus:bg-white">
-                                    <option value="">Select Category...</option>
-                                    {dbCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                </select>
+                            
+                            <div className="mt-4">
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex justify-between">
+                                    <span>FAQ (Optional)</span>
+                                    <span className="text-xs text-slate-400 font-normal">Supports HTML (e.g. &lt;b&gt;, &lt;ul&gt;)</span>
+                                </label>
+                                <textarea 
+                                    name="faq" 
+                                    value={faq} 
+                                    onChange={(e) => setFaq(e.target.value)}
+                                    rows={5}
+                                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 focus:bg-white"
+                                    placeholder="Enter FAQ content..."
+                                ></textarea>
                             </div>
-                            <button type="submit" className="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-700 shadow-md">Save Sub-Category</button>
+
+                            <div className="mt-4">
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex justify-between">
+                                    <span>How to Use (Optional)</span>
+                                    <span className="text-xs text-slate-400 font-normal">Supports HTML (e.g. &lt;b&gt;, &lt;ul&gt;)</span>
+                                </label>
+                                <textarea 
+                                    name="how_to_use" 
+                                    value={howToUse} 
+                                    onChange={(e) => setHowToUse(e.target.value)}
+                                    rows={5}
+                                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 focus:bg-white"
+                                    placeholder="Enter How to Use content..."
+                                ></textarea>
+                            </div>
+
+                            <div className="pt-4 mt-4 border-t border-slate-100">
+                                <button type="submit" className="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-700 shadow-md">Save Sub-Category</button>
+                            </div>
                         </form>
                     </div>
                 </div>

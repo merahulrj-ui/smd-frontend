@@ -80,7 +80,7 @@ export default async function CategoryPage({
       categoryName = cats[0].name;
       
       // 2. Fetch subcategories for carousel and sidebar
-      const [subRows] = await pool.query('SELECT id, name, slug, image FROM sub_categories WHERE category_id = ?', [categoryId]) as any[];
+      const [subRows] = await pool.query('SELECT id, name, slug, image, faq, how_to_use FROM sub_categories WHERE category_id = ?', [categoryId]) as any[];
       subcategories = subRows;
 
       // 3. Find current subcategory if nested

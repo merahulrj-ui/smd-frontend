@@ -66,11 +66,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     // 3. Fetch Products
-    const [products] = await pool.query('SELECT slug, created_at FROM products WHERE status = 1') as any[];
+    const [products] = await pool.query('SELECT slug FROM products WHERE status = "live" OR status = "1"') as any[];
     products.forEach((prod: any) => {
       sitemapData.push({
         url: `${BASE_URL}/product/${prod.slug}`,
-        lastModified: prod.created_at || new Date(),
+        lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 0.8,
       });
