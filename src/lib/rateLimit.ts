@@ -6,11 +6,18 @@ type RateLimitData = {
     resetAt: number;
 };
 
-// Store for IP-based global rate limiting
-export const ipRateLimitStore = new Map<string, RateLimitData>();
+const globalForRateLimit = globalThis as unknown as {
+    ipRateLimitStore: Map<string, RateLimitData> | undefined;
+    emailLockoutStore: Map<string, { attempts: number, lockedUntil: number }> | undefined;
+}
 
-// Store for Account Lockouts (e.g. 5 failed OTP attempts)
-export const emailLockoutStore = new Map<string, { attempts: number, lockedUntil: number }>();
+export const ipRateLimitStore = globalForRateLimit.ipRateLimitStore ?? new Map<string, RateLimitData>();
+export const emailLockoutStore = globalForRateLimit.emailLockoutStore ?? new Map<string, { attempts: number, lockedUntil: number }>();
+
+if (process.env.NODE_ENV !== 'production') {
+    globalForRateLimit.ipRateLimitStore = ipRateLimitStore;
+    globalForRateLimit.emailLockoutStore = emailLockoutStore;
+}
 
 /**
  * Checks if a specific key (like an IP address) has exceeded the max allowed hits in the given time window.

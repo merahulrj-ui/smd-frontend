@@ -82,8 +82,8 @@ export default async function CategoryPage({
           sql += ` AND sub_category_id IN (${matchedSubIds.map(() => '?').join(',')})`;
           sqlParams.push(...matchedSubIds);
         } else {
-          sql += ' AND category_id = ?';
-          sqlParams.push(categoryId);
+          sql += ' AND category = ?';
+          sqlParams.push(categoryName);
         }
       } else if (currentSubcategoryObj) {
         sql += ' AND sub_category_id = ?';
@@ -91,11 +91,11 @@ export default async function CategoryPage({
       } else {
         const subIds = subcategories.map((s: any) => s.id);
         if (subIds.length > 0) {
-           sql += ` AND (category_id = ? OR sub_category_id IN (${subIds.map(() => '?').join(',')}))`;
-           sqlParams.push(categoryId, ...subIds);
+           sql += ` AND (category = ? OR sub_category_id IN (${subIds.map(() => '?').join(',')}))`;
+           sqlParams.push(categoryName, ...subIds);
         } else {
-           sql += ' AND category_id = ?';
-           sqlParams.push(categoryId);
+           sql += ' AND category = ?';
+           sqlParams.push(categoryName);
         }
       }
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOTPAuth } from '@/hooks/useOTPAuth';
 
 interface OTPVerificationFlowProps {
@@ -20,8 +20,21 @@ export default function OTPVerificationFlow({ onVerified, title = "Verification 
     const [email, setEmail] = useState(prefilledData?.email || '');
     const [otp, setOtp] = useState('');
     
+    // Timer for Resend OTP
+    const [timer, setTimer] = useState(0);
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (timer > 0 && view === 'otp') {
+            interval = setInterval(() => {
+                setTimer((prev) => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [timer, view]);
+
     // Sync with prefilledData changes
-    React.useEffect(() => {
+    useEffect(() => {
         if (prefilledData) {
             setName(prefilledData.name);
             setPhone(prefilledData.phone);
@@ -33,8 +46,8 @@ export default function OTPVerificationFlow({ onVerified, title = "Verification 
     const [isSending, setIsSending] = useState(false);
     const [isVerifying, setIsVerifying] = useState(false);
 
-    const handleSendOtp = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSendOtp = async (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
         if (!name || !phone || !email) {
             setErrorMsg('All fields are required.');
             return;
@@ -51,6 +64,7 @@ export default function OTPVerificationFlow({ onVerified, title = "Verification 
             const data = await res.json();
             if (data.success) {
                 setView('otp');
+                setTimer(60); // Start 60-second cooldown
             } else {
                 setErrorMsg(data.message || 'Error sending OTP');
             }
@@ -133,7 +147,16 @@ export default function OTPVerificationFlow({ onVerified, title = "Verification 
                         <button type="button" onClick={() => setView('email')} className="text-xs font-bold text-blue-600 hover:underline">Change</button>
                     </div>
                     <div>
-                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Enter 6-Digit OTP*</label>
+                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5 flex justify-between">
+                            <span>Enter 6-Digit OTP*</span>
+                            {timer > 0 ? (
+                                <span className="text-slate-400 font-normal">Resend in {timer}s</span>
+                            ) : (
+                                <button type="button" onClick={() => handleSendOtp()} disabled={isSending} className="text-blue-600 hover:underline cursor-pointer font-bold disabled:opacity-50">
+                                    {isSending ? 'Sending...' : 'Resend OTP'}
+                                </button>
+                            )}
+                        </label>
                         <input type="text" value={otp} onChange={e => setOtp(e.target.value)} required placeholder="••••••" maxLength={6} className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all text-center text-xl tracking-[0.5em] font-bold" />
                     </div>
                     <button type="button" onClick={handleVerifyOtp} disabled={isVerifying || otp.length < 5} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-70">

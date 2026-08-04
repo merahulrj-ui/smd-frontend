@@ -1,5 +1,6 @@
 "use client";
 import Link from 'next/link';
+import Image from 'next/image';
 import InquireButton from './InquireButton';
 import { useUI } from '@/context/UIContext';
 
@@ -28,10 +29,12 @@ export default function ProductCard({ id, slug, name, price, mrp, image, isNew }
       
       {/* Image */}
       <Link href={`/product/${slug}`} className="flex items-center justify-center mb-3 outline-none relative overflow-hidden group-hover:scale-105 transition-transform duration-300 h-[150px] w-full shrink-0">
-        <img 
+        <Image 
           src={image ? (image.startsWith('http') || image.startsWith('/') ? image : `/backend-media/${image}`) : '/placeholder-product.png'} 
           alt={name}
-          className="w-full h-full object-contain"
+          fill
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+          className="object-contain"
         />
       </Link>
       

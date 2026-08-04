@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useUI } from '@/context/UIContext';
 import { useState, useEffect } from 'react';
 
@@ -34,11 +35,12 @@ export default function MobileDrawer() {
       >
           <div className="flex items-center justify-between p-5 border-b border-slate-200">
               <Link href="/" onClick={closeDrawer}>
-                  <img src="/images/img_68ae826eb6cc47.12112340_logo.webp" alt="SMD MEDICARE" className="h-[45px] w-auto object-contain" />
+                  <Image src="/images/img_68ae826eb6cc47.12112340_logo.webp" alt="SMD MEDICARE" width={121} height={69} className="h-[45px] w-auto object-contain" />
               </Link>
               <button 
                 className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-colors" 
                 onClick={closeDrawer}
+                aria-label="Close Menu"
               >
                 <i className="fas fa-times text-lg"></i>
               </button>

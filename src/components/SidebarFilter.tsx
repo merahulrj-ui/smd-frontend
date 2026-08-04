@@ -89,8 +89,8 @@ export default function SidebarFilter({ subcategories = [], brands = [], isSearc
 
         {/* Sort By Filter */}
         <div className="mb-6 pb-5 border-b border-slate-100">
-          <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <i className="fas fa-sort-amount-down text-slate-400"></i> Sort By
+          <h4 className="text-[15px] font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <i className="fas fa-sort-amount-down text-blue-500/70"></i> Sort By
           </h4>
           <select 
             className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all cursor-pointer hover:bg-white"
@@ -98,16 +98,16 @@ export default function SidebarFilter({ subcategories = [], brands = [], isSearc
             onChange={(e) => applyFilters({ sort_by: e.target.value })}
           >
             <option value="relevance">Relevance</option>
-            <option value="price_low_high">Price: Low to High</option>
-            <option value="price_high_low">Price: High to Low</option>
+            <option value="price_low">Price: Low to High</option>
+            <option value="price_high">Price: High to Low</option>
             <option value="newest">Newest Arrivals</option>
           </select>
         </div>
 
         {/* Price Filter */}
         <div className="mb-6 pb-5 border-b border-slate-100">
-          <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <i className="fas fa-rupee-sign text-slate-400"></i> Price Range
+          <h4 className="text-[15px] font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <i className="fas fa-rupee-sign text-blue-500/70"></i> Price Range
           </h4>
           <div className="flex items-center gap-2 mb-3">
             <input 
@@ -136,8 +136,8 @@ export default function SidebarFilter({ subcategories = [], brands = [], isSearc
 
         {/* Discount Filter */}
         <div className="mb-6 pb-5 border-b border-slate-100">
-          <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <i className="fas fa-tags text-slate-400"></i> Discount
+          <h4 className="text-[15px] font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <i className="fas fa-tags text-blue-500/70"></i> Discount
           </h4>
           <select 
             className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all cursor-pointer hover:bg-white"
@@ -155,8 +155,8 @@ export default function SidebarFilter({ subcategories = [], brands = [], isSearc
         {/* Subcategories Filter (Only show if not empty) */}
         {subcategories && subcategories.length > 0 && (
           <div className="mb-6 pb-5 border-b border-slate-100">
-            <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <i className="fas fa-list-ul text-slate-400"></i> 
+            <h4 className="text-[15px] font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <i className="fas fa-list-ul text-blue-500/70"></i> 
               {isSearch ? 'Categories' : 'Sub Categories'}
             </h4>
             
@@ -197,8 +197,8 @@ export default function SidebarFilter({ subcategories = [], brands = [], isSearc
         {/* Brands Filter */}
         {brands && brands.length > 0 && (
           <div className="mb-2">
-            <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <i className="fas fa-building text-slate-400"></i> Brand
+            <h4 className="text-[15px] font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <i className="fas fa-copyright text-blue-500/70"></i> Brands
             </h4>
 
             {brands.length > 5 && (

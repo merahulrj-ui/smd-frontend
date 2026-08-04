@@ -35,7 +35,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         )}
 
         {/* Sidebar */}
-        <aside className={`w-64 bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col fixed top-4 bottom-4 left-4 z-50 rounded-2xl transition-transform duration-300 ${sidebarActive ? 'translate-x-0' : 'max-lg:-translate-x-[150%]'}`} style={{fontFamily: "'Plus Jakarta Sans', sans-serif"}}>
+        <aside className={`w-64 bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col fixed top-4 bottom-4 left-4 z-50 rounded-2xl transition-transform duration-300 ${sidebarActive ? 'translate-x-0' : 'max-lg:-translate-x-[150%]'}`}>
           <div className="p-6 flex justify-between items-center border-b border-slate-100/50 mb-2">
             <Link href="/" className="block w-full text-center">
               <img src="/images/img_68ae826eb6cc47.12112340_logo.webp" alt="SMD MEDICARE" className="w-full h-auto max-h-12 object-contain" />
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </aside>
 
         {/* Main Content */}
-        <main className="lg:ml-[19rem] flex-1 p-6 lg:p-8 min-w-0 w-full" style={{fontFamily: "'Plus Jakarta Sans', sans-serif"}}>
+        <main className="lg:ml-[19rem] flex-1 p-6 lg:p-8 min-w-0 w-full">
           <header className="flex justify-between items-center mb-8 bg-white/70 backdrop-blur-xl px-6 py-4 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-white/50 sticky top-4 z-40 flex-wrap gap-4">
             <div className="flex items-center gap-4">
               <button className="lg:hidden text-slate-500 hover:text-slate-800 p-2 rounded-lg hover:bg-slate-100 transition-colors bg-transparent border-0" onClick={() => setSidebarActive(!sidebarActive)}>

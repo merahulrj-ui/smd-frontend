@@ -1,3 +1,10 @@
 @import "tailwindcss";
 @source "../../src";
-html, body { scroll-behavior: smooth; }
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

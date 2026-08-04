@@ -75,14 +75,14 @@ export default function BlogsClient({ dbBlogs }: { dbBlogs: any[] }) {
                                 <tr><td colSpan={5} className="text-center py-10 text-slate-400 font-medium">No articles found.</td></tr>
                             )}
                             {dbBlogs.map((blog: any) => {
-                                let coverImg = blog.blog_image || 'images/placeholder.png';
+                                let coverImg = blog.blog_image || 'images/placeholder.svg';
 
                                 return (
                                     <tr key={blog.id} className="border-b border-slate-50 hover:bg-slate-50/80 transition-colors">
                                         <td className="py-4 px-5 whitespace-nowrap text-xs font-medium text-slate-500">{new Date(blog.created_at).toLocaleDateString()}</td>
                                         <td className="py-4 px-5">
                                             <div className="w-20 h-14 rounded-lg bg-white border border-slate-200 overflow-hidden shadow-sm flex items-center justify-center">
-                                                <img src={coverImg.startsWith('http') ? coverImg : (coverImg.includes('/') ? `/backend-media/${coverImg}` : `/backend-media/images/${coverImg}`)} className="w-full h-full object-cover" onError={(e: any) => e.target.src='/backend-media/images/placeholder.png'} />
+                                                <img src={coverImg.startsWith('http') ? coverImg : (coverImg.includes('/') ? `/backend-media/${coverImg}` : `/backend-media/images/${coverImg}`)} className="w-full h-full object-cover" onError={(e: any) => e.target.src='/backend-media/images/placeholder.svg'} />
                                             </div>
                                         </td>
                                         <td className="py-4 px-5">

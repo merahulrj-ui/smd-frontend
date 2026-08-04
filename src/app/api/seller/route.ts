@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     // 1. IP-based Rate Limiting (Max 3 inquiries per IP per 10 minutes)
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-    const rateLimit = checkRateLimit(`seller_ip_${ip}`, 3, 10 * 60 * 1000);
+    const rateLimit = checkRateLimit(`seller_ip_${ip}`, 10, 10 * 60 * 1000);
     if (!rateLimit.allowed) {
         return NextResponse.json({ success: false, error: 'Too many requests. Please wait a few minutes before trying again.' }, { status: 429 });
     }
@@ -24,7 +24,9 @@ export async function POST(req: Request) {
 
     // 2. Backend Verification - Check if email exists in verified_users
     try {
+        console.log("Seller form received:", { email, contact });
         const [rows]: any = await pool.query('SELECT phone FROM verified_users WHERE email = ?', [email]);
+        console.log("Verified users DB row:", rows);
         if (rows.length === 0 || rows[0].phone !== contact) {
             return NextResponse.json({ success: false, error: 'Unauthorized submission. Please verify your email and phone combination first.' }, { status: 401 });
         }

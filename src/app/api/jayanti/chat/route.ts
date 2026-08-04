@@ -70,7 +70,9 @@ const searchProducts = async (query: string) => {
 
     const stopWords = [
         'show', 'me', 'some', 'affordable', 'best', 'cheap', 'what', 'is', 'the', 'price', 'of', 'i', 'need', 'want', 'buy', 'looking', 'for', 'features', 'details', 'specification', 'specs', 'about', 'tell', 'describe', 'give', 'have', 'do', 'you',
-        'hai', 'kya', 'tumhare', 'paas', 'pas', 'chahiye', 'ka', 'ki', 'ke', 'ko', 'dikhao', 'batao', 'aur', 'mein', 'se', 'yeh', 'woh', 'aapke', 'mujhko', 'mujhe', 'humko', 'humein', 'koi', 'bhi', 'mil', 'jayega', 'milega'
+        'hai', 'kya', 'tumhare', 'paas', 'pas', 'chahiye', 'ka', 'ki', 'ke', 'ko', 'dikhao', 'batao', 'aur', 'mein', 'se', 'yeh', 'woh', 'aapke', 'mujhko', 'mujhe', 'humko', 'humein', 'koi', 'bhi', 'mil', 'jayega', 'milega',
+        'machine', 'kitne', 'kitna', 'wala', 'wali', 'kaisa', 'kaise', 'karna', 'karni',
+        'tum', 'tumhara', 'naam', 'kaun', 'ho', 'baat', 'kar', 'sakte', 'bol', 'hello', 'hi', 'hey'
     ];
     
     let words = query.replace(/[^a-zA-Z0-9\s]/g, '').toLowerCase().split(' ');
@@ -105,6 +107,9 @@ const searchProducts = async (query: string) => {
 
         brands.forEach((b: any) => {
             if (!b.brand) return;
+            // Only do fuzzy matching for words longer than 3 characters to avoid matching Hindi conversational words like "bol" or "tum"
+            if (searchedKeyword!.length <= 3) return;
+            
             const lev = levenshtein(searchedKeyword!.toLowerCase(), b.brand.toLowerCase());
             if (lev <= 2) {
                 if (lev === 0) { closest = b.brand; shortest = 0; }
@@ -135,28 +140,59 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { message: userMessage, history = [] } = body;
+        const { message: rawMessage, history = [] } = body;
 
-        if (!userMessage) {
+        if (!rawMessage) {
             return NextResponse.json({ success: false, message: 'Message is required' }, { status: 400 });
         }
 
+        let userMessage = rawMessage.trim().toLowerCase();
+
+        // 1. Check Smart FAQs (No AI, No Product Search needed)
+        try {
+            const [faqs]: any = await pool.query('SELECT pattern, answer FROM chat_faqs');
+            for (let faq of faqs) {
+                const regex = new RegExp(`\\b(${faq.pattern})\\b`, 'i');
+                if (regex.test(userMessage)) {
+                    return NextResponse.json({ success: true, reply: faq.answer, raw_reply: faq.answer, fast_track: true });
+                }
+            }
+        } catch(e) { console.error('FAQ Check Error', e); }
+
+        // 2. Intent Matching (Price & Bulk)
+        const isBulkIntent = /\b(bulk|wholesale|distributor|quantity|bada order)\b/i.test(userMessage);
+        const isPriceIntent = /\b(price of|kitne ka hai|rate|cost|price)\b/i.test(userMessage);
+
+        if (isBulkIntent) {
+            return NextResponse.json({ success: true, reply: "That sounds like a bulk order request! 📦 We provide special wholesale pricing for hospitals and distributors. Please click the **'Become a Seller/Partner'** button on the top right, or directly contact us on WhatsApp so our sales team can send you a formal quotation.", fast_track: true });
+        }
+
+        // 3. Synonym Replacement (e.g. "sugar check" -> "glucometer")
+        try {
+            const [synonyms]: any = await pool.query('SELECT keyword, maps_to FROM chat_synonyms');
+            for (let syn of synonyms) {
+                if (userMessage.includes(syn.keyword.toLowerCase())) {
+                    userMessage = userMessage.replace(new RegExp(syn.keyword, 'gi'), syn.maps_to);
+                }
+            }
+        } catch(e) { console.error('Synonym Check Error', e); }
+
+        // 4. Fuzzy Cache Check
+        try {
+            const strippedMsg = userMessage.replace(/[^a-zA-Z0-9]/g, '');
+            const [cachedQAs]: any = await pool.query("SELECT answer FROM jayanti_qa_caches WHERE REPLACE(REPLACE(REPLACE(question, ' ', ''), '?', ''), '.', '') = ? LIMIT 1", [strippedMsg]);
+            if (cachedQAs.length > 0) {
+                let reply = cachedQAs[0].answer;
+                reply = reply.replace(new RegExp('(https?://[^\\s]+)', 'g'), '<a href="$1" target="_blank" class="chat-link">$1</a>');
+                reply = reply.replace(new RegExp('\\[CAROUSEL\\]', 'g'), '');
+                return NextResponse.json({ success: true, reply, raw_reply: cachedQAs[0].answer, from_cache: true });
+            }
+        } catch(e) { console.error('Cache DB read error', e); }
+
+        // 5. Search Products Database
         const { products, correctedBrand, searchedKeyword } = await searchProducts(userMessage);
         
-        // 1. Check Cache ONLY if no products found in DB
-        if (products.length === 0) {
-            try {
-                const [cachedQAs]: any = await pool.query('SELECT answer FROM jayanti_qa_caches WHERE question = ? LIMIT 1', [userMessage.trim()]);
-                if (cachedQAs.length > 0) {
-                    const rawReply = cachedQAs[0].answer;
-                    let reply = rawReply;
-                    // Format links
-                    reply = reply.replace(new RegExp('(https?://[^\\s]+)', 'g'), '<a href="$1" target="_blank" class="chat-link">$1</a>');
-                    reply = reply.replace(new RegExp('\\[CAROUSEL\\]', 'g'), '');
-                    return NextResponse.json({ success: true, reply, raw_reply: rawReply, from_cache: true });
-                }
-            } catch(e) { console.error('Cache DB read error', e); }
-        }
+        // (Cache check already done above before product search)
 
         if (products.length > 0) {
             const hindiWords = ['hai', 'kya', 'tumhare', 'paas', 'pas', 'chahiye', 'ka', 'ki', 'ke', 'ko', 'dikhao', 'batao', 'aur', 'mein', 'se', 'yeh', 'woh', 'aapke', 'mujhko', 'mujhe', 'humko', 'humein', 'koi', 'bhi', 'mil', 'jayega', 'milega', 'hain', 'ho', 'nahi'];
@@ -180,6 +216,13 @@ export async function POST(request: Request) {
                 replyText = isHindi 
                     ? `Shayad aapka matlab **${correctedBrand}** se tha? ✨ Ye lijiye us brand ke kuch top products:` 
                     : `Did you mean **${correctedBrand}**? 🌟 Here are some premium matches for that brand:`;
+            }
+
+            // Price Intent Output
+            if (isPriceIntent && products.length > 0) {
+                const firstProduct = products[0];
+                const displayPrice = firstProduct.price > 0 ? `₹${Number(firstProduct.price).toLocaleString('en-IN')}` : 'Available on request';
+                replyText = isHindi ? `**${firstProduct.name}** ka price **${displayPrice}** hai.` : `The price of **${firstProduct.name}** is **${displayPrice}**.`;
             }
 
             const askedForDetails = /\b(features|details|specification|specs|about)\b/i.test(userMessage) || /\b(detail|jankari|batao)\b/i.test(userMessage.replace(/[^a-zA-Z0-9\s]/g, '').toLowerCase());
@@ -218,11 +261,6 @@ export async function POST(request: Request) {
 
             replyText += `<br><br>[CAROUSEL]<br><br><span style='font-size:12px; color:#64748b;'>${footerText}</span>`;
             
-            try {
-                const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_caches WHERE question = ? LIMIT 1', [userMessage.trim()]);
-                if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_caches (question, answer, created_at, updated_at) VALUES (?, ?, NOW(), NOW())', [userMessage.trim(), replyText]);
-            } catch(e) { }
-
             const carouselHtml = generateCarouselHtml(products);
             const finalReply = replyText.replace('[CAROUSEL]', carouselHtml);
 

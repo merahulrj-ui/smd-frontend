@@ -67,14 +67,45 @@ export async function POST(request: Request) {
         const mailOptions = {
             from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
             to: email,
-            subject: 'Your OTP for Jayanti AI',
+            subject: 'Your Verification Code - Jayanti AI',
             html: `
-                <div style="font-family: Arial, sans-serif; padding: 20px;">
-                    <h2>Verify Your Email</h2>
-                    <p>Hi ${name},</p>
-                    <p>Your one-time password (OTP) for Jayanti AI is:</p>
-                    <h3 style="background: #f4f4f4; padding: 10px; display: inline-block; letter-spacing: 2px;">${otp}</h3>
-                    <p>This OTP is valid for 10 minutes.</p>
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; padding: 40px 20px; text-align: center;">
+                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+                        
+                        <!-- Header -->
+                        <div style="background-color: #0d9488; padding: 30px 20px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; letter-spacing: 0.5px;">SMD Medicare</h1>
+                        </div>
+
+                        <!-- Body -->
+                        <div style="padding: 40px 30px; text-align: left;">
+                            <h2 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 20px;">Verify Your Identity</h2>
+                            <p style="color: #475569; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                                Hi <strong style="color: #0f172a;">${name}</strong>,<br><br>
+                                We received a request to access Jayanti AI. Please use the verification code below to securely log in to your account.
+                            </p>
+
+                            <!-- OTP Box -->
+                            <div style="text-align: center; margin: 35px 0;">
+                                <div style="display: inline-block; background-color: #f0fdfa; border: 2px dashed #14b8a6; border-radius: 12px; padding: 15px 30px;">
+                                    <h3 style="color: #0f766e; font-size: 32px; letter-spacing: 8px; margin: 0; font-family: monospace;">${otp}</h3>
+                                </div>
+                            </div>
+
+                            <p style="color: #64748b; font-size: 14px; text-align: center; margin-top: 30px;">
+                                This code is valid for <strong>10 minutes</strong>.<br>If you didn't request this code, you can safely ignore this email.
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px; text-align: center;">
+                            <p style="color: #94a3b8; font-size: 12px; margin: 0;">
+                                &copy; ${new Date().getFullYear()} SMD Medicare. All rights reserved.<br>
+                                This is an automated message, please do not reply.
+                            </p>
+                        </div>
+
+                    </div>
                 </div>
             `
         };

@@ -312,18 +312,18 @@ export default function JayantiChatbot() {
     };
 
     return (
-        <div className="fixed bottom-24 md:bottom-5 right-5 z-[99999] font-sans text-slate-800">
+        <div className="fixed bottom-[70px] md:bottom-6 right-4 md:right-6 z-[99999] font-sans text-slate-800">
             {!isOpen && (
                 <button 
                     onClick={toggleJayanti} 
-                    className="relative w-[50px] h-[50px] rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700 cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-105 hover:-translate-y-1"
-                    style={{ animation: 'jayantiPulse 3s infinite' }}
+                    className="relative w-16 h-16 cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1 drop-shadow-[0_8px_15px_rgba(37,99,235,0.4)] animate-bounce"
+                    style={{ animationDuration: '3s' }}
                 >
-                    <div className={`absolute bottom-[60px] right-0 bg-slate-800 text-white py-2.5 px-4 rounded-full text-[13.5px] font-semibold whitespace-nowrap shadow-lg pointer-events-none before:content-[''] before:absolute before:-bottom-1.5 before:right-[22px] before:w-0 before:h-0 before:border-x-[8px] before:border-x-transparent before:border-t-[8px] before:border-t-slate-800 transition-opacity duration-1000 ${showTooltip ? 'opacity-100' : 'opacity-0'}`}>
-                        Hi, I'm Jayanti AI
+                    <div className={`absolute bottom-[75px] right-2 bg-blue-600 text-white py-2 px-4 rounded-full text-[13px] font-semibold whitespace-nowrap shadow-lg pointer-events-none before:content-[''] before:absolute before:-bottom-1.5 before:right-[20px] before:w-0 before:h-0 before:border-x-[8px] before:border-x-transparent before:border-t-[8px] before:border-t-blue-600 transition-opacity duration-1000 ${showTooltip ? 'opacity-100' : 'opacity-0'}`}>
+                        Hi, I'm Jayanti AI 👋
                     </div>
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white w-[22px] h-[22px] rounded-full text-sm font-extrabold flex items-center justify-center border-2 border-white shadow-sm z-10">1</span>
-                    <AnimatedBotIcon className="w-[32px] h-[32px]" />
+                    <span className="absolute top-0 right-0 bg-red-500 text-white w-6 h-6 rounded-full text-xs font-extrabold flex items-center justify-center border-2 border-white shadow-sm z-10">1</span>
+                    <AnimatedBotIcon className="w-full h-full" />
                 </button>
             )}
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useUI, CURRENCIES, CurrencyCode } from '@/context/UIContext';
 import { useTypewriterPlaceholder } from '@/hooks/useTypewriterPlaceholder';
@@ -32,7 +33,7 @@ export default function Navbar() {
         
         <div className="flex items-center">
           <Link href="/">
-            <img src="/images/img_68ae826eb6cc47.12112340_logo.webp" alt="SMD MEDICARE" className="h-[55px] w-auto transition-transform duration-300 hover:scale-[1.03]" />
+            <Image src="/images/img_68ae826eb6cc47.12112340_logo.webp" alt="SMD MEDICARE" width={121} height={69} className="h-[55px] w-auto transition-transform duration-300 hover:scale-[1.03]" priority />
           </Link>
         </div>
 
@@ -47,7 +48,7 @@ export default function Navbar() {
               className="border-none bg-transparent outline-none flex-1 text-[0.95rem] text-slate-700 pr-2 pointer-events-none" 
               readOnly 
             />
-            <button type="button" aria-label="Search" className="bg-teal-600 hover:bg-teal-500 text-white border-none w-[38px] h-[38px] rounded-full flex items-center justify-center cursor-pointer transition-colors">
+            <button type="button" aria-label="Search" className="bg-blue-600 hover:bg-blue-700 text-white border-none w-[38px] h-[38px] rounded-full flex items-center justify-center cursor-pointer transition-colors shadow-sm">
               <i className="fas fa-search" aria-hidden="true"></i>
             </button>
           </div>
@@ -126,7 +127,7 @@ export default function Navbar() {
               <li><Link href="/contact" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-teal-600/10 hover:text-teal-600 transition-colors">Contact</Link></li>
               <li><Link href="/blog" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-teal-600/10 hover:text-teal-600 transition-colors">Blogs</Link></li>
               <li>
-                <button onClick={() => setSellerModalOpen(true)} className="ml-2 bg-gradient-to-r from-teal-600 to-teal-500 text-white font-semibold px-6 py-2 rounded-full shadow-[0_4px_15px_rgba(13,148,136,0.3)] hover:shadow-[0_6px_20px_rgba(13,148,136,0.4)] hover:-translate-y-0.5 transition-all">
+                <button onClick={() => setSellerModalOpen(true)} className="ml-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 py-2 rounded-full shadow-[0_4px_15px_rgba(37,99,235,0.3)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.4)] hover:-translate-y-0.5 transition-all">
                   Become a Seller
                 </button>
               </li>

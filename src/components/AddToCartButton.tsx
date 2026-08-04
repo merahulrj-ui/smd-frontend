@@ -9,12 +9,7 @@ export default function AddToCartButton({ product }: { product: any }) {
     <button 
       onClick={() => addToCatalog(product)}
       disabled={isAdded}
-      style={{
-        flex: 1, padding: '15px 20px', fontSize: '1.1rem', fontWeight: 700, 
-        borderRadius: '8px', 
-        background: isAdded ? '#94a3b8' : 'var(--color-secondary)', 
-        color: '#fff', border: 'none', cursor: isAdded ? 'not-allowed' : 'pointer', transition: '0.2s'
-      }}
+      className={`flex-1 py-4 px-5 text-[1.1rem] font-bold rounded-xl text-white transition-all shadow-md flex items-center justify-center gap-2 ${isAdded ? 'bg-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg'}`}
     >
       <i className="fas fa-shopping-cart"></i> {isAdded ? 'Added to Quote' : 'Add to Quote'}
     </button>

@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import pool from '@/lib/db';
 import { notFound } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
+import ShareButtons from '@/components/ShareButtons';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -137,9 +139,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Cover Image */}
           {article.blog_image && (
             <div className="w-full rounded-xl overflow-hidden mb-12 shadow-sm border border-slate-100">
-              <img 
+              <Image 
                 src={`/backend-media/${article.blog_image}`} 
                 alt={article.title} 
+                width={1200}
+                height={480}
                 className="w-full max-h-[480px] object-cover"
               />
             </div>
@@ -151,9 +155,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               sections.map((section: any, idx: number) => (
                 <div key={idx}>
                   {section.heading && (
-                    <h3 className="text-2xl font-bold text-slate-900 mt-8 mb-4 border-l-4 border-teal-600 pl-4">
+                    <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4 border-l-4 border-teal-600 pl-4">
                       {section.heading}
-                    </h3>
+                    </h2>
                   )}
                   {section.paragraph && (
                     <div className="mb-6 text-slate-600">
@@ -196,13 +200,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           
           {/* Share Section */}
           <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <span className="font-bold text-slate-700">Share this article:</span>
-              <button className="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-blue-100 hover:text-blue-600 transition-colors"><i className="fab fa-facebook-f"></i></button>
-              <button className="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-blue-100 hover:text-blue-400 transition-colors"><i className="fab fa-twitter"></i></button>
-              <button className="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-blue-100 hover:text-blue-700 transition-colors"><i className="fab fa-linkedin-in"></i></button>
-              <button className="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-green-100 hover:text-green-600 transition-colors"><i className="fab fa-whatsapp"></i></button>
-            </div>
+            <ShareButtons title={article.title} />
             <Link href="/blog" className="text-blue-600 font-semibold hover:text-blue-800 flex items-center gap-2">
               <i className="fas fa-arrow-left text-sm"></i> Back to Blogs
             </Link>
@@ -259,10 +257,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <Link href={`/blog/${post.slug}`} key={post.id} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col transform hover:-translate-y-1">
                 <div className="h-48 w-full bg-slate-100 relative overflow-hidden flex items-center justify-center">
                   {post.blog_image ? (
-                    <img 
+                    <Image 
                       src={`/backend-media/${post.blog_image}`} 
                       alt={post.title} 
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className={`absolute inset-0 bg-gradient-to-br ${COLORS[idx % COLORS.length]}`}>

@@ -55,9 +55,8 @@ export default function CategoriesClient({ categories }: Props) {
                   className={`w-full text-left px-2 sm:px-4 md:px-6 py-3 md:py-4 flex flex-col md:flex-row items-center md:gap-3 transition-colors ${isActive ? 'bg-white text-blue-600 font-bold shadow-[inset_0px_0px_10px_rgba(0,0,0,0.02)]' : 'text-slate-600 hover:bg-white hover:text-blue-500 font-medium'}`}
                 >
                   <div className={`w-10 h-10 md:w-8 md:h-8 rounded-full flex items-center justify-center shrink-0 mb-1 md:mb-0 ${isActive ? 'bg-blue-50/50 text-blue-600' : 'bg-transparent md:bg-slate-200 text-slate-400 md:text-slate-500'}`}>
-                    {/* Using an image or a generic icon depending on what was there before. The screenshot shows images like a heart for cardiology, teeth for dental, etc. If we don't have images, a generic icon is fine. Let's use generic for now. */}
-                    <img src={`/backend-media/category-icons/${cat.slug}.png`} onError={(e) => { e.currentTarget.style.display='none'; e.currentTarget.nextElementSibling?.removeAttribute('hidden'); }} className="w-8 h-8 object-contain drop-shadow-sm" alt="" />
-                    <i className="fas fa-layer-group text-sm" hidden></i>
+                    {/* Fallback to generic icon to prevent 404 network requests for missing images */}
+                    <i className="fas fa-layer-group text-sm"></i>
                   </div>
                   <span className="text-[0.65rem] md:text-base text-center md:text-left leading-tight break-words whitespace-normal w-full md:truncate">{cat.name}</span>
                 </button>

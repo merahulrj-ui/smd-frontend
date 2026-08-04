@@ -16,12 +16,6 @@ export function useOTPAuth() {
             const saved = localStorage.getItem('smd_verified_user');
             if (saved) {
                 setUser(JSON.parse(saved));
-            } else {
-                // Check legacy Jayanti AI verified state
-                const jayantiVerified = localStorage.getItem('jayanti_verified') === 'true';
-                if (jayantiVerified) {
-                    setUser({ name: '', email: '', phone: '', isVerified: true });
-                }
             }
         } catch (e) {
             console.error(e);

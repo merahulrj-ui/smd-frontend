@@ -91,9 +91,7 @@ export default async function BlogPage() {
             <p className="text-slate-500 mt-2">Discover knowledge tailored for healthcare professionals.</p>
           </div>
           <div className="mt-4 md:mt-0 flex gap-2">
-            <button className="bg-slate-900 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-slate-800 transition-colors">All</button>
-            <button className="bg-white border border-slate-200 text-slate-600 px-5 py-2 rounded-full text-sm font-semibold hover:bg-slate-50 transition-colors">Technology</button>
-            <button className="bg-white border border-slate-200 text-slate-600 px-5 py-2 rounded-full text-sm font-semibold hover:bg-slate-50 transition-colors">Guides</button>
+            <button className="bg-slate-900 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-slate-800 transition-colors cursor-default">All Articles</button>
           </div>
         </div>
 

@@ -3,7 +3,7 @@ import pool from '@/lib/db';
 
 export async function GET() {
   try {
-    const [categories] = await pool.query('SELECT id, name, slug FROM categories WHERE status = 1 ORDER BY name ASC') as any[];
+    const [categories] = await pool.query('SELECT DISTINCT c.id, c.name, c.slug FROM categories c INNER JOIN products p ON c.name = p.category WHERE c.status = 1 ORDER BY c.name ASC') as any[];
     const [subCategories] = await pool.query('SELECT id, category_id, name, slug FROM sub_categories WHERE status = 1 ORDER BY name ASC') as any[];
 
     // Structure the data for the Mega Menu

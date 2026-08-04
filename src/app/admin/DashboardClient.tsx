@@ -377,15 +377,15 @@ export default function AdminDashboardClient({
             <table className="w-full text-left text-sm text-slate-600 border-collapse min-w-[800px]">
                 <thead>
                     <tr>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-center" style={{ width: '5%' }}>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] text-center w-[5%]">
                           <input type="checkbox" onChange={toggleSelectAll} checked={products.length > 0 && selectedIds.length === products.length} className="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" />
                         </th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '8%' }}>ID</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '8%' }}>Image</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '32%' }}>Product Details</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '20%' }}>Category</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '15%' }}>Pricing</th>
-                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px]" style={{ width: '12%' }}>Actions</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] w-[8%]">ID</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] w-[8%]">Image</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] w-[32%]">Product Details</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] w-[20%]">Category</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] w-[15%]">Pricing</th>
+                        <th className="bg-slate-50/50 text-slate-500 font-bold py-4 px-5 border-b border-slate-100 uppercase tracking-widest text-[11px] w-[12%]">Actions</th>
                     </tr>
                 </thead>
                 <tbody>

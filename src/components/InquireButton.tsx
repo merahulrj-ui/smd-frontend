@@ -7,7 +7,7 @@ export default function InquireButton({ productName }: { productName: string }) 
 
   return (
     <button 
-      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-2 rounded-lg transition-colors" 
+      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-2 rounded-lg transition-colors shadow-sm hover:shadow-md" 
       onClick={(e) => { 
         e.preventDefault(); 
         openInquiryModal(productName, 'Product Inquiry');
