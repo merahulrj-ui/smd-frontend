@@ -8,11 +8,33 @@ import ShareButtons from '@/components/ShareButtons';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const [rows] = await pool.query('SELECT title, content FROM blog WHERE slug = ?', [slug]) as any[];
+    const [rows] = await pool.query('SELECT title, content, image FROM blog WHERE slug = ? LIMIT 1', [slug]) as any[];
     if (rows.length > 0) {
+      const article = rows[0];
+      const title = `${article.title} | SMD MEDICARE Blog`;
+      const description = typeof article.content === 'string' ? article.content.replace(/<[^>]*>?/gm, '').substring(0, 160) + '...' : 'Read the latest from SMD Medicare';
+      const url = `https://smdmedicare.com/blog/${slug}`;
+      const imageUrl = article.image ? `https://smdmedicare.com/backend-media/${article.image}` : 'https://smdmedicare.com/images/logo.png';
+      
       return {
-        title: `${rows[0].title} - SMD MEDICARE Blog`,
-        description: typeof rows[0].content === 'string' ? rows[0].content.replace(/<[^>]*>?/gm, '').substring(0, 160) + '...' : 'Read the latest from SMD Medicare',
+        title,
+        description,
+        openGraph: {
+          title,
+          description,
+          url,
+          images: [{ url: imageUrl }],
+          type: 'article',
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title,
+          description,
+          images: [imageUrl],
+        },
+        alternates: {
+          canonical: url,
+        }
       };
     }
   } catch (error) {}
@@ -80,9 +102,35 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     // Not JSON, keep as string
   }
 
+  const articleUrl = `https://smdmedicare.com/blog/${slug}`;
+  const imageUrl = article.image ? `https://smdmedicare.com/backend-media/${article.image}` : 'https://smdmedicare.com/images/logo.png';
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: article.title,
+    image: imageUrl,
+    datePublished: article.date || new Date().toISOString(),
+    author: {
+      '@type': 'Organization',
+      name: 'SMD Medicare'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'SMD Medicare',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://smdmedicare.com/images/logo.png'
+      }
+    }
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen font-sans pb-20 pt-[76px]">
-      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Breadcrumbs */}
       <div className="bg-white py-4 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
           <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">

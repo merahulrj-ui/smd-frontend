@@ -2,8 +2,16 @@ import Link from 'next/link';
 import pool from '@/lib/db';
 
 export const metadata = {
-  title: 'About Us - SMD MEDICARE',
-  description: 'Learn about SMD Medicare\'s decade-long journey in diagnostic excellence, our mission, vision, and the team dedicated to providing quality healthcare solutions in India.'
+  title: 'About Us | SMD MEDICARE',
+  description: 'Learn about SMD Medicare\'s decade-long journey in diagnostic excellence, our mission, vision, and the team dedicated to providing quality healthcare solutions in India.',
+  openGraph: {
+    title: 'About Us | SMD MEDICARE',
+    description: 'Learn about SMD Medicare\'s decade-long journey in diagnostic excellence, our mission, vision, and the team dedicated to providing quality healthcare solutions in India.',
+    url: 'https://smdmedicare.com/about',
+  },
+  alternates: {
+    canonical: 'https://smdmedicare.com/about',
+  }
 };
 
 export const dynamic = 'force-dynamic';

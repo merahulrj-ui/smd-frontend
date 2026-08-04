@@ -2,8 +2,16 @@ import Link from 'next/link';
 import ContactForm from '@/components/ContactForm';
 
 export const metadata = {
-  title: 'Contact Us - SMD MEDICARE',
-  description: 'Contact SMD Medicare for inquiries about hospital equipment, reagents, and medical supplies.'
+  title: 'Contact Us | SMD MEDICARE',
+  description: 'Contact SMD Medicare for inquiries about hospital equipment, reagents, and medical supplies.',
+  openGraph: {
+    title: 'Contact Us | SMD MEDICARE',
+    description: 'Contact SMD Medicare for inquiries about hospital equipment, reagents, and medical supplies.',
+    url: 'https://smdmedicare.com/contact',
+  },
+  alternates: {
+    canonical: 'https://smdmedicare.com/contact',
+  }
 };
 
 export default function ContactPage() {

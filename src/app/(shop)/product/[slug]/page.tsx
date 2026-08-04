@@ -8,12 +8,33 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const resolvedParams = await params;
   
   try {
-    const [rows] = await pool.query('SELECT name, category_id FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
+    const [rows] = await pool.query('SELECT name, category_id, image, short_description FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
     if (rows && rows.length > 0) {
       const product = rows[0];
+      const title = `${product.name} - Buy Online at SMD MEDICARE`;
+      const description = product.short_description || `Shop for high-quality ${product.name} online at wholesale prices on SMD Medicare.`;
+      const url = `https://smdmedicare.com/product/${resolvedParams.slug}`;
+      const imageUrl = product.image ? `https://smdmedicare.com/backend-media/${product.image}` : 'https://smdmedicare.com/images/logo.png';
+      
       return {
-        title: `${product.name} - Buy Online at SMD MEDICARE`,
-        description: `Shop for high-quality ${product.name} online at wholesale prices on SMD Medicare.`
+        title,
+        description,
+        openGraph: {
+          title,
+          description,
+          url,
+          images: [{ url: imageUrl }],
+          type: 'website',
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title,
+          description,
+          images: [imageUrl],
+        },
+        alternates: {
+          canonical: url,
+        }
       };
     }
   } catch(e) {}
@@ -88,12 +109,42 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     return notFound();
   }
 
+  const productUrl = `https://smdmedicare.com/product/${slug}`;
+  const imageUrl = product.image ? `https://smdmedicare.com/backend-media/${product.image}` : 'https://smdmedicare.com/images/logo.png';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: imageUrl,
+    description: product.short_description || `High-quality ${product.name}`,
+    sku: product.hsn_code || product.id.toString(),
+    brand: {
+      '@type': 'Brand',
+      name: product.brand || 'SMD Medicare'
+    },
+    offers: {
+      '@type': 'Offer',
+      url: productUrl,
+      priceCurrency: 'INR',
+      price: product.price || 0,
+      availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition'
+    }
+  };
+
   return (
-    <ProductClient 
-      product={product} 
-      relatedProducts={relatedProducts} 
-      reviews={reviews}
-      brandLogo={brandLogo} 
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ProductClient 
+        product={product} 
+        relatedProducts={relatedProducts} 
+        reviews={reviews}
+        brandLogo={brandLogo} 
+      />
+    </>
   );
 }

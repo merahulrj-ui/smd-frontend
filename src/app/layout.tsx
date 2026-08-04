@@ -9,8 +9,45 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
-  description: "SMD Medicare - Trusted supplier of medical equipment, hospital furniture, and diagnostic kits.",
+  metadataBase: new URL('https://smdmedicare.com'),
+  title: {
+    default: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
+    template: "%s | SMD MEDICARE",
+  },
+  description: "SMD Medicare is a trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits in India.",
+  keywords: ["medical equipment", "hospital furniture", "surgical instruments", "wholesale medical supplies", "diagnostic kits", "SMD Medicare"],
+  authors: [{ name: "SMD Medicare" }],
+  creator: "SMD Medicare",
+  publisher: "SMD Medicare",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
+    description: "Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits.",
+    url: 'https://smdmedicare.com',
+    siteName: 'SMD Medicare',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
+    description: "Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({

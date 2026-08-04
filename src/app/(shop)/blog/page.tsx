@@ -3,8 +3,16 @@ import pool from '@/lib/db';
 import Image from 'next/image';
 
 export const metadata = {
-  title: 'Blog & Insights - SMD MEDICARE',
-  description: 'Read the latest updates, guides, and diagnostic sector insights from SMD Medicare.'
+  title: 'Blog & Insights | SMD MEDICARE',
+  description: 'Read the latest updates, guides, and diagnostic sector insights from SMD Medicare.',
+  openGraph: {
+    title: 'Blog & Insights | SMD MEDICARE',
+    description: 'Read the latest updates, guides, and diagnostic sector insights from SMD Medicare.',
+    url: 'https://smdmedicare.com/blog',
+  },
+  alternates: {
+    canonical: 'https://smdmedicare.com/blog',
+  }
 };
 
 export const dynamic = 'force-dynamic';

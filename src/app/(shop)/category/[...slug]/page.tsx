@@ -26,9 +26,27 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   } catch(e) {}
   
+  const title = `${name} | Buy Online at SMD MEDICARE`;
+  const description = `Shop for high-quality ${name} online at wholesale prices on SMD Medicare. Explore our wide range of medical and hospital supplies.`;
+  const url = `https://smdmedicare.com/category/${slugs.join('/')}`;
+
   return {
-    title: `${name} - Buy Wholesale Medical Equipment - SMD MEDICARE`,
-    description: `Shop for high-quality ${name} online at wholesale prices on SMD Medicare.`
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    alternates: {
+      canonical: url,
+    }
   };
 }
 

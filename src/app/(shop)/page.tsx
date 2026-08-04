@@ -32,8 +32,25 @@ export default async function Home() {
     console.error("Error fetching live data:", error);
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalOrganization',
+    name: 'SMD Medicare',
+    url: 'https://smdmedicare.com',
+    logo: 'https://smdmedicare.com/images/logo.png',
+    description: 'Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits in India.',
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'IN'
+    }
+  };
+
   return (
     <div className="bg-slate-100 min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
       
       {/* Next-Gen Tailwind Hero Section */}
