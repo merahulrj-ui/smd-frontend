@@ -40,16 +40,16 @@ export default function CategoryCarousel({ subcategories, categorySlug, currentS
           display: flex;
           align-items: center;
           margin: 0 auto;
-          max-width: 1000px;
+          max-width: 1400px;
           padding: 0 40px;
         }
         .category-block-container {
           display: flex;
-          gap: 15px;
+          gap: 12px;
           overflow-x: auto;
           scrollbar-width: none;
           scroll-behavior: smooth;
-          padding: 10px 5px;
+          padding: 5px;
         }
         .category-block-container::-webkit-scrollbar { display: none; }
         
@@ -57,8 +57,8 @@ export default function CategoryCarousel({ subcategories, categorySlug, currentS
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          width: 35px;
-          height: 35px;
+          width: 36px;
+          height: 36px;
           background: white;
           border: 1px solid #e2e8f0;
           border-radius: 50%;
@@ -66,93 +66,88 @@ export default function CategoryCarousel({ subcategories, categorySlug, currentS
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          font-size: 20px;
-          color: #475569;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+          font-size: 18px;
+          color: #64748b;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
           z-index: 10;
           transition: all 0.2s;
         }
         .scroll-arrow:hover {
           background: #f8fafc;
-          color: var(--color-primary);
-          border-color: var(--color-primary);
+          color: #2563eb;
+          border-color: #bfdbfe;
+          transform: translateY(-50%) scale(1.05);
         }
-        .left-arrow { left: 0; }
-        .right-arrow { right: 0; }
+        .left-arrow { left: 5px; }
+        .right-arrow { right: 5px; }
         
-        .category-block {
-          display: flex;
-          flex-direction: column;
+        .category-chip {
+          display: inline-flex;
           align-items: center;
-          min-width: 85px;
+          gap: 8px;
+          padding: 8px 20px;
+          background: white;
+          border: 1px solid #e2e8f0;
+          border-radius: 9999px;
+          color: #475569;
+          font-size: 0.875rem;
+          font-weight: 600;
+          white-space: nowrap;
+          transition: all 0.2s ease;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.03);
           text-decoration: none;
-          padding: 10px;
-          border-radius: 12px;
-          transition: 0.2s;
-          border: 1px solid transparent;
         }
-        .category-block:hover {
+        .category-chip:hover {
           background: #f8fafc;
+          border-color: #cbd5e1;
+          color: #2563eb;
+          box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
-        .category-icon {
-          width: 55px;
-          height: 55px;
-          border-radius: 12px;
+        .category-chip.active {
+          background: #eff6ff;
+          border-color: #bfdbfe;
+          color: #2563eb;
+        }
+        .chip-icon {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          overflow: hidden;
+          background: #f1f5f9;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-bottom: 8px;
-          color: white;
-          font-weight: bold;
-          font-size: 1.2rem;
-          overflow: hidden;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .category-icon img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        .category-name {
-          font-size: 0.75rem;
-          color: #475569;
-          text-align: center;
-          font-weight: 500;
-          line-height: 1.2;
-          white-space: normal;
+          flex-shrink: 0;
         }
       `}} />
       <div className="carousel-container">
         {showLeft && (
-          <button className="scroll-arrow left-arrow" onClick={() => scrollRef.current?.scrollBy({ left: -200, behavior: 'smooth' })}>
-            &lsaquo;
+          <button className="scroll-arrow left-arrow" onClick={() => scrollRef.current?.scrollBy({ left: -300, behavior: 'smooth' })}>
+            <i className="fas fa-chevron-left"></i>
           </button>
         )}
         
         <div className="category-block-container" ref={scrollRef} onScroll={manageArrows}>
-          {subcategories.map((subcat, i) => {
+          {subcategories.map((subcat) => {
             const catImg = subcat.image ? `/backend-media/uploads/subcategories/${subcat.image}` : (subcat.productImage ? `/backend-media/${subcat.productImage}` : null);
-            const words = subcat.name.split(' ');
-            const initials = words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : subcat.name.substring(0, 2).toUpperCase();
-            const bgColor = colors[i % colors.length];
             const isActive = currentSubcatSlug === subcat.slug;
             
             return (
-              <Link key={subcat.id} href={`/category/${categorySlug}/${subcat.slug}`} className={`category-block ${isActive ? 'border-primary bg-teal-50/50' : ''}`}>
-                <div className={`category-icon relative overflow-hidden ${catImg ? 'bg-transparent border border-slate-200' : `${bgColor} text-white border-none`}`}>
-                  {catImg ? <Image src={catImg} alt={subcat.name} fill sizes="60px" className="object-contain" /> : <span>{initials}</span>}
-                </div>
-                <div className={`category-name ${isActive ? 'text-primary font-bold' : ''}`}>
-                  {subcat.name}
-                </div>
+              <Link key={subcat.id} href={`/category/${categorySlug}/${subcat.slug}`} className={`category-chip ${isActive ? 'active' : ''}`}>
+                {catImg && (
+                  <div className="chip-icon relative border border-slate-200">
+                    <Image src={catImg} alt={subcat.name} fill sizes="24px" className="object-cover" />
+                  </div>
+                )}
+                <span>{subcat.name}</span>
               </Link>
             );
           })}
         </div>
 
         {showRight && (
-          <button className="scroll-arrow right-arrow" onClick={() => scrollRef.current?.scrollBy({ left: 200, behavior: 'smooth' })}>
-            &rsaquo;
+          <button className="scroll-arrow right-arrow" onClick={() => scrollRef.current?.scrollBy({ left: 300, behavior: 'smooth' })}>
+            <i className="fas fa-chevron-right"></i>
           </button>
         )}
       </div>

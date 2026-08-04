@@ -7,13 +7,13 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="bg-slate-50 min-h-screen pb-20">
+    <div className="bg-slate-50 min-h-screen pb-20 pt-[76px]">
       {/* Breadcrumbs */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
-            <Link href="/" className="hover:text-teal-600 transition-colors">Home</Link>
-            <i className="fas fa-chevron-right text-[0.6rem]"></i>
-            <span className="text-slate-800">About Us</span>
+      <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">
+            <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+            <span className="mx-2 text-slate-300">»</span>
+            <span className="text-slate-900 font-semibold">About Us</span>
         </div>
       </div>
 

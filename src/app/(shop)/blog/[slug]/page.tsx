@@ -81,50 +81,52 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen font-sans pb-20">
+    <div className="bg-slate-50 min-h-screen font-sans pb-20 pt-[76px]">
       
       {/* Breadcrumbs */}
       <div className="bg-white py-4 px-4 sm:px-6 lg:px-8 border-b border-slate-200">
-          <div className="max-w-[1200px] mx-auto flex items-center gap-2 text-sm font-medium text-slate-500 overflow-hidden whitespace-nowrap">
+          <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">
               <Link href="/" className="hover:text-blue-600 transition-colors shrink-0">Home</Link> 
-              <i className="fas fa-chevron-right text-[0.6rem] shrink-0"></i>
+              <span className="mx-2 text-slate-300">»</span>
               <Link href="/blog" className="hover:text-blue-600 transition-colors shrink-0">Blogs</Link>
-              <i className="fas fa-chevron-right text-[0.6rem] shrink-0"></i>
+              <span className="mx-2 text-slate-300">»</span>
               <span className="text-slate-900 font-semibold truncate">{article.title}</span>
           </div>
       </div>
 
       {/* Full-width Hero Header */}
-      <div className="w-full bg-[#161c24] pt-16 pb-32 md:pt-24 md:pb-40 text-center relative overflow-hidden shadow-inner">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-[#161c24]/80"></div>
+      <div className="w-full bg-white pt-16 pb-32 md:pt-24 md:pb-40 text-center relative overflow-hidden border-b border-slate-200">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-slate-50 to-indigo-50 opacity-80"></div>
+        {/* Decorative blur blobs */}
+        <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[150%] bg-blue-200/40 blur-3xl rounded-full mix-blend-multiply pointer-events-none"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[30%] h-[150%] bg-indigo-200/40 blur-3xl rounded-full mix-blend-multiply pointer-events-none"></div>
         
         <div className="relative z-10 px-4 sm:px-6 lg:px-8">
-          <span className="inline-block border border-teal-500/30 bg-teal-900/40 text-teal-400 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-8 shadow-sm backdrop-blur-sm">
-            <i className="fas fa-circle text-[0.5rem] mr-2 text-teal-400 animate-pulse"></i>
+          <span className="inline-block border border-blue-200 bg-blue-100 text-blue-700 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-8 shadow-sm">
+            <i className="fas fa-circle text-[0.5rem] mr-2 text-blue-500 animate-pulse"></i>
             MEDICAL & DIAGNOSTIC ARTICLE
           </span>
           
-          <h1 className="text-3xl md:text-5xl lg:text-[54px] font-extrabold text-white mb-8 leading-[1.1] max-w-5xl mx-auto drop-shadow-md">
+          <h1 className="text-3xl md:text-5xl lg:text-[54px] font-extrabold text-slate-900 mb-8 leading-[1.1] max-w-5xl mx-auto tracking-tight">
             {article.title}
           </h1>
           
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm md:text-base font-medium text-slate-300">
-            <div className="flex items-center gap-2 text-teal-400">
-              <i className="far fa-user"></i>
-              <span className="text-white font-bold">{article.author_name || 'SMD Editorial'}</span>
-              {article.author_title && <span className="hidden sm:inline text-teal-500/80">({article.author_title})</span>}
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm md:text-base font-medium text-slate-600">
+            <div className="flex items-center gap-2">
+              <i className="far fa-user text-blue-600"></i>
+              <span className="text-slate-900 font-bold">{article.author_name || 'SMD Editorial'}</span>
+              {article.author_title && <span className="hidden sm:inline text-slate-500">({article.author_title})</span>}
             </div>
             <div className="flex items-center gap-2">
-              <i className="far fa-calendar-alt text-teal-500"></i>
+              <i className="far fa-calendar-alt text-blue-600"></i>
               <span>{formatDate(article.created_at)}</span>
             </div>
             <div className="flex items-center gap-2">
-              <i className="far fa-clock text-teal-500"></i>
+              <i className="far fa-clock text-blue-600"></i>
               <span>{article.read_time || '5'} mins read</span>
             </div>
             <div className="flex items-center gap-2">
-              <i className="far fa-eye text-teal-500"></i>
+              <i className="far fa-eye text-blue-600"></i>
               <span>{article.views + 1} views</span>
             </div>
           </div>
@@ -155,7 +157,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               sections.map((section: any, idx: number) => (
                 <div key={idx}>
                   {section.heading && (
-                    <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4 border-l-4 border-teal-600 pl-4">
+                    <h2 className="text-2xl font-bold text-slate-900 mt-8 mb-4 border-l-4 border-blue-600 pl-4">
                       {section.heading}
                     </h2>
                   )}
@@ -170,7 +172,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                           const cleanText = trimmed.replace(/^[-*•✅✔]\s*/, '');
                           return (
                             <div key={lineIdx} className="flex gap-3 mb-2 items-start pl-2">
-                              <i className="fas fa-check-circle text-teal-600 mt-1.5 shrink-0"></i>
+                              <i className="fas fa-check-circle text-blue-600 mt-1.5 shrink-0"></i>
                               <span>{cleanText}</span>
                             </div>
                           );
@@ -189,7 +191,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           {/* Author Profile Bio Box */}
           <div className="mt-12 p-6 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-5">
-            <div className="w-14 h-14 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold shrink-0 text-xl shadow-sm">
+            <div className="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shrink-0 text-xl shadow-sm">
               <i className="fas fa-user-md"></i>
             </div>
             <div>
@@ -246,7 +248,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {relatedBlogs.map((post, idx) => {
               const COLORS = [
-                'from-emerald-400 to-teal-500',
+                'from-emerald-400 to-blue-500',
                 'from-rose-400 to-pink-500',
                 'from-blue-500 to-indigo-600',
                 'from-amber-400 to-orange-500',
@@ -276,8 +278,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     {post.title}
                   </h3>
                   <div className="flex items-center justify-between text-xs font-medium text-slate-500 mt-auto pt-4 border-t border-slate-50">
-                    <span className="flex items-center gap-2"><i className="far fa-user text-teal-600"></i> {post.author_name || 'SMD MEDICARE Team'}</span>
-                    <span className="flex items-center gap-2"><i className="far fa-clock text-teal-600"></i> {post.read_time || '5'} mins read</span>
+                    <span className="flex items-center gap-2"><i className="far fa-user text-blue-600"></i> {post.author_name || 'SMD MEDICARE Team'}</span>
+                    <span className="flex items-center gap-2"><i className="far fa-clock text-blue-600"></i> {post.read_time || '5'} mins read</span>
                   </div>
                 </div>
               </Link>

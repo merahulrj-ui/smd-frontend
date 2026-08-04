@@ -1,5 +1,6 @@
 import pool from '@/lib/db';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import InquireButton from '@/components/InquireButton';
 import ProductCard from '@/components/ProductCard';
 import SidebarFilter from '@/components/SidebarFilter';
@@ -45,17 +46,21 @@ export default async function MainCategoryPage({
   let categoryName = baseCatSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   let categoryId = null;
   let categoryObj = null;
+  let shouldReturn404 = false;
 
   try {
     // 1. Fetch main category
     const [cats] = await pool.query('SELECT * FROM categories WHERE slug = ? OR REPLACE(LOWER(name), " ", "-") = ? LIMIT 1', [baseCatSlug, baseCatSlug]) as any[];
-    if (cats && cats.length > 0) {
+    
+    if (!cats || cats.length === 0) {
+      shouldReturn404 = true;
+    } else {
       categoryObj = cats[0];
       categoryId = categoryObj.id;
       categoryName = categoryObj.name;
       
-      // 2. Fetch subcategories for carousel and sidebar
-      const [subRows] = await pool.query('SELECT id, name, slug, image FROM sub_categories WHERE category_id = ?', [categoryId]) as any[];
+    // 2. Fetch subcategories for carousel and sidebar
+    const [subRows] = await pool.query('SELECT id, name, slug, image FROM sub_categories WHERE category_id = ?', [categoryId]) as any[];
       subcategories = subRows;
       
       // 3. Build SQL Query for Products
@@ -133,27 +138,43 @@ export default async function MainCategoryPage({
     console.error("Failed to fetch category products", err);
   }
 
+  if (shouldReturn404) {
+    notFound();
+  }
+
   // FAQ logic
   const faqSource = categoryObj;
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-12">
+    <div className="bg-slate-50 min-h-screen pb-12 pt-[76px]">
       {/* Tailwind Breadcrumbs */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="text-sm text-slate-500 font-medium">
+        <div className="text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">
           <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
-          <span className="mx-2 text-slate-300">/</span>
+          <span className="mx-2 text-slate-300">»</span>
           <Link href="/categories" className="hover:text-blue-600 transition-colors">Categories</Link>
-          <span className="mx-2 text-slate-300">/</span>
+          <span className="mx-2 text-slate-300">»</span>
           <span className="text-slate-800">{categoryName}</span>
         </div>
       </div>
 
-      {/* Tailwind Dark Hero Section */}
-      <section className="relative bg-slate-900 overflow-hidden text-center py-16 px-4 mb-8">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-400 via-transparent to-transparent blur-3xl"></div>
-        <h1 className="relative text-3xl md:text-5xl font-extrabold text-white mb-4 max-w-4xl mx-auto tracking-tight">{categoryName}</h1>
-        <p className="relative text-lg text-slate-300 max-w-2xl mx-auto font-light">Explore our premium selection of {categoryName.toLowerCase()} products</p>
+      {/* Premium Dark Hero Section (Like Blog) */}
+      <section className="relative overflow-hidden bg-slate-900 py-16 lg:py-20 mb-8 border-y border-slate-800">
+        <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[100%] rounded-full bg-gradient-to-br from-teal-500/20 to-blue-600/20 blur-[100px]"></div>
+            <div className="absolute bottom-[0%] right-[0%] w-[40%] h-[80%] rounded-full bg-gradient-to-tl from-indigo-500/20 to-purple-600/20 blur-[120px]"></div>
+        </div>
+        <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-teal-500/10 text-teal-400 font-semibold text-sm mb-4 border border-teal-500/20">
+              <i className="fas fa-boxes mr-2"></i> EXPLORE CATEGORY
+            </span>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+              {categoryName}
+            </h1>
+            <p className="text-lg text-slate-300 max-w-2xl mx-auto font-medium">
+              Explore our premium selection of {categoryName.toLowerCase()} products
+            </p>
+        </div>
       </section>
 
       {/* Subcategory Carousel */}

@@ -8,7 +8,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const resolvedParams = await params;
   
   try {
-    const [rows] = await pool.query('SELECT name, category_id FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
+    const [rows] = await pool.query('SELECT name, category FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
     if (rows && rows.length > 0) {
       const product = rows[0];
       return {
@@ -29,35 +29,23 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   
   let product: any = null;
   let relatedProducts: any[] = [];
-  let reviews: any[] = [];
   let brandLogo: string | null = null;
   
   try {
-    // 1. Fetch main product (join with categories for category name)
-    const [prodRows] = await pool.query(`
-      SELECT p.*, c.name as category_name 
-      FROM products p 
-      LEFT JOIN categories c ON p.category_id = c.id 
-      WHERE p.slug = ? LIMIT 1
-    `, [slug]) as any[];
-    
+    // 1. Fetch main product
+    const [prodRows] = await pool.query('SELECT * FROM products WHERE slug = ? LIMIT 1', [slug]) as any[];
     if (!prodRows || prodRows.length === 0) {
       return notFound();
     }
     product = prodRows[0];
-    // We keep product.category as it is from the database.
-    // If it's missing, we fallback to category_name.
-    product.category = product.category || product.category_name || 'Uncategorized';
     
     // Attempt to parse JSON specifications if stored as string, otherwise keep as is
-    if (typeof product.specification === 'string') {
+    if (typeof product.specifications === 'string') {
       try {
-        product.specifications = JSON.parse(product.specification);
+        product.specifications = JSON.parse(product.specifications);
       } catch(e) {
         product.specifications = [];
       }
-    } else {
-      product.specifications = product.specification || [];
     }
 
     // 2. Fetch Brand Logo
@@ -71,17 +59,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
     // 3. Fetch Related Products (same category, excluding current product)
     const [relRows] = await pool.query(
-      "SELECT id, name, slug, image, price, mrp FROM products WHERE category = ? AND id != ? AND status = 'live' ORDER BY RAND() LIMIT 8", 
+      'SELECT id, name, slug, image, price, mrp FROM products WHERE category = ? AND id != ? AND status = 1 ORDER BY RAND() LIMIT 8', 
       [product.category, product.id]
     ) as any[];
     relatedProducts = relRows;
-
-    // 4. Fetch Reviews
-    const [reviewRows] = await pool.query(
-      'SELECT id, name, rating, review_text, created_at FROM reviews WHERE product_id = ? AND is_approved = 1 ORDER BY created_at DESC', 
-      [product.id]
-    ) as any[];
-    reviews = reviewRows || [];
 
   } catch (err) {
     console.error("Failed to fetch product", err);
@@ -92,7 +73,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <ProductClient 
       product={product} 
       relatedProducts={relatedProducts} 
-      reviews={reviews}
       brandLogo={brandLogo} 
     />
   );

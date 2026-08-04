@@ -41,7 +41,7 @@ export default async function BlogPage() {
 
   const COLORS = [
     'from-blue-500 to-indigo-600',
-    'from-emerald-400 to-teal-500',
+    'from-emerald-400 to-blue-500',
     'from-rose-400 to-pink-500',
     'from-amber-400 to-orange-500',
     'from-violet-500 to-purple-600',
@@ -52,29 +52,29 @@ export default async function BlogPage() {
   const gridArticles = articles.length > 0 ? articles.slice(1) : [];
 
   return (
-    <div className="bg-slate-50 min-h-screen font-sans">
+    <div className="bg-slate-50 min-h-screen font-sans pt-[76px]">
       
       {/* Breadcrumbs Banner */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-[1400px] mx-auto flex items-center gap-2 text-sm font-medium text-slate-500">
+          <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">
               <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link> 
-              <i className="fas fa-chevron-right text-[0.6rem]"></i>
+              <span className="mx-2 text-slate-300">»</span>
               <span className="text-slate-900 font-semibold">Blog & Insights</span>
           </div>
       </div>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-slate-900 py-20 lg:py-32">
+      <section className="relative overflow-hidden bg-slate-900 py-12 lg:py-16">
         <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[100%] rounded-full bg-gradient-to-br from-teal-500/20 to-blue-600/20 blur-[100px]"></div>
+            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[100%] rounded-full bg-gradient-to-br from-blue-500/20 to-blue-600/20 blur-[100px]"></div>
             <div className="absolute bottom-[0%] right-[0%] w-[40%] h-[80%] rounded-full bg-gradient-to-tl from-indigo-500/20 to-purple-600/20 blur-[120px]"></div>
         </div>
         <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span className="inline-block py-1.5 px-4 rounded-full bg-teal-500/10 text-teal-400 font-semibold text-sm mb-6 border border-teal-500/20">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-blue-500/10 text-blue-400 font-semibold text-sm mb-6 border border-blue-500/20">
               <i className="fas fa-newspaper mr-2"></i> SMD MEDICARE INSIGHTS
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight">
-              Medical Insights, <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-400">Delivered.</span>
+              Medical Insights, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-400">Delivered.</span>
             </h1>
             <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-medium">
               Explore our latest articles, guides, and industry trends to stay ahead in the rapidly evolving world of healthcare and diagnostics.
@@ -83,9 +83,9 @@ export default async function BlogPage() {
       </section>
 
       {/* Blog Content */}
-      <section className="py-16 lg:py-24 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-8 lg:py-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-slate-200 pb-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-8 border-b border-slate-200 pb-4">
           <div>
             <h2 className="text-3xl font-bold text-slate-900">Latest Articles</h2>
             <p className="text-slate-500 mt-2">Discover knowledge tailored for healthcare professionals.</p>
@@ -97,7 +97,7 @@ export default async function BlogPage() {
 
         {/* Featured Article */}
         {featuredArticle && (
-          <div className="mb-16">
+          <div className="mb-10">
             <Link href={`/blog/${featuredArticle.slug}`} className="group flex flex-col lg:flex-row bg-white rounded-3xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_50px_rgba(0,0,0,0.08)] transition-all duration-300 border border-slate-100">
               <div className="lg:w-1/2 h-64 lg:h-auto bg-slate-100 relative overflow-hidden flex items-center justify-center">
                 {featuredArticle.blog_image ? (
@@ -105,7 +105,7 @@ export default async function BlogPage() {
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900">
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                    <div className="absolute w-64 h-64 bg-teal-500/30 rounded-full blur-[80px] -top-10 -left-10 group-hover:scale-110 transition-transform duration-700"></div>
+                    <div className="absolute w-64 h-64 bg-blue-500/30 rounded-full blur-[80px] -top-10 -left-10 group-hover:scale-110 transition-transform duration-700"></div>
                     <div className="absolute w-64 h-64 bg-blue-500/30 rounded-full blur-[80px] -bottom-10 -right-10 group-hover:scale-110 transition-transform duration-700"></div>
                     <i className="fas fa-newspaper text-8xl text-white/90 drop-shadow-lg transform group-hover:scale-110 transition-transform duration-500"></i>
                   </div>
@@ -116,20 +116,20 @@ export default async function BlogPage() {
               </div>
               <div className="lg:w-1/2 p-8 lg:p-14 flex flex-col justify-center">
                 <div className="flex items-center gap-4 text-sm font-medium text-slate-500 mb-4">
-                  <span className="text-teal-600 font-bold">Insights</span>
+                  <span className="text-blue-600 font-bold">Insights</span>
                   <span>•</span>
                   <span>{formatDate(featuredArticle.created_at)}</span>
                   <span>•</span>
                   <span>{featuredArticle.read_time || '5 mins'}</span>
                 </div>
-                <h3 className="text-2xl md:text-4xl font-extrabold text-slate-900 mb-6 leading-tight group-hover:text-teal-600 transition-colors">
+                <h3 className="text-2xl md:text-4xl font-extrabold text-slate-900 mb-6 leading-tight group-hover:text-blue-600 transition-colors">
                   {featuredArticle.title}
                 </h3>
                 <p className="text-slate-600 text-lg mb-8 line-clamp-3">
                   {getExcerpt(featuredArticle.content)}
                 </p>
                 <div className="flex items-center gap-4 mt-auto">
-                  <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(featuredArticle.author_name || 'Admin')}&background=0D9488&color=fff&size=100`} alt="Author" className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 shadow-sm" />
+                  <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(featuredArticle.author_name || 'Admin')}&background=2563EB&color=fff&size=100`} alt="Author" className="w-12 h-12 rounded-full object-cover border-2 border-slate-200 shadow-sm" />
                   <div>
                     <p className="text-sm font-bold text-slate-900">{featuredArticle.author_name || 'SMD Editorial'}</p>
                     <p className="text-xs text-slate-500">{featuredArticle.author_title || 'Medical Contributor'}</p>
@@ -141,7 +141,7 @@ export default async function BlogPage() {
         )}
 
         {/* Article Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {gridArticles.map((article, idx) => (
             <Link href={`/blog/${article.slug}`} key={article.id} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col transform hover:-translate-y-1">
               <div className={`h-48 w-full bg-slate-100 relative overflow-hidden flex items-center justify-center`}>
@@ -194,24 +194,24 @@ export default async function BlogPage() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="bg-teal-600 py-16 lg:py-20 mt-10">
+      <section className="bg-blue-600 py-16 lg:py-20 mt-10">
         <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">Never Miss an Update</h2>
-          <p className="text-teal-100 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
             Subscribe to our newsletter to get the latest medical equipment reviews, industry news, and exclusive offers delivered straight to your inbox.
           </p>
           <form className="flex flex-col sm:flex-row max-w-md mx-auto gap-3">
             <input 
               type="email" 
               placeholder="Enter your email address" 
-              className="flex-grow px-5 py-4 rounded-xl bg-white border-2 border-transparent focus:outline-none focus:ring-4 focus:ring-teal-400/50 text-slate-900 placeholder-slate-400 shadow-lg"
+              className="flex-grow px-5 py-4 rounded-xl bg-white border-2 border-transparent focus:outline-none focus:ring-4 focus:ring-blue-400/50 text-slate-900 placeholder-slate-400 shadow-lg"
               required
             />
             <button type="submit" className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition-colors shadow-lg whitespace-nowrap">
               Subscribe
             </button>
           </form>
-          <p className="text-teal-200 text-xs mt-4">We care about your data in our <Link href="#" className="underline hover:text-white">privacy policy</Link>.</p>
+          <p className="text-blue-200 text-xs mt-4">We care about your data in our <Link href="#" className="underline hover:text-white">privacy policy</Link>.</p>
         </div>
       </section>
 

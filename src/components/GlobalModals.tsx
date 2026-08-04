@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useUI } from '@/context/UIContext';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -9,6 +10,7 @@ import { useOTPAuth } from '@/hooks/useOTPAuth';
 import OTPVerificationFlow from '@/components/OTPVerificationFlow';
 
 export default function GlobalModals() {
+  const router = useRouter();
   const typewriterPlaceholder = useTypewriterPlaceholder();
   const { user, isVerified } = useOTPAuth();
   const { 
@@ -111,6 +113,14 @@ export default function GlobalModals() {
       saveRecentSearch(query);
     }
     handleSearchChange({ target: { value: query } } as any);
+  };
+
+  const submitSearch = (query: string) => {
+    if (query.length >= 2) {
+      saveRecentSearch(query);
+      router.push(`/search/${encodeURIComponent(query)}`);
+      setSearchOpen(false);
+    }
   };
 
   const handleGlobalInquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -273,7 +283,7 @@ export default function GlobalModals() {
                               onChange={handleSearchChange}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  executeSearch(searchQuery);
+                                  submitSearch(searchQuery);
                                 }
                               }}
                               placeholder={typewriterPlaceholder || "Search..."} 
@@ -285,7 +295,7 @@ export default function GlobalModals() {
                                 <i className="fas fa-times-circle"></i>
                             </button>
                           )}
-                          <button onClick={() => executeSearch(searchQuery)} aria-label="Submit Search" className="text-slate-600 ml-1 font-bold text-lg cursor-pointer hover:text-blue-600 transition-colors">
+                          <button onClick={() => submitSearch(searchQuery)} aria-label="Submit Search" className="text-slate-600 ml-1 font-bold text-lg cursor-pointer hover:text-blue-600 transition-colors">
                               <i className="fas fa-search"></i>
                           </button>
                       </div>
@@ -646,12 +656,12 @@ export default function GlobalModals() {
 
       {/* Global Floating Catalog & Quote Bar */}
       {catalog.length > 0 && (
-        <div id="catalog-bar" className="fixed bottom-[30px] right-[30px] z-[10005] bg-white px-5 py-3 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.15)] border border-slate-200 flex items-center gap-3">
-            <span className="font-semibold text-primary text-base cursor-pointer" title="Click to Manage">
+        <div id="catalog-bar" className="fixed bottom-[30px] left-1/2 -translate-x-1/2 z-[10005] bg-white px-5 py-3 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.15)] border border-slate-200 flex items-center gap-3">
+            <span className="font-semibold text-blue-600 text-base cursor-pointer whitespace-nowrap" title="Click to Manage">
               <i className="fas fa-shopping-cart"></i> {catalog.length} {catalog.length === 1 ? 'Item' : 'Items'} in Quote
             </span>
             <div className="w-[1px] h-[20px] bg-slate-200"></div>
-            <button type="button" onClick={handleGeneratePDF} className="bg-primary text-white border-none py-2 px-4 rounded-full font-semibold text-[0.88rem] cursor-pointer transition-colors hover:bg-primary/90">PDF Catalog</button>
+            <button type="button" onClick={handleGeneratePDF} className="bg-blue-600 text-white border-none py-2 px-4 rounded-full font-semibold text-[0.88rem] cursor-pointer transition-colors hover:bg-blue-700">PDF Catalog</button>
             <button type="button" onClick={() => setQuoteModalOpen(true)} className="bg-slate-900 text-white border-none py-2 px-4 rounded-full font-semibold text-[0.88rem] cursor-pointer transition-colors hover:bg-slate-800">Get Quotation</button>
             <button type="button" onClick={clearCatalog} aria-label="Clear Cart" className="bg-transparent text-red-500 border-none text-[1.2rem] cursor-pointer px-1 hover:text-red-600 transition-colors">
                 <i className="fas fa-trash-alt"></i>

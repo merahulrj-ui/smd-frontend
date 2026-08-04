@@ -1,7 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import pool from '@/lib/db';
 
-export default function Footer() {
+export default async function Footer() {
+  let categories: any[] = [];
+  try {
+    const [catRows] = await pool.query(`
+      SELECT DISTINCT c.name, c.slug 
+      FROM categories c 
+      JOIN products p ON c.name = p.category 
+      WHERE p.status = 'live' 
+      LIMIT 5
+    `) as any[];
+    categories = catRows;
+  } catch (error) {
+    console.error('Error fetching footer categories:', error);
+  }
+
   return (
     <footer className="bg-slate-950 text-slate-300 pt-16 pb-8 border-t-4 border-teal-600">
         <div className="max-w-[1400px] mx-auto px-5 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
@@ -40,10 +55,15 @@ export default function Footer() {
             <div className="flex flex-col">
                 <h3 className="text-white text-lg font-bold mb-5 tracking-wide">Our Categories</h3>
                 <ul className="flex flex-col gap-3">
-                    <li><Link href="/category/rapid-test-kits" className="text-slate-400 hover:text-teal-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Rapid Test Kits</Link></li>
-                    <li><Link href="/category/elisa-kits" className="text-slate-400 hover:text-teal-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> ELISA Kits</Link></li>
-                    <li><Link href="/category/surgical-instruments" className="text-slate-400 hover:text-teal-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Surgical Instruments</Link></li>
-                    <li><Link href="/category/diagnostic-equipment" className="text-slate-400 hover:text-teal-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Diagnostic Equipment</Link></li>
+                    {categories.length > 0 ? categories.map((cat) => (
+                      <li key={cat.slug}>
+                        <Link href={`/category/${cat.slug}`} className="text-slate-400 hover:text-teal-400 transition-colors text-sm flex items-center gap-2">
+                          <i className="fas fa-angle-right text-[0.7em]"></i> {cat.name}
+                        </Link>
+                      </li>
+                    )) : (
+                      <li><span className="text-slate-500 text-sm">Loading categories...</span></li>
+                    )}
                 </ul>
             </div>
 

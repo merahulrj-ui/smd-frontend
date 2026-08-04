@@ -163,24 +163,45 @@ export default async function CategoryPage({
   // FAQ logic
   const faqSource = currentSubcategoryObj || (categoryId ? { name: categoryName } : null); // We should ideally get FAQs from categories too if available
 
+  const displayTitle = currentSubcategoryObj ? currentSubcategoryObj.name : categoryName;
+
   return (
-    <div className="bg-slate-50 min-h-screen pb-12">
+    <div className="bg-slate-50 min-h-screen pb-12 pt-[76px]">
       {/* Tailwind Breadcrumbs */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="text-sm text-slate-500 font-medium">
+        <div className="text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">
           <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
-          <span className="mx-2 text-slate-300">/</span>
+          <span className="mx-2 text-slate-300">»</span>
           <Link href="/categories" className="hover:text-blue-600 transition-colors">Categories</Link>
-          <span className="mx-2 text-slate-300">/</span>
-          <span className="text-slate-800">{categoryName}</span>
+          <span className="mx-2 text-slate-300">»</span>
+          {currentSubcategoryObj && baseCatSlug !== currentSubcatSlug ? (
+            <>
+              <Link href={`/category/${baseCatSlug}`} className="hover:text-blue-600 transition-colors capitalize">{categoryName}</Link>
+              <span className="mx-2 text-slate-300">»</span>
+              <span className="text-slate-800">{displayTitle}</span>
+            </>
+          ) : (
+            <span className="text-slate-800">{displayTitle}</span>
+          )}
         </div>
       </div>
 
-      {/* Tailwind Dark Hero Section */}
-      <section className="relative bg-slate-900 overflow-hidden text-center py-16 px-4 mb-8">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-teal-400 via-transparent to-transparent blur-3xl"></div>
-        <h1 className="relative text-3xl md:text-5xl font-extrabold text-white mb-4 max-w-4xl mx-auto tracking-tight">{categoryName}</h1>
-        <p className="relative text-lg text-slate-300 max-w-2xl mx-auto font-light">Explore our premium selection of {categoryName.toLowerCase()} products</p>
+      {/* Light Blue Hero Section */}
+      <section className="relative overflow-hidden bg-white py-12 lg:py-16 mb-8 border-b border-slate-200">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-slate-50 to-indigo-50 opacity-80"></div>
+        <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[150%] bg-blue-200/40 blur-3xl rounded-full mix-blend-multiply pointer-events-none"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[30%] h-[150%] bg-indigo-200/40 blur-3xl rounded-full mix-blend-multiply pointer-events-none"></div>
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm mb-4 border border-blue-200">
+              <i className="fas fa-boxes mr-2"></i> EXPLORE SUBCATEGORY
+            </span>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+              {displayTitle}
+            </h1>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto font-medium">
+              Explore our premium selection of {displayTitle.toLowerCase()} products
+            </p>
+        </div>
       </section>
 
       {/* Subcategory Carousel */}
