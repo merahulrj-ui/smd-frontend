@@ -75,17 +75,17 @@ export default function CategoriesClient({ categories }: Props) {
             </h1>
             
             {activeCategory.subcategories && activeCategory.subcategories.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-10">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-10">
                 {activeCategory.subcategories.map((subcat, idx) => (
                   <Link 
                     href={`/category/${activeCategory.slug}/${subcat.slug}`} 
                     key={subcat.id}
-                    className="flex flex-col items-center group text-center"
+                    className="flex items-center gap-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-xl px-4 py-3 group transition-all duration-200"
                   >
-                    <div className={`w-24 h-24 sm:w-28 sm:h-28 rounded-2xl ${COLORS[idx % COLORS.length]} flex items-center justify-center text-white text-2xl sm:text-3xl font-extrabold mb-4 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300`}>
+                    <div className={`w-9 h-9 rounded-lg ${COLORS[idx % COLORS.length]} flex items-center justify-center text-white text-xs font-bold shrink-0 group-hover:scale-105 transition-transform`}>
                       {getInitials(subcat.name)}
                     </div>
-                    <span className="text-slate-700 text-sm font-semibold group-hover:text-blue-600 transition-colors line-clamp-2">
+                    <span className="text-slate-700 text-sm font-semibold group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
                       {subcat.name}
                     </span>
                   </Link>
