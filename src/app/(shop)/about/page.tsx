@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="bg-slate-50 min-h-screen pb-20 pt-[76px]">
+    <div className="bg-slate-50 min-h-screen pb-10 pt-[76px]">
       {/* Breadcrumbs */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">
@@ -18,13 +18,13 @@ export default function AboutPage() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white mb-16 border-y border-slate-200">
+      <section className="relative overflow-hidden bg-white mb-10 border-y border-slate-200">
           <div className="absolute inset-0 bg-gradient-to-r from-teal-50 to-blue-50 opacity-70"></div>
           {/* Decorative blur blobs */}
           <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[150%] bg-teal-200/40 blur-3xl rounded-full mix-blend-multiply"></div>
           <div className="absolute bottom-[-20%] right-[-10%] w-[30%] h-[150%] bg-blue-200/40 blur-3xl rounded-full mix-blend-multiply"></div>
           
-          <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+          <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 text-center">
               <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
                 About <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-blue-600">SMD Medicare</span>
               </h1>
@@ -35,7 +35,7 @@ export default function AboutPage() {
       </section>
 
       {/* Company intro */}
-      <section className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 mb-20 text-center">
+      <section className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
           <h2 className="text-3xl font-bold text-slate-900 mb-8 inline-block pb-3 border-b-4 border-teal-500">Our Story</h2>
           <p className="text-lg text-slate-600 leading-relaxed font-medium">
             At SMD Medicare, we believe that access to quality healthcare should not be a privilege, but a right. Established with a vision to revolutionize the way medical products and services reach people, SMD Medicare has grown into a trusted name in the healthcare and medical distribution industry. Headquartered in India, we are committed to making world-class healthcare solutions affordable, reliable, and accessible to hospitals, clinics, medical professionals, and individual customers alike.
@@ -43,9 +43,9 @@ export default function AboutPage() {
       </section>
 
       {/* Mission & Vision blocks */}
-      <section className="bg-white border-y border-slate-200 py-20 mb-20">
+      <section className="bg-white border-y border-slate-200 py-10 mb-10">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
+              <div className="text-center mb-10">
                   <h2 className="text-3xl font-bold text-slate-900 mb-4">Mission, Vision & Core Values</h2>
                   <div className="w-24 h-1 bg-teal-500 mx-auto rounded-full"></div>
               </div>
@@ -71,8 +71,8 @@ export default function AboutPage() {
       </section>
 
       {/* What We Do */}
-      <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-          <div className="text-center mb-16">
+      <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+          <div className="text-center mb-10">
               <h2 className="text-3xl font-bold text-slate-900 mb-4">What We Do – Products & Services</h2>
               <div className="w-24 h-1 bg-teal-500 mx-auto rounded-full"></div>
           </div>
@@ -102,17 +102,17 @@ export default function AboutPage() {
       </section>
 
       {/* Leadership section */}
-      <section className="bg-slate-900 text-white py-20 mb-20 relative overflow-hidden">
+      <section className="bg-slate-900 text-white py-12 mb-10 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
           
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-              <div className="text-center mb-16">
+              <div className="text-center mb-10">
                   <h2 className="text-3xl font-bold mb-4">Our Team & Leadership</h2>
                   <p className="text-slate-400 font-medium max-w-2xl mx-auto">Behind every fulfilled order is a team that believes in diagnostic excellence.</p>
                   <div className="w-24 h-1 bg-teal-500 mx-auto rounded-full mt-6"></div>
               </div>
               
-              <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 max-w-[800px] mx-auto p-10 md:p-14 rounded-3xl text-center shadow-2xl">
+              <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 max-w-[800px] mx-auto p-8 md:p-10 rounded-3xl text-center shadow-2xl">
                   <div className="relative inline-block mb-6">
                       <img src="https://ui-avatars.com/api/?name=Rahul+Kumar&background=0D9488&color=fff&size=200&font-size=0.35&bold=true" alt="Rahul Kumar, Founder" className="w-40 h-40 rounded-full object-cover border-4 border-slate-700 shadow-xl" />
                       <div className="absolute -bottom-3 -right-3 bg-teal-500 w-12 h-12 rounded-full flex items-center justify-center shadow-lg border-4 border-slate-800">
@@ -132,8 +132,8 @@ export default function AboutPage() {
       </section>
 
       {/* Who We Serve Section */}
-      <section className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 bg-white p-10 md:p-14 rounded-3xl shadow-sm border border-slate-200">
-          <div className="text-center mb-12">
+      <section className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-slate-200">
+          <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-slate-900 mb-4 inline-block pb-3 border-b-4 border-teal-500">Who We Serve</h2>
               <p className="text-slate-600 font-medium max-w-2xl mx-auto mt-4">SMD Medicare is exclusively a business-to-business (B2B) platform. To maintain regulatory compliance, we supply only to verified entities.</p>
           </div>

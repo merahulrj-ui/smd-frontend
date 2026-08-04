@@ -70,22 +70,22 @@ export default function CategoriesClient({ categories }: Props) {
       <div className="w-[65%] md:w-3/4 p-4 md:p-10 bg-white overflow-y-auto h-[calc(100vh-160px)] md:h-[800px] custom-scrollbar">
         {activeCategory ? (
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 mb-8 pb-4 border-b border-slate-100">
+            <h1 className="text-xs md:text-2xl font-bold text-slate-900 mb-3 md:mb-8 pb-2 md:pb-4 border-b border-slate-100">
               Explore {activeCategory.name}
             </h1>
             
             {activeCategory.subcategories && activeCategory.subcategories.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-10">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-5 mb-10">
                 {activeCategory.subcategories.map((subcat, idx) => (
                   <Link 
                     href={`/category/${activeCategory.slug}/${subcat.slug}`} 
                     key={subcat.id}
-                    className="flex items-center gap-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 rounded-xl px-4 py-3 group transition-all duration-200"
+                    className="flex flex-col items-center group text-center"
                   >
-                    <div className={`w-9 h-9 rounded-lg ${COLORS[idx % COLORS.length]} flex items-center justify-center text-white text-xs font-bold shrink-0 group-hover:scale-105 transition-transform`}>
+                    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl ${COLORS[idx % COLORS.length]} flex items-center justify-center text-white text-base sm:text-lg font-extrabold mb-2 shadow-sm group-hover:shadow-md group-hover:-translate-y-1 transition-all duration-300`}>
                       {getInitials(subcat.name)}
                     </div>
-                    <span className="text-slate-700 text-sm font-semibold group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
+                    <span className="text-slate-700 text-[11px] sm:text-xs font-semibold group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
                       {subcat.name}
                     </span>
                   </Link>
@@ -98,13 +98,13 @@ export default function CategoriesClient({ categories }: Props) {
               </div>
             )}
             
-            <div className="mt-8 pt-6 border-t border-slate-100">
+            <div className="mt-4 md:mt-8 pt-3 md:pt-6 border-t border-slate-100">
               <Link 
                 href={`/category/${activeCategory.slug}`}
-                className="text-blue-600 font-semibold hover:text-blue-700 flex items-center gap-2 group w-max"
+                className="text-blue-600 font-semibold hover:text-blue-700 flex items-center gap-1.5 group w-max text-[11px] md:text-sm"
               >
                 View All {activeCategory.name} Products 
-                <i className="fas fa-arrow-right text-sm transform group-hover:translate-x-1 transition-transform"></i>
+                <i className="fas fa-arrow-right text-[10px] md:text-sm transform group-hover:translate-x-1 transition-transform"></i>
               </Link>
             </div>
           </div>
