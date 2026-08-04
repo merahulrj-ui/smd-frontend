@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState, useTransition } from 'react';
+import dynamic from 'next/dynamic';
 import { saveCategoryAction, deleteCategoryAction, saveSubCategoryAction, deleteSubCategoryAction } from './actions';
+import 'react-quill-new/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 export default function CategoriesClient({ dbCategories, dbSubCategories }: { dbCategories: any[], dbSubCategories: any[] }) {
     const [isPending, startTransition] = useTransition();
@@ -226,31 +230,21 @@ export default function CategoriesClient({ dbCategories, dbSubCategories }: { db
                             <div className="mt-4">
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex justify-between">
                                     <span>FAQ (Optional)</span>
-                                    <span className="text-xs text-slate-400 font-normal">Supports HTML (e.g. &lt;b&gt;, &lt;ul&gt;)</span>
                                 </label>
-                                <textarea 
-                                    name="faq" 
-                                    value={faq} 
-                                    onChange={(e) => setFaq(e.target.value)}
-                                    rows={5}
-                                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 focus:bg-white"
-                                    placeholder="Enter FAQ content..."
-                                ></textarea>
+                                <input type="hidden" name="faq" value={faq} />
+                                <div className="bg-white rounded-xl border border-slate-300 overflow-hidden [&_.ql-toolbar]:border-0 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-slate-200 [&_.ql-toolbar]:bg-slate-50 [&_.ql-container]:border-0 [&_.ql-editor]:min-h-[150px]">
+                                    <ReactQuill theme="snow" value={faq} onChange={setFaq} />
+                                </div>
                             </div>
 
                             <div className="mt-4">
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5 flex justify-between">
                                     <span>How to Use (Optional)</span>
-                                    <span className="text-xs text-slate-400 font-normal">Supports HTML (e.g. &lt;b&gt;, &lt;ul&gt;)</span>
                                 </label>
-                                <textarea 
-                                    name="how_to_use" 
-                                    value={howToUse} 
-                                    onChange={(e) => setHowToUse(e.target.value)}
-                                    rows={5}
-                                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none bg-slate-50 focus:bg-white"
-                                    placeholder="Enter How to Use content..."
-                                ></textarea>
+                                <input type="hidden" name="how_to_use" value={howToUse} />
+                                <div className="bg-white rounded-xl border border-slate-300 overflow-hidden [&_.ql-toolbar]:border-0 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-slate-200 [&_.ql-toolbar]:bg-slate-50 [&_.ql-container]:border-0 [&_.ql-editor]:min-h-[150px]">
+                                    <ReactQuill theme="snow" value={howToUse} onChange={setHowToUse} />
+                                </div>
                             </div>
 
                             <div className="pt-4 mt-4 border-t border-slate-100">
