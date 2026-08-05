@@ -5,6 +5,7 @@ import pool from '@/lib/db';
 import ProductCard from '@/components/ProductCard';
 import ClientCategoryImage from '@/components/ClientCategoryImage';
 import ClientCarousel from '@/components/ClientCarousel';
+import HeroPartnerButton from '@/components/HeroPartnerButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,7 @@ export default async function Home() {
   let products = [];
   let categories = [];
   let latest_blogs = [];
+  let dbBrands = [];
   try {
     const [rows] = await pool.query('SELECT id, name, slug, image, price, mrp FROM products LIMIT 8') as any[];
     products = rows || [];
@@ -28,6 +30,9 @@ export default async function Home() {
 
     const [blogRows] = await pool.query('SELECT id, title, slug, blog_image, author_name, read_time, created_at FROM blog ORDER BY created_at DESC LIMIT 3') as any[];
     latest_blogs = blogRows || [];
+
+    const [brandRows] = await pool.query('SELECT id, name, logo FROM brands WHERE status = 1 LIMIT 6') as any[];
+    dbBrands = brandRows || [];
   } catch (error) {
     console.error("Error fetching live data:", error);
   }
@@ -54,67 +59,33 @@ export default async function Home() {
       <Navbar />
       
       {/* Next-Gen Tailwind Hero Section */}
-      <section className="relative mt-[76px] bg-gradient-to-br from-blue-900 via-slate-900 to-blue-950 overflow-hidden rounded-b-[40px] mb-8 border-b border-blue-800/30 shadow-2xl">
-        {/* Abstract Background Gradients */}
-        <div className="absolute top-0 inset-x-0 h-full overflow-hidden pointer-events-none">
-          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[80%] rounded-full bg-blue-500/10 blur-[100px]"></div>
-          <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[80%] rounded-full bg-sky-500/10 blur-[100px]"></div>
+      <section className="relative mt-[76px] bg-gradient-to-br from-blue-900 via-slate-900 to-blue-950 md:rounded-b-[40px] mb-4 md:mb-6 border-b border-blue-800/30 shadow-xl md:shadow-2xl overflow-hidden transform-gpu w-full">
+        {/* Abstract Background Gradients (Hidden on mobile to prevent WebKit blur glitches) */}
+        <div className="absolute top-0 inset-x-0 h-full pointer-events-none hidden md:block">
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[80%] rounded-full bg-blue-500/20 blur-[100px]"></div>
+          <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[80%] rounded-full bg-sky-500/20 blur-[100px]"></div>
         </div>
 
-        <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white/90 text-sm font-medium mb-6">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-            INDIA'S #1 MEDICAL & DIAGNOSTIC SUPPLIES PLATFORM
+        <div className="relative w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:pt-10 md:pb-8 text-center flex flex-col items-center justify-center min-h-[250px] md:min-h-0">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-1.5 rounded-full bg-white/10 border border-white/10 text-white/90 text-xs md:text-sm font-medium mb-4 md:mb-5">
+            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-blue-400 animate-pulse"></span>
+            #1 B2B MEDICAL SUPPLIES
           </div>
           
-          <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-5 leading-tight max-w-4xl mx-auto tracking-tight drop-shadow-sm">
-            Trusted Medical Equipment & Medical Supplies Provider in India
+          <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-3 md:mb-4 leading-tight w-full max-w-4xl mx-auto tracking-tight drop-shadow-sm">
+            Trusted Medical Equipment & Supplies in India
           </h1>
-          <p className="text-base md:text-lg text-blue-50/80 mb-8 max-w-2xl mx-auto font-light leading-relaxed">
-            Your reliable partner for hospital equipment, surgical instruments, and diagnostic solutions with fast delivery nationwide.
+          <p className="text-sm md:text-base text-blue-50/80 mb-6 md:mb-6 w-full max-w-2xl mx-auto font-light leading-relaxed px-2">
+            Your reliable partner for hospital equipment, surgical instruments, and diagnostic solutions with fast delivery.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <Link href="/categories" className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] flex items-center gap-2">
-              <i className="fas fa-boxes"></i> Explore Products
+          <div className="flex flex-row items-center justify-center gap-3 w-full mb-2 md:mb-4">
+            <Link href="/categories" className="px-5 py-2.5 md:px-8 md:py-3 bg-blue-600 hover:bg-blue-500 text-white text-sm md:text-base font-semibold rounded-lg md:rounded-xl transition-all shadow-lg md:shadow-[0_0_20px_rgba(37,99,235,0.3)] flex items-center gap-2 flex-1 md:flex-none justify-center">
+              <i className="fas fa-boxes"></i> Explore
             </Link>
-            <a href="#" className="px-8 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 font-semibold rounded-xl transition-all flex items-center gap-2">
-              <i className="fas fa-handshake"></i> Become a Partner
-            </a>
+            <HeroPartnerButton />
           </div>
 
-          {/* Floating Glassmorphism Hero Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center gap-5 text-left transform transition-transform hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-2xl shadow-lg shrink-0">
-                <i className="fas fa-microscope"></i>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-white mb-1">10,000+</div>
-                <div className="text-sm text-blue-100 font-medium">Quality Products</div>
-              </div>
-            </div>
-            
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center gap-5 text-left transform transition-transform hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white text-2xl shadow-lg shrink-0">
-                <i className="fas fa-hospital-user"></i>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-white mb-1">5,000+</div>
-                <div className="text-sm text-sky-100 font-medium">Hospitals & Labs</div>
-              </div>
-            </div>
-
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex items-center gap-5 text-left transform transition-transform hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-lg shrink-0">
-                <i className="fas fa-shipping-fast"></i>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-white mb-1">100%</div>
-                <div className="text-sm text-indigo-100 font-medium">Express Delivery</div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -176,6 +147,30 @@ export default async function Home() {
           </ClientCarousel>
         </div>
       </section>
+
+      {/* Brands We Carry Section */}
+      {dbBrands && dbBrands.length > 0 && (
+        <section className="py-10 bg-white border-b border-slate-200">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Top Brands We Carry</h2>
+              <p className="text-slate-500 max-w-2xl mx-auto">Providing genuine equipment from the most trusted manufacturers.</p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {dbBrands.map((brand: any) => (
+                <div key={brand.id} className="bg-slate-50 border border-slate-200 p-6 rounded-2xl hover:border-blue-300 hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 group cursor-pointer h-[120px]">
+                  {brand.logo ? (
+                    <img src={brand.logo.startsWith('images/') ? `/backend-media/${brand.logo}` : `/backend-media/images/${brand.logo}`} alt={brand.name} className="max-h-full max-w-full object-contain filter group-hover:brightness-110 transition-all" />
+                  ) : (
+                    <span className="font-bold text-slate-700 group-hover:text-blue-700 transition-colors text-center">{brand.name}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Expertise & One-Stop Section */}
       <section className="py-6 bg-white border-y border-slate-200">
@@ -253,6 +248,23 @@ export default async function Home() {
               <h3 className="text-lg font-bold text-slate-800 mb-2">Regulatory Compliant</h3>
               <p className="text-slate-600 text-sm">Your go-to source for wholesale medical supplies and bulk orders.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Bulk Order / Wholesale CTA Banner */}
+      <section className="py-10 md:py-12 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500/20 rounded-full blur-[80px] pointer-events-none"></div>
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="text-center md:text-left max-w-2xl">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-2 md:mb-3">Looking for Bulk Supplies for your Hospital?</h2>
+            <p className="text-blue-100/80 text-sm md:text-base">Get a customized wholesale quote within 24 hours. Partner with us for reliable, fast, and high-quality medical equipment procurement.</p>
+          </div>
+          <div className="shrink-0 w-full md:w-auto flex justify-center md:justify-end">
+            <Link href="/contact" className="px-6 py-3 bg-white text-blue-900 font-bold rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:-translate-y-1 transition-all flex items-center gap-2 whitespace-nowrap">
+              <i className="fas fa-envelope"></i> Contact Us
+            </Link>
           </div>
         </div>
       </section>
@@ -366,6 +378,96 @@ export default async function Home() {
               </details>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Trust Stats Section (Moved from Hero) */}
+      <section className="pt-6 pb-2 md:pt-10 md:pb-6 bg-slate-50 border-t border-slate-200">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Desktop Version (Cards) */}
+          <div className="hidden md:grid grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 flex items-center gap-5 text-left transform-gpu transition-transform hover:-translate-y-1 hover:shadow-lg shadow-sm">
+              <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl shrink-0">
+                <i className="fas fa-microscope"></i>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900 mb-1">10,000+</div>
+                <div className="text-sm text-slate-500 font-medium">Quality Products</div>
+              </div>
+            </div>
+            
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 flex items-center gap-5 text-left transform-gpu transition-transform hover:-translate-y-1 hover:shadow-lg shadow-sm">
+              <div className="w-14 h-14 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl shrink-0">
+                <i className="fas fa-hospital-user"></i>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900 mb-1">5,000+</div>
+                <div className="text-sm text-slate-500 font-medium">Hospitals & Labs</div>
+              </div>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 flex items-center gap-5 text-left transform-gpu transition-transform hover:-translate-y-1 hover:shadow-lg shadow-sm">
+              <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl shrink-0">
+                <i className="fas fa-shipping-fast"></i>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900 mb-1">100%</div>
+                <div className="text-sm text-slate-500 font-medium">Express Delivery</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Version (Unified Strip) */}
+          <div className="md:hidden flex items-center justify-between w-full max-w-sm mx-auto bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+             <div className="flex flex-col items-center flex-1">
+                <i className="fas fa-microscope text-blue-500 text-2xl mb-1.5 drop-shadow-sm"></i>
+                <div className="text-slate-900 font-extrabold text-[15px] tracking-wide">10k+</div>
+                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">Products</div>
+             </div>
+             
+             <div className="w-[1px] h-12 bg-slate-200"></div>
+             
+             <div className="flex flex-col items-center flex-1">
+                <i className="fas fa-hospital-user text-sky-500 text-2xl mb-1.5 drop-shadow-sm"></i>
+                <div className="text-slate-900 font-extrabold text-[15px] tracking-wide">5k+</div>
+                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">Hospitals</div>
+             </div>
+             
+             <div className="w-[1px] h-12 bg-slate-200"></div>
+             
+             <div className="flex flex-col items-center flex-1">
+                <i className="fas fa-shipping-fast text-indigo-500 text-2xl mb-1.5 drop-shadow-sm"></i>
+                <div className="text-slate-900 font-extrabold text-[15px] tracking-wide">100%</div>
+                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">Delivery</div>
+             </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 py-10 lg:py-12 border-t border-slate-800 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[300px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div className="relative max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 drop-shadow-sm">Never Miss an Update</h2>
+          <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl mx-auto font-light leading-relaxed">
+            Subscribe to our newsletter to get the latest medical equipment reviews, industry news, and exclusive offers delivered straight to your inbox.
+          </p>
+          <form className="flex flex-col sm:flex-row max-w-md mx-auto gap-3">
+            <input 
+              type="email" 
+              placeholder="Enter your email address" 
+              className="flex-grow px-5 py-4 rounded-xl bg-white/5 border border-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/10 text-white placeholder-slate-400 shadow-inner backdrop-blur-sm transition-all"
+              required
+            />
+            <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(37,99,235,0.3)] whitespace-nowrap">
+              Subscribe
+            </button>
+          </form>
+          <p className="text-slate-500 text-xs mt-6">We care about your data in our <Link href="#" className="underline hover:text-slate-300 transition-colors">privacy policy</Link>.</p>
         </div>
       </section>
     </div>

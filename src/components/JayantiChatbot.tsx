@@ -193,15 +193,53 @@ export default function JayantiChatbot() {
         }
     };
 
+    const playSound = (type: 'send' | 'receive') => {
+        try {
+            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            
+            osc.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            
+            if (type === 'send') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.1);
+            } else {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.15);
+                gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.15);
+            }
+        } catch (e) {}
+    };
+
     const sendMessage = async (text: string) => {
         const msg = text.trim();
         if (!msg) return;
+
+        if (msg.length > 500) {
+            alert('Message is too long. Please keep it under 500 characters.');
+            return;
+        }
 
         const newUserMsg = {role: 'user', content: msg};
         const updatedHistory = [...chatHistory, newUserMsg];
         setChatHistory(updatedHistory);
         setChatInput('');
         setIsTyping(true);
+        
+        playSound('send');
 
         try {
             const minDelay = new Promise(resolve => setTimeout(resolve, 900));
@@ -220,6 +258,7 @@ export default function JayantiChatbot() {
             setIsTyping(false);
 
             if (data.success) {
+                playSound('receive');
                 const newAiMsg = {role: 'ai', content: data.reply || data.raw_reply, raw_content: data.raw_reply || data.reply};
                 let newHistory = [...updatedHistory, newAiMsg];
                 if (newHistory.length > 6) {
@@ -301,8 +340,8 @@ export default function JayantiChatbot() {
         let parsedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         parsedText = parsedText.replace(/\n/g, '<br>');
         
-        // Sanitize the HTML to prevent Self-XSS
-        parsedText = DOMPurify.sanitize(parsedText, { ADD_ATTR: ['target'] });
+        // Sanitize the HTML to prevent Self-XSS (allow styling and custom actions)
+        parsedText = DOMPurify.sanitize(parsedText, { ADD_ATTR: ['target', 'class', 'style', 'data-name', 'onclick'] });
         
         parsedText = parsedText.replace(
             /Talk to a Human on WhatsApp/gi,
@@ -429,6 +468,7 @@ export default function JayantiChatbot() {
                             onChange={e => setChatInput(e.target.value)} 
                             onKeyDown={handleEnter}
                             disabled={isTyping}
+                            maxLength={500}
                             className="flex-1 px-4 py-3 border border-slate-200 rounded-3xl outline-none text-[13.5px] bg-white/90 shadow-inner transition-all focus:border-indigo-500 focus:shadow-[0_0_0_3px_rgba(99,102,241,0.1)] w-full"
                         />
                         <button 

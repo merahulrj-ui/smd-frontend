@@ -202,24 +202,27 @@ export default async function BlogPage() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="bg-blue-600 py-16 lg:py-20 mt-10">
-        <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">Never Miss an Update</h2>
-          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+      <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 py-10 lg:py-12 mt-10 border-t border-slate-800 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[300px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div className="relative max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3 drop-shadow-sm">Never Miss an Update</h2>
+          <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl mx-auto font-light leading-relaxed">
             Subscribe to our newsletter to get the latest medical equipment reviews, industry news, and exclusive offers delivered straight to your inbox.
           </p>
           <form className="flex flex-col sm:flex-row max-w-md mx-auto gap-3">
             <input 
               type="email" 
               placeholder="Enter your email address" 
-              className="flex-grow px-5 py-4 rounded-xl bg-white border-2 border-transparent focus:outline-none focus:ring-4 focus:ring-blue-400/50 text-slate-900 placeholder-slate-400 shadow-lg"
+              className="flex-grow px-5 py-4 rounded-xl bg-white/5 border border-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/10 text-white placeholder-slate-400 shadow-inner backdrop-blur-sm transition-all"
               required
             />
-            <button type="submit" className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition-colors shadow-lg whitespace-nowrap">
+            <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(37,99,235,0.3)] whitespace-nowrap">
               Subscribe
             </button>
           </form>
-          <p className="text-blue-200 text-xs mt-4">We care about your data in our <Link href="#" className="underline hover:text-white">privacy policy</Link>.</p>
+          <p className="text-slate-500 text-xs mt-6">We care about your data in our <Link href="#" className="underline hover:text-slate-300 transition-colors">privacy policy</Link>.</p>
         </div>
       </section>
 

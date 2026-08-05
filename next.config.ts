@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  allowedDevOrigins: ['10.194.242.217', '192.168.0.0/16', '10.0.0.0/8'],
+  allowedDevOrigins: ['10.194.242.217', '192.168.0.0/16', '10.0.0.0/8', '192.168.29.118', 'localhost:3000'],
   async headers() {
     return [
       {

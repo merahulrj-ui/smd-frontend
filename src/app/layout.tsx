@@ -61,7 +61,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className={`${manrope.className} antialiased`}>
+      <body className={`${manrope.className} antialiased overflow-x-hidden`}>
         {children}
       </body>
     </html>

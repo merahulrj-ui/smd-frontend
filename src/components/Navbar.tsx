@@ -28,18 +28,18 @@ export default function Navbar() {
 
 
   return (
-    <header className="fixed top-0 left-0 w-full h-[76px] bg-white border-b border-slate-200 z-50 transition-all duration-300">
+    <header className="fixed top-0 left-0 w-full h-[76px] bg-white border-b border-slate-200 z-50">
       <div className="max-w-[1400px] mx-auto h-full flex justify-between items-center px-4 sm:px-6 lg:px-8">
         
         <div className="flex items-center">
           <Link href="/">
-            <Image src="/images/img_68ae826eb6cc47.12112340_logo.webp" alt="SMD MEDICARE" width={121} height={69} className="h-[55px] w-auto transition-transform duration-300 hover:scale-[1.03]" priority />
+            <Image src="/images/img_68ae826eb6cc47.12112340_logo.webp" alt="SMD MEDICARE" width={121} height={69} className="h-[55px] w-auto transition-transform duration-300 md:hover:scale-[1.03]" priority />
           </Link>
         </div>
 
         <div className="hidden lg:flex flex-1 max-w-[450px] mx-10">
           <div 
-            className="flex items-center bg-slate-50 rounded-full py-1 pl-4 pr-1.5 border border-slate-300 transition-all duration-300 cursor-text w-full hover:border-teal-400" 
+            className="flex items-center bg-slate-50 rounded-full py-1 pl-4 pr-1.5 border border-slate-300 transition-all duration-300 cursor-text w-full hover:border-blue-400" 
             onClick={() => setSearchOpen(true)}
           >
             <input 
@@ -58,11 +58,11 @@ export default function Navbar() {
           <nav className="hidden lg:block">
             <ul className="flex items-center gap-2 list-none m-0 p-0">
               <li>
-                <Link href="/" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-teal-600/10 hover:text-teal-600 transition-colors">Home</Link>
+                <Link href="/" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-blue-600/10 hover:text-blue-600 transition-colors">Home</Link>
               </li>
               
               <li className="group relative py-2">
-                <Link href="/categories" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-teal-600/10 hover:text-teal-600 transition-colors flex items-center gap-1 cursor-pointer">
+                <Link href="/categories" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-blue-600/10 hover:text-blue-600 transition-colors flex items-center gap-1 cursor-pointer">
                   Categories <i className="fas fa-chevron-down text-[0.7em]"></i>
                 </Link>
                 
@@ -123,9 +123,9 @@ export default function Navbar() {
                 </div>
               </li>
 
-              <li><Link href="/about" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-teal-600/10 hover:text-teal-600 transition-colors">About Us</Link></li>
-              <li><Link href="/contact" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-teal-600/10 hover:text-teal-600 transition-colors">Contact</Link></li>
-              <li><Link href="/blog" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-teal-600/10 hover:text-teal-600 transition-colors">Blogs</Link></li>
+              <li><Link href="/about" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-blue-600/10 hover:text-blue-600 transition-colors">About Us</Link></li>
+              <li><Link href="/contact" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-blue-600/10 hover:text-blue-600 transition-colors">Contact</Link></li>
+              <li><Link href="/blog" className="text-slate-700 font-medium text-[0.95rem] px-4 py-2 rounded-full hover:bg-blue-600/10 hover:text-blue-600 transition-colors">Blogs</Link></li>
               <li>
                 <button onClick={() => setSellerModalOpen(true)} className="ml-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 py-2 rounded-full shadow-[0_4px_15px_rgba(37,99,235,0.3)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.4)] hover:-translate-y-0.5 transition-all">
                   Become a Seller
@@ -154,9 +154,9 @@ export default function Navbar() {
                     <li key={code}>
                       <button 
                         onClick={() => { setCurrency(code); setIsCurrencyOpen(false); }}
-                        className={`w-full text-left px-4 py-2 text-sm transition-colors font-medium flex items-center gap-3 ${currency === code ? 'bg-teal-50 text-teal-700' : 'text-slate-600 hover:bg-slate-50 hover:text-teal-600'}`}
+                        className={`w-full text-left px-4 py-2 text-sm transition-colors font-medium flex items-center gap-3 ${currency === code ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50 hover:text-blue-600'}`}
                       >
-                        <span className={`w-5 text-center font-bold text-lg ${currency === code ? 'text-teal-700' : 'text-slate-800'}`}>{CURRENCIES[code].symbol}</span> 
+                        <span className={`w-5 text-center font-bold text-lg ${currency === code ? 'text-blue-700' : 'text-slate-800'}`}>{CURRENCIES[code].symbol}</span> 
                         {code}
                       </button>
                     </li>
@@ -166,10 +166,10 @@ export default function Navbar() {
             </div>
             
             <div className="flex lg:hidden items-center gap-4">
-              <button className="text-slate-600 text-xl hover:text-teal-600 transition-colors" aria-label="Open Search" onClick={() => setSearchOpen(true)}>
+              <button className="text-slate-600 text-xl hover:text-blue-600 transition-colors" aria-label="Open Search" onClick={() => setSearchOpen(true)}>
                 <i className="fas fa-search" aria-hidden="true"></i>
               </button>
-              <button className="text-slate-600 text-2xl hover:text-teal-600 transition-colors" aria-label="Open Navigation Menu" onClick={() => setMobileDrawerOpen(true)}>
+              <button className="text-slate-600 text-2xl hover:text-blue-600 transition-colors" aria-label="Open Navigation Menu" onClick={() => setMobileDrawerOpen(true)}>
                 <i className="fas fa-bars"></i>
               </button>
             </div>

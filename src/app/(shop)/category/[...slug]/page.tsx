@@ -286,30 +286,53 @@ export default async function CategoryPage({
 
         {/* FAQs Section */}
         {faqSource && ((faqSource.how_to_use && faqSource.how_to_use.trim() !== '') || (faqSource.faq && faqSource.faq.trim() !== '')) && (
-          <div className="max-w-4xl mx-auto mt-16 mb-8 space-y-8">
+          <div className="max-w-4xl mx-auto mt-16 mb-12 space-y-8 overflow-hidden">
             <style dangerouslySetInnerHTML={{__html: `
-              .rich-text-content h1, .rich-text-content h2, .rich-text-content h3, .rich-text-content h4, .rich-text-content h5 { color: #1e293b; font-bold; margin-top: 1.5em; margin-bottom: 0.5em; }
-              .rich-text-content p { margin-bottom: 1em; color: #475569; line-height: 1.7; }
-              .rich-text-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1em; color: #475569; }
-              .rich-text-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1em; color: #475569; }
-              .rich-text-content li { margin-bottom: 0.3em; }
-              .rich-text-content strong, .rich-text-content b { font-weight: 700; color: #0f172a; }
-              .rich-text-content a { color: #2563eb; text-decoration: underline; }
+              .rich-text-content {
+                font-size: 1rem;
+                line-height: 1.8;
+                color: #334155;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                word-break: break-word;
+              }
+              .rich-text-content * {
+                white-space: pre-wrap !important;
+                max-width: 100%;
+              }
+              .rich-text-content h1, .rich-text-content h2, .rich-text-content h3, .rich-text-content h4, .rich-text-content h5 { 
+                color: #0f172a; 
+                font-weight: 700; 
+                margin-top: 1.5em; 
+                margin-bottom: 0.75em; 
+              }
+              .rich-text-content p { margin-bottom: 1.25em; }
+              .rich-text-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25em; }
+              .rich-text-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.25em; }
+              .rich-text-content li { margin-bottom: 0.5em; }
+              .rich-text-content strong, .rich-text-content b { font-weight: 600; color: #1e293b; }
+              .rich-text-content a { color: #2563eb; text-decoration: underline; font-weight: 500; }
             `}} />
 
             {faqSource.how_to_use && faqSource.how_to_use.trim() !== '' && (
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
-                <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                  <i className="fas fa-info-circle text-blue-600"></i> How to Use {faqSource.name}
+              <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-200">
+                <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3 pb-4 border-b border-slate-100">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+                    <i className="fas fa-info-circle text-lg"></i>
+                  </div>
+                  How to Use {faqSource.name}
                 </h3>
                 <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: faqSource.how_to_use }}></div>
               </div>
             )}
 
             {faqSource.faq && faqSource.faq.trim() !== '' && (
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
-                <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                  <i className="fas fa-question-circle text-blue-600"></i> Frequently Asked Questions
+              <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-200">
+                <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3 pb-4 border-b border-slate-100">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+                    <i className="fas fa-question-circle text-lg"></i>
+                  </div>
+                  Frequently Asked Questions
                 </h3>
                 <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: faqSource.faq }}></div>
               </div>

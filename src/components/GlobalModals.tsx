@@ -64,13 +64,28 @@ export default function GlobalModals() {
 
   useEffect(() => {
     if (isSearchOpen || isSellerModalOpen || isQuoteModalOpen || inquiryState.isOpen) {
-      document.body.style.overflow = 'hidden';
+      if (window.innerWidth >= 768) {
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.overflow = 'hidden';
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+        
+        // Also adjust fixed headers so they don't jump
+        const header = document.querySelector('header');
+        if (header) header.style.paddingRight = `${scrollbarWidth}px`;
+      }
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      
+      const header = document.querySelector('header');
+      if (header) header.style.paddingRight = '';
     }
     
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      const header = document.querySelector('header');
+      if (header) header.style.paddingRight = '';
     };
   }, [isSearchOpen, isSellerModalOpen, isQuoteModalOpen, inquiryState.isOpen]);
 
@@ -261,18 +276,17 @@ export default function GlobalModals() {
       <div 
         id="searchOverlay" 
         onClick={() => setSearchOpen(false)}
-        className={`fixed inset-0 bg-slate-900/50 z-[10000] flex items-start justify-center md:pt-24 transition-opacity duration-300 ${isSearchOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-white md:bg-slate-900/50 z-[60] md:z-40 flex flex-col items-center justify-start md:pt-24 transition-opacity duration-200 ${isSearchOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className={`w-full h-full md:h-auto md:max-w-[900px] md:mx-4 transition-all duration-300 transform flex flex-col ${isSearchOpen ? 'translate-y-0 scale-100' : '-translate-y-10 scale-95'}`}
+            className={`w-full h-full md:h-auto md:max-w-[900px] flex flex-col bg-white md:rounded-3xl md:shadow-2xl overflow-hidden relative pb-6 transition-all duration-300 transform ${isSearchOpen ? 'md:translate-y-0 md:scale-100' : 'md:-translate-y-10 md:scale-95'}`}
           >
-              <div className="bg-white md:rounded-3xl shadow-2xl overflow-hidden relative md:border md:border-slate-200 flex flex-col flex-1 h-full md:h-auto">
                   
                   {/* Header with Search Input */}
-                  <div className="p-4 border-b border-slate-100 bg-white sticky top-0 z-20 flex items-center gap-3 shrink-0">
+                  <div className="p-4 border-b border-slate-100 bg-white sticky top-0 z-20 flex items-center gap-3 shrink-0 pt-6 md:pt-4">
                       <button onClick={() => setSearchOpen(false)} aria-label="Close Search" className="text-slate-500 hover:text-slate-800 p-2 -ml-2 rounded-full hover:bg-slate-50 transition-colors">
-                          <i className="fas fa-arrow-left text-lg"></i>
+                          <i className="fas fa-arrow-left text-xl"></i>
                       </button>
                       
                       <div className="flex-1 flex items-center bg-slate-50 border border-slate-200 rounded-full px-4 py-2.5 focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-300 transition-all shadow-inner">
@@ -288,7 +302,6 @@ export default function GlobalModals() {
                               }}
                               placeholder={typewriterPlaceholder || "Search..."} 
                               className="bg-transparent border-none outline-none w-full text-slate-700 text-[15px] placeholder-slate-400 font-medium"
-                              autoFocus
                           />
                           {searchQuery && (
                             <button onClick={() => {setSearchQuery(''); setSearchResults([]);}} aria-label="Clear Search" className="text-slate-400 hover:text-slate-600 mr-2">
@@ -419,7 +432,6 @@ export default function GlobalModals() {
                       )}
                   </div>
               </div>
-          </div>
       </div>
 
       {/* Quote Details Modal */}

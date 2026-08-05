@@ -28,7 +28,7 @@ const levenshtein = (a: string, b: string) => {
 };
 
 const generateCarouselHtml = (products: any[]) => {
-    let html = '<div class="jayanti-carousel-container"><div class="jayanti-carousel">';
+    let html = '<div class="my-2.5 -mx-[15px] px-[15px]"><div class="flex gap-2.5 overflow-x-auto pb-2.5 snap-x snap-mandatory custom-scrollbar">';
     products.forEach(p => {
         const imageUrl = p.image ? (p.image.startsWith('http') ? p.image : (p.image.includes('/') ? `/backend-media/${p.image}` : `/backend-media/images/${p.image}`)) : '/backend-media/images/placeholder.png';
         const productUrl = `/product/${p.slug}`;
@@ -38,21 +38,21 @@ const generateCarouselHtml = (products: any[]) => {
         let discount = '';
         
         if (p.mrp > p.price && p.mrp > 0) {
-            mrp = `<span style="font-size:11px;color:#94a3b8;text-decoration:line-through;">₹${Number(p.mrp).toLocaleString('en-IN')}</span>`;
+            mrp = `<span class="text-[11px] text-slate-400 line-through">₹${Number(p.mrp).toLocaleString('en-IN')}</span>`;
             const pct = Math.round(((p.mrp - p.price) / p.mrp) * 100);
-            discount = `<span style="position:absolute;top:8px;left:8px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;">${pct}% OFF</span>`;
+            discount = `<span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md shadow-sm z-10">${pct}% OFF</span>`;
         }
         
-        html += '<div style="flex:0 0 180px;scroll-snap-align:start;">';
-        html += '<div class="advanced-product-card" style="position:relative;">';
+        html += '<div style="flex:0 0 160px;scroll-snap-align:start;">';
+        html += '<div class="flex flex-col bg-white border border-slate-200 rounded-xl p-2.5 h-full shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all relative">';
         html += discount;
-        html += `<a href="${productUrl}" style="text-decoration:none;display:block;">`;
-        html += `<div class="img-container"><img src="${imageUrl}" alt="${name}" onerror="this.src='https://placehold.co/400x400/EFEFEF/AAAAAA&text=No+Image'"></div>`;
-        html += `<h4>${name}</h4>`;
+        html += `<a href="${productUrl}" class="no-underline block outline-none group">`;
+        html += `<div class="h-[100px] w-full flex items-center justify-center mb-2.5 rounded-lg overflow-hidden bg-slate-50"><img src="${imageUrl}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.src='https://placehold.co/400x400/EFEFEF/AAAAAA&text=No+Image'"></div>`;
+        html += `<h4 class="text-[12.5px] font-semibold text-slate-800 mb-2 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">${name}</h4>`;
         html += '</a>';
-        html += `<div style="margin-top:auto;"><div class="price-container"><span class="current-price">${price}</span> ${mrp}</div>`;
+        html += `<div class="mt-auto"><div class="flex flex-col gap-0.5 mb-2.5 min-h-[35px] justify-end"><span class="text-[13px] font-bold text-blue-700">${price}</span> ${mrp}</div>`;
         const escapedName = name.replace(/'/g, "\\'");
-        html += `<div class="action-buttons"><button class="btn-primary-action inquire-btn" data-name="${name}" onclick="event.preventDefault();if(typeof openInquiryModal==='function'){openInquiryModal('${escapedName}','Product Inquiry');}">Get Best Price</button></div></div>`;
+        html += `<div class="w-full"><button class="w-full bg-blue-600 hover:bg-blue-700 text-white border-none py-1.5 rounded-lg text-[11px] font-semibold cursor-pointer transition-colors flex items-center justify-center shadow-sm" data-name="${name}" onclick="event.preventDefault();if(typeof openInquiryModal==='function'){openInquiryModal('${escapedName}','Product Inquiry');}"><i class="fas fa-paper-plane mr-1"></i> Get Best Price</button></div></div>`;
         html += '</div></div>';
     });
     html += '</div></div>';
@@ -70,9 +70,9 @@ const searchProducts = async (query: string) => {
 
     const stopWords = [
         'show', 'me', 'some', 'affordable', 'best', 'cheap', 'what', 'is', 'the', 'price', 'of', 'i', 'need', 'want', 'buy', 'looking', 'for', 'features', 'details', 'specification', 'specs', 'about', 'tell', 'describe', 'give', 'have', 'do', 'you',
-        'hai', 'kya', 'tumhare', 'paas', 'pas', 'chahiye', 'ka', 'ki', 'ke', 'ko', 'dikhao', 'batao', 'aur', 'mein', 'se', 'yeh', 'woh', 'aapke', 'mujhko', 'mujhe', 'humko', 'humein', 'koi', 'bhi', 'mil', 'jayega', 'milega',
-        'machine', 'kitne', 'kitna', 'wala', 'wali', 'kaisa', 'kaise', 'karna', 'karni',
-        'tum', 'tumhara', 'naam', 'kaun', 'ho', 'baat', 'kar', 'sakte', 'bol', 'hello', 'hi', 'hey'
+        'hai', 'kya', 'tumhare', 'paas', 'pas', 'chahiye', 'ka', 'ki', 'ke', 'ko', 'dikhao', 'batao', 'aur', 'mein', 'se', 'yeh', 'woh', 'aapke', 'mujhko', 'mujhe', 'humko', 'humein', 'koi', 'bhi', 'mil', 'jayega', 'milega', 'hum', 'ham', 'aap', 'apko', 'aapko', 'mera', 'meri', 'mere', 'iska', 'iski', 'iske', 'usko', 'uski', 'uske',
+        'machine', 'kitne', 'kitna', 'wala', 'wali', 'kaisa', 'kaise', 'karna', 'karni', 'kyu', 'kaha', 'kahan', 'kab',
+        'tum', 'tumhara', 'naam', 'kaun', 'ho', 'baat', 'kar', 'sakte', 'skte', 'sakta', 'skta', 'sakti', 'skti', 'bol', 'hello', 'hi', 'hey', 'ji', 'haan', 'ha', 'na', 'nahi', 'nhi'
     ];
     
     let words = query.replace(/[^a-zA-Z0-9\s]/g, '').toLowerCase().split(' ');
@@ -146,6 +146,15 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: 'Message is required' }, { status: 400 });
         }
 
+        if (rawMessage.length > 500) {
+            return NextResponse.json({ success: false, reply: 'Message is too long. Please keep it under 500 characters.' }, { status: 400 });
+        }
+
+        const wordCount = rawMessage.trim().split(/\s+/).length;
+        if (wordCount > 30) {
+            return NextResponse.json({ success: false, reply: 'Your message contains too many words. Please ask a short, clear question about a product or price.' }, { status: 400 });
+        }
+
         let userMessage = rawMessage.trim().toLowerCase();
 
         // 1. Check Smart FAQs (No AI, No Product Search needed)
@@ -159,12 +168,17 @@ export async function POST(request: Request) {
             }
         } catch(e) { console.error('FAQ Check Error', e); }
 
-        // 2. Intent Matching (Price & Bulk)
+        // 2. Intent Matching (Price & Bulk & Human)
         const isBulkIntent = /\b(bulk|wholesale|distributor|quantity|bada order)\b/i.test(userMessage);
         const isPriceIntent = /\b(price of|kitne ka hai|rate|cost|price)\b/i.test(userMessage);
+        const isHumanIntent = /\b(talk to|speak to|contact|human|expert|agent|customer care|support|call|baat kar|sampark|help)\b/i.test(userMessage);
 
         if (isBulkIntent) {
             return NextResponse.json({ success: true, reply: "That sounds like a bulk order request! 📦 We provide special wholesale pricing for hospitals and distributors. Please click the **'Become a Seller/Partner'** button on the top right, or directly contact us on WhatsApp so our sales team can send you a formal quotation.", fast_track: true });
+        }
+
+        if (isHumanIntent) {
+            return NextResponse.json({ success: true, reply: "Sure! 📞 You can connect with our human experts directly on WhatsApp for personalized assistance. Just click the **'Talk to a Human on WhatsApp'** link above, or message us at **+91 9555422455**.", fast_track: true });
         }
 
         // 3. Synonym Replacement (e.g. "sugar check" -> "glucometer")
@@ -177,102 +191,46 @@ export async function POST(request: Request) {
             }
         } catch(e) { console.error('Synonym Check Error', e); }
 
-        // 4. Fuzzy Cache Check
+        // Cache check moved below product search
+        // 4. Search Products Database
+        const { products, correctedBrand, searchedKeyword } = await searchProducts(userMessage);
+        
+        // 5. Fuzzy Cache Check (Done after product search so we can inject carousel)
         try {
             const strippedMsg = userMessage.replace(/[^a-zA-Z0-9]/g, '');
             const [cachedQAs]: any = await pool.query("SELECT answer FROM jayanti_qa_caches WHERE REPLACE(REPLACE(REPLACE(question, ' ', ''), '?', ''), '.', '') = ? LIMIT 1", [strippedMsg]);
             if (cachedQAs.length > 0) {
                 let reply = cachedQAs[0].answer;
-                reply = reply.replace(new RegExp('(https?://[^\\s]+)', 'g'), '<a href="$1" target="_blank" class="chat-link">$1</a>');
-                reply = reply.replace(new RegExp('\\[CAROUSEL\\]', 'g'), '');
+                reply = reply.replace(new RegExp('(https?://[^\\s<"\']+)', 'g'), '<a href="$1" target="_blank" class="chat-link">$1</a>');
+                
+                if (reply.includes('[CAROUSEL]') && products.length > 0) {
+                     const carouselHtml = generateCarouselHtml(products);
+                     reply = reply.replace(/\[CAROUSEL\]/gi, `<br><br>${carouselHtml}`);
+                } else {
+                     reply = reply.replace(/\[CAROUSEL\]/gi, '');
+                }
                 return NextResponse.json({ success: true, reply, raw_reply: cachedQAs[0].answer, from_cache: true });
             }
         } catch(e) { console.error('Cache DB read error', e); }
 
-        // 5. Search Products Database
-        const { products, correctedBrand, searchedKeyword } = await searchProducts(userMessage);
-        
-        // (Cache check already done above before product search)
-
-        if (products.length > 0) {
-            const hindiWords = ['hai', 'kya', 'tumhare', 'paas', 'pas', 'chahiye', 'ka', 'ki', 'ke', 'ko', 'dikhao', 'batao', 'aur', 'mein', 'se', 'yeh', 'woh', 'aapke', 'mujhko', 'mujhe', 'humko', 'humein', 'koi', 'bhi', 'mil', 'jayega', 'milega', 'hain', 'ho', 'nahi'];
-            const queryWords = userMessage.replace(/[^a-zA-Z0-9\s]/g, '').toLowerCase().split(' ');
-            const isHindi = queryWords.some((w: string) => hindiWords.includes(w));
-
-            const englishReplies = [
-                "I found exactly what you're looking for! ✨ Here are our top recommendations from the SMD MEDICARE catalog:",
-                "Great choice! 🌟 Here are some premium options tailored to your request:",
-                "I've fetched the best matches for you! 📦 Check out these top products below:"
-            ];
-            const hindiReplies = [
-                "Zaroor! ✨ SMD MEDICARE ke premium collection se aapke liye kuch best options ye rahe:",
-                "Bilkul! 🌟 Aapki requirement ke hisaab se humare top products check karein:",
-                "Ji haan, ye available hai! 📦 Aapke liye humare catalog se kuch behtareen matches:"
-            ];
-
-            let replyText = isHindi ? hindiReplies[Math.floor(Math.random() * hindiReplies.length)] : englishReplies[Math.floor(Math.random() * englishReplies.length)];
-
-            if (correctedBrand) {
-                replyText = isHindi 
-                    ? `Shayad aapka matlab **${correctedBrand}** se tha? ✨ Ye lijiye us brand ke kuch top products:` 
-                    : `Did you mean **${correctedBrand}**? 🌟 Here are some premium matches for that brand:`;
-            }
-
-            // Price Intent Output
-            if (isPriceIntent && products.length > 0) {
-                const firstProduct = products[0];
-                const displayPrice = firstProduct.price > 0 ? `₹${Number(firstProduct.price).toLocaleString('en-IN')}` : 'Available on request';
-                replyText = isHindi ? `**${firstProduct.name}** ka price **${displayPrice}** hai.` : `The price of **${firstProduct.name}** is **${displayPrice}**.`;
-            }
-
-            const askedForDetails = /\b(features|details|specification|specs|about)\b/i.test(userMessage) || /\b(detail|jankari|batao)\b/i.test(userMessage.replace(/[^a-zA-Z0-9\s]/g, '').toLowerCase());
-            
-            if (askedForDetails) {
-                const firstProduct = products[0];
-                const details = firstProduct.features || firstProduct.description;
-                if (details && details.trim().length > 0) {
-                    let cleanDetails = details.replace(/<[^>]*>?/gm, ''); // strip html
-                    if (cleanDetails.length > 600) {
-                        cleanDetails = cleanDetails.substring(0, 600) + '...';
-                    }
-                    replyText = isHindi ? `**${firstProduct.name}** ki details ye rahi:<br><br><em>${cleanDetails}</em>` : `Here are the details for **${firstProduct.name}**:<br><br><em>${cleanDetails}</em>`;
-                    
-                    try {
-                        const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_caches WHERE question = ? LIMIT 1', [userMessage.trim()]);
-                        if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_caches (question, answer, created_at, updated_at) VALUES (?, ?, NOW(), NOW())', [userMessage.trim(), replyText]);
-                    } catch(e) { }
-
-                    return NextResponse.json({ success: true, reply: replyText, raw_reply: replyText, fast_track: true });
-                }
-            }
-
-            const englishFooters = [
-                "Feel free to click **'Get Best Price'** on any product above, or ask me for more details!",
-                "If you need technical specs or pricing for any of these, just let me know.",
-                "Click on any product to get a quote, or tell me if you're looking for something else!"
-            ];
-            const hindiFooters = [
-                "Inme se kisi ka bhi price janne ke liye **'Get Best Price'** par click karein, ya mujhse details poochein!",
-                "Agar aapko inki technical details ya quotation chahiye, toh aap nishchint hoke bata sakte hain.",
-                "Kisi bhi product ka quote lene ke liye click karein. Kuch aur dekhna hai toh zaroor bataiye!"
-            ];
-            
-            const footerText = isHindi ? hindiFooters[Math.floor(Math.random() * hindiFooters.length)] : englishFooters[Math.floor(Math.random() * englishFooters.length)];
-
-            replyText += `<br><br>[CAROUSEL]<br><br><span style='font-size:12px; color:#64748b;'>${footerText}</span>`;
-            
-            const carouselHtml = generateCarouselHtml(products);
-            const finalReply = replyText.replace('[CAROUSEL]', carouselHtml);
-
-            return NextResponse.json({ success: true, reply: finalReply, raw_reply: replyText, fast_track: true });
-        }
-
-        // If no products, use Gemini API
         let contextString = "No exact matches found right now, try to answer generally or ask them to clarify based on the available brands/categories.";
+        let carouselHtml = "";
+        
+        if (products.length > 0) {
+            carouselHtml = generateCarouselHtml(products);
+            const productNames = products.map((p: any) => p.name).join(', ');
+            contextString = `Found the following products in the database that match the user's query: ${productNames}. Answer the user's question intelligently based on this. After your answer, you MUST append the exact tag [CAROUSEL] at the very end of your response so we can display these products to the user visually.`;
+            
+            // Price Intent override for AI context
+            if (isPriceIntent) {
+                const displayPrice = products[0].price > 0 ? `₹${Number(products[0].price).toLocaleString('en-IN')}` : 'Available on request';
+                contextString += ` The price of ${products[0].name} is ${displayPrice}. Include this price naturally in your response.`;
+            }
+        }
         
         let typoNote = "";
         if (correctedBrand) {
-            typoNote = `\nIMPORTANT SYSTEM NOTE: The user typed '${searchedKeyword}' but they likely meant the brand '${correctedBrand}'. Politely ask 'Did you mean ${correctedBrand}?' and show them the products anyway.`;
+            typoNote = `\nIMPORTANT SYSTEM NOTE: The user typed '${searchedKeyword}' but they likely meant the brand '${correctedBrand}'. Politely ask 'Did you mean ${correctedBrand}?' in your response.`;
         }
 
         const [brandsRes]: any = await pool.query('SELECT DISTINCT name FROM brands');
@@ -359,26 +317,28 @@ ${contextString}
         }
 
         if (successResponse) {
-            const rawReply = successResponse.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't process that.";
+            let aiReply = successResponse.candidates[0].content.parts[0].text;
+            let rawAiReply = aiReply;
+            
+            if (products.length > 0) {
+                if (!aiReply.includes('[CAROUSEL]')) {
+                    aiReply += '\n\n[CAROUSEL]'; // Fallback if AI forgets it
+                }
+            }
             
             try {
                 const [existing]: any = await pool.query('SELECT id FROM jayanti_qa_caches WHERE question = ? LIMIT 1', [userMessage.trim()]);
-                if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_caches (question, answer, created_at, updated_at) VALUES (?, ?, NOW(), NOW())', [userMessage.trim(), rawReply]);
-            } catch(e) { }
+                if(existing.length === 0) await pool.query('INSERT INTO jayanti_qa_caches (question, answer, created_at, updated_at) VALUES (?, ?, NOW(), NOW())', [userMessage.trim(), rawAiReply]);
+            } catch(e) { console.error('Cache DB Write Error', e); }
             
-            // Escape HTML
-            let reply = rawReply
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+            // Format links BEFORE injecting the carousel so we don't break the HTML attributes
+            let replyHtml = aiReply.replace(new RegExp('(https?://[^\\s<"\']+)', 'g'), '<a href="$1" target="_blank" class="chat-link">$1</a>');
             
-            // Format links
-            reply = reply.replace(new RegExp('(https?://[^\\s]+)', 'g'), '<a href="$1" target="_blank" class="chat-link">$1</a>');
-            reply = reply.replace(new RegExp('\\[CAROUSEL\\]', 'g'), '');
+            if (products.length > 0) {
+                replyHtml = replyHtml.replace(/\[CAROUSEL\]/gi, `<br><br>${carouselHtml}`);
+            }
 
-            return NextResponse.json({ success: true, reply, raw_reply: rawReply });
+            return NextResponse.json({ success: true, reply: replyHtml, raw_reply: rawAiReply });
         } else {
             console.error('Gemini API Error (All models failed):', lastError);
             return NextResponse.json({ success: false, reply: 'The AI is currently experiencing very high demand globally and cannot answer right now. You can <a href="https://wa.me/919555422455" target="_blank" class="chat-link" style="color:#25d366; font-weight:600;"><i class="fab fa-whatsapp"></i> Chat with a human on WhatsApp</a> instead!' });
