@@ -8,11 +8,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const resolvedParams = await params;
   
   try {
-    const [rows] = await pool.query('SELECT name, category_id, image, short_description FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
+    const [rows] = await pool.query('SELECT name, category_id, image, description FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
     if (rows && rows.length > 0) {
       const product = rows[0];
       const title = `${product.name} - Buy Online at SMD MEDICARE`;
-      const description = product.short_description || `Shop for high-quality ${product.name} online at wholesale prices on SMD Medicare.`;
+      
+      // Extract plain text from description or use default
+      let descriptionText = `Shop for high-quality ${product.name} online at wholesale prices on SMD Medicare.`;
+      if (product.description) {
+        // Simple strip HTML tags and limit to 150 chars
+        const plainText = product.description.replace(/<[^>]*>?/gm, '').trim();
+        if (plainText.length > 10) {
+          descriptionText = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
+        }
+      }
+      
+      const description = descriptionText;
       const url = `https://smdmedicare.com/product/${resolvedParams.slug}`;
       const imageUrl = product.image ? `https://smdmedicare.com/backend-media/${product.image}` : 'https://smdmedicare.com/images/logo.png';
       
