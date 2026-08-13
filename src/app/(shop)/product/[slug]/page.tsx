@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       }
       
       const description = descriptionText;
-      const url = `https://smdmedicare.com/product/${resolvedParams.slug}`;
-      const imageUrl = product.image ? `https://smdmedicare.com/backend-media/${product.image}` : 'https://smdmedicare.com/images/logo.png';
+      const url = `https://smdmedicare.in/product/${resolvedParams.slug}`;
+      const imageUrl = product.image ? `https://smdmedicare.in/backend-media/${product.image}` : 'https://smdmedicare.in/images/logo.png';
       
       return {
         title,
@@ -120,8 +120,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     return notFound();
   }
 
-  const productUrl = `https://smdmedicare.com/product/${slug}`;
-  const imageUrl = product.image ? `https://smdmedicare.com/backend-media/${product.image}` : 'https://smdmedicare.com/images/logo.png';
+  const productUrl = `https://smdmedicare.in/product/${slug}`;
+  const imageUrl = product.image ? `https://smdmedicare.in/backend-media/${product.image}` : 'https://smdmedicare.in/images/logo.png';
 
   const jsonLd = {
     '@context': 'https://schema.org',

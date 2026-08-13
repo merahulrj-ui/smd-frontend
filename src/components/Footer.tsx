@@ -78,7 +78,7 @@ export default async function Footer() {
                     </p>
                     <p className="flex items-start gap-3 text-slate-400 text-sm break-all">
                         <i className="fas fa-envelope mt-1 text-blue-500"></i>
-                        <a href="mailto:info@smdmedicare.com" className="hover:text-blue-400 transition-colors">info@smdmedicare.com</a>
+                        <a href="mailto:info@smdmedicare.in" className="hover:text-blue-400 transition-colors">info@smdmedicare.in</a>
                     </p>
                     <p className="flex items-start gap-3 text-slate-400 text-sm leading-relaxed">
                         <i className="fas fa-map-marker-alt mt-1 text-blue-500"></i>

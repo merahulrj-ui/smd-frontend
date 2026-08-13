@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import pool from '@/lib/db';
 
-const BASE_URL = 'https://smdmedicare.com';
+const BASE_URL = 'https://smdmedicare.in';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapData: MetadataRoute.Sitemap = [

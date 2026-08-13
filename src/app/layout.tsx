@@ -9,7 +9,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://smdmedicare.com'),
+  metadataBase: new URL('https://smdmedicare.in'),
   title: {
     default: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
     template: "%s | SMD MEDICARE",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
     description: "Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits.",
-    url: 'https://smdmedicare.com',
+    url: 'https://smdmedicare.in',
     siteName: 'SMD Medicare',
     locale: 'en_IN',
     type: 'website',

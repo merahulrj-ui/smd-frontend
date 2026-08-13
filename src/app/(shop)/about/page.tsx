@@ -7,10 +7,10 @@ export const metadata = {
   openGraph: {
     title: 'About Us | SMD MEDICARE',
     description: 'Learn about SMD Medicare\'s decade-long journey in diagnostic excellence, our mission, vision, and the team dedicated to providing quality healthcare solutions in India.',
-    url: 'https://smdmedicare.com/about',
+    url: 'https://smdmedicare.in/about',
   },
   alternates: {
-    canonical: 'https://smdmedicare.com/about',
+    canonical: 'https://smdmedicare.in/about',
   }
 };
 

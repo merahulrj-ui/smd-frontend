@@ -7,10 +7,10 @@ export const metadata = {
   openGraph: {
     title: 'Contact Us | SMD MEDICARE',
     description: 'Contact SMD Medicare for inquiries about hospital equipment, reagents, and medical supplies.',
-    url: 'https://smdmedicare.com/contact',
+    url: 'https://smdmedicare.in/contact',
   },
   alternates: {
-    canonical: 'https://smdmedicare.com/contact',
+    canonical: 'https://smdmedicare.in/contact',
   }
 };
 
@@ -87,8 +87,8 @@ export default function ContactPage() {
                           </div>
                           <div>
                               <strong className="block text-slate-900 text-sm tracking-wide uppercase mb-1">Email ID</strong>
-                              <a href="mailto:info@smdmedicare.com" className="text-indigo-600 font-bold hover:text-indigo-700 transition-colors text-lg">
-                                  info@smdmedicare.com
+                              <a href="mailto:info@smdmedicare.in" className="text-indigo-600 font-bold hover:text-indigo-700 transition-colors text-lg">
+                                  info@smdmedicare.in
                               </a>
                           </div>
                       </div>

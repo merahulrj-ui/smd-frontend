@@ -130,13 +130,13 @@ export default function ProductClient({
                       <p className="font-bold text-white tracking-wide">+91 95554 22455</p>
                     </div>
                   </a>
-                  <a href="mailto:info@smdmedicare.com" className="flex items-center gap-4 group">
+                  <a href="mailto:info@smdmedicare.in" className="flex items-center gap-4 group">
                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
                       <i className="fas fa-envelope"></i>
                     </div>
                     <div>
                       <p className="text-xs text-slate-400 font-medium mb-0.5">Email Support</p>
-                      <p className="font-bold text-white tracking-wide">info@smdmedicare.com</p>
+                      <p className="font-bold text-white tracking-wide">info@smdmedicare.in</p>
                     </div>
                   </a>
                 </div>
@@ -373,13 +373,13 @@ export default function ProductClient({
                       <p className="font-bold tracking-wide">+91 95554 22455</p>
                     </div>
                   </a>
-                  <a href="mailto:info@smdmedicare.com" className="flex items-center gap-4 group">
+                  <a href="mailto:info@smdmedicare.in" className="flex items-center gap-4 group">
                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                       <i className="fas fa-envelope"></i>
                     </div>
                     <div>
                       <p className="text-xs text-slate-400 font-medium mb-0.5">Email Support</p>
-                      <p className="font-bold tracking-wide">info@smdmedicare.com</p>
+                      <p className="font-bold tracking-wide">info@smdmedicare.in</p>
                     </div>
                   </a>
                 </div>

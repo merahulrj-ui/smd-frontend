@@ -187,8 +187,8 @@ export default function ProductClient({
                   <a href="tel:+919555422455" className="flex items-center text-[#1565c0] hover:text-[#0d47a1] transition-colors font-medium text-[15px]">
                     <i className="fas fa-phone-alt text-lg mr-2"></i> +91 95554 22455
                   </a>
-                  <a href="mailto:info@smdmedicare.com" className="flex items-center text-[#1565c0] hover:text-[#0d47a1] transition-colors font-medium text-[15px]">
-                    <i className="fas fa-envelope text-lg mr-2"></i> info@smdmedicare.com
+                  <a href="mailto:info@smdmedicare.in" className="flex items-center text-[#1565c0] hover:text-[#0d47a1] transition-colors font-medium text-[15px]">
+                    <i className="fas fa-envelope text-lg mr-2"></i> info@smdmedicare.in
                   </a>
                 </div>
               </div>
@@ -434,8 +434,8 @@ export default function ProductClient({
                   <a href="tel:+919555422455" className="flex items-center text-[#1565c0] hover:text-[#0d47a1] transition-colors font-medium text-[15px]">
                     <i className="fas fa-phone-alt text-lg mr-2"></i> +91 95554 22455
                   </a>
-                  <a href="mailto:info@smdmedicare.com" className="flex items-center text-[#1565c0] hover:text-[#0d47a1] transition-colors font-medium text-[15px]">
-                    <i className="fas fa-envelope text-lg mr-2"></i> info@smdmedicare.com
+                  <a href="mailto:info@smdmedicare.in" className="flex items-center text-[#1565c0] hover:text-[#0d47a1] transition-colors font-medium text-[15px]">
+                    <i className="fas fa-envelope text-lg mr-2"></i> info@smdmedicare.in
                   </a>
                 </div>
               </div>

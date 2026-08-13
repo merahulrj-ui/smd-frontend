@@ -13,8 +13,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       const article = rows[0];
       const title = `${article.title} | SMD MEDICARE Blog`;
       const description = typeof article.content === 'string' ? article.content.replace(/<[^>]*>?/gm, '').substring(0, 160) + '...' : 'Read the latest from SMD Medicare';
-      const url = `https://smdmedicare.com/blog/${slug}`;
-      const imageUrl = article.image ? `https://smdmedicare.com/backend-media/${article.image}` : 'https://smdmedicare.com/images/logo.png';
+      const url = `https://smdmedicare.in/blog/${slug}`;
+      const imageUrl = article.image ? `https://smdmedicare.in/backend-media/${article.image}` : 'https://smdmedicare.in/images/logo.png';
       
       return {
         title,
@@ -102,8 +102,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     // Not JSON, keep as string
   }
 
-  const articleUrl = `https://smdmedicare.com/blog/${slug}`;
-  const imageUrl = article.image ? `https://smdmedicare.com/backend-media/${article.image}` : 'https://smdmedicare.com/images/logo.png';
+  const articleUrl = `https://smdmedicare.in/blog/${slug}`;
+  const imageUrl = article.image ? `https://smdmedicare.in/backend-media/${article.image}` : 'https://smdmedicare.in/images/logo.png';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -119,7 +119,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       name: 'SMD Medicare',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://smdmedicare.com/images/logo.png'
+        url: 'https://smdmedicare.in/images/logo.png'
       }
     }
   };

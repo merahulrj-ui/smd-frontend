@@ -41,8 +41,8 @@ export default async function Home() {
     '@context': 'https://schema.org',
     '@type': 'MedicalOrganization',
     name: 'SMD Medicare',
-    url: 'https://smdmedicare.com',
-    logo: 'https://smdmedicare.com/images/logo.png',
+    url: 'https://smdmedicare.in',
+    logo: 'https://smdmedicare.in/images/logo.png',
     description: 'Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits in India.',
     address: {
       '@type': 'PostalAddress',

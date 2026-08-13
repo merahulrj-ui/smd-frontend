@@ -8,10 +8,10 @@ export const metadata = {
   openGraph: {
     title: 'Blog & Insights | SMD MEDICARE',
     description: 'Read the latest updates, guides, and diagnostic sector insights from SMD Medicare.',
-    url: 'https://smdmedicare.com/blog',
+    url: 'https://smdmedicare.in/blog',
   },
   alternates: {
-    canonical: 'https://smdmedicare.com/blog',
+    canonical: 'https://smdmedicare.in/blog',
   }
 };
 

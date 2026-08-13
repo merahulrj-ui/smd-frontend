@@ -107,7 +107,7 @@ export default function MobileDrawer() {
               <div className="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
                   <p className="text-slate-500 font-semibold mb-2 flex items-center justify-center gap-2"><i className="fas fa-phone-alt text-blue-500"></i> Quick Assistance</p>
                   <a href="tel:+919555422455" className="text-xl font-bold text-slate-800 hover:text-blue-600 block mb-1">+91 95554 22455</a>
-                  <p className="text-slate-500 text-sm"><i className="fas fa-envelope"></i> info@smdmedicare.com</p>
+                  <p className="text-slate-500 text-sm"><i className="fas fa-envelope"></i> info@smdmedicare.in</p>
               </div>
           </div>
       </aside>

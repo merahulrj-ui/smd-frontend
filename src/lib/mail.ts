@@ -5,7 +5,7 @@ const transporter = nodemailer.createTransport({
   port: parseInt(process.env.MAIL_PORT || '465'),
   secure: true, // true for 465, false for other ports
   auth: {
-    user: process.env.MAIL_USERNAME || 'info@smdmedicare.com',
+    user: process.env.MAIL_USERNAME || 'info@smdmedicare.in',
     pass: process.env.MAIL_PASSWORD || 'Rahul@6726',
   },
 });
@@ -21,8 +21,8 @@ export const sendMail = async ({
 }) => {
   try {
     const info = await transporter.sendMail({
-      from: `"${process.env.MAIL_FROM_NAME || 'SMD Medicare'}" <${process.env.MAIL_FROM_ADDRESS || 'info@smdmedicare.com'}>`,
-      to: to || process.env.MAIL_FROM_ADDRESS || 'info@smdmedicare.com',
+      from: `"${process.env.MAIL_FROM_NAME || 'SMD Medicare'}" <${process.env.MAIL_FROM_ADDRESS || 'info@smdmedicare.in'}>`,
+      to: to || process.env.MAIL_FROM_ADDRESS || 'info@smdmedicare.in',
       subject,
       html,
     });

@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   
   const title = `${name} | Buy Online at SMD MEDICARE`;
   const description = `Shop for high-quality ${name} online at wholesale prices on SMD Medicare. Explore our wide range of medical and hospital supplies.`;
-  const url = `https://smdmedicare.com/category/${slugs.join('/')}`;
+  const url = `https://smdmedicare.in/category/${slugs.join('/')}`;
 
   return {
     title,
