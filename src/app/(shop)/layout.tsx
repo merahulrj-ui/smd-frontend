@@ -1,11 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
-import dynamic from 'next/dynamic';
-
-const MobileDrawer = dynamic(() => import('@/components/MobileDrawer'), { ssr: false });
-const GlobalModals = dynamic(() => import('@/components/GlobalModals'), { ssr: false });
-
+import LazyComponents from "@/components/LazyComponents";
 import JayantiChatbotWrapper from "@/components/JayantiChatbotWrapper";
 import { UIProvider } from "@/context/UIContext";
 
@@ -18,9 +14,8 @@ export default function ShopLayout({
     <UIProvider>
         <Navbar />
         
-        {/* Mobile Drawer & Modals */}
-        <MobileDrawer />
-        <GlobalModals />
+        {/* Mobile Drawer & Modals (Lazy Loaded) */}
+        <LazyComponents />
 
         {/* Main Content Area */}
         <main className="main-layout-content">
