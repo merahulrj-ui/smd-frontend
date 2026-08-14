@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import FontAwesomeLoader from "@/components/FontAwesomeLoader";
 import "./globals.css";
 
