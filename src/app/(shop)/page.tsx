@@ -98,7 +98,7 @@ export default async function Home() {
         
         {/* Interactive Tailwind Horizontal Carousel */}
         <ClientCarousel>
-          {products.map((product: any) => (
+          {products.map((product: any, index: number) => (
             <div key={product.id} className="snap-start shrink-0 w-[200px] md:w-[220px]">
               <ProductCard 
                 id={product.id}
@@ -107,6 +107,7 @@ export default async function Home() {
                 price={product.price}
                 mrp={product.mrp}
                 image={product.image ? `/backend-media/${product.image}` : '/backend-media/images/placeholder.png'}
+                priority={index < 2}
               />
             </div>
           ))}
