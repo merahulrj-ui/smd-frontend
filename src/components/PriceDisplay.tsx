@@ -13,7 +13,7 @@ export default function PriceDisplay({ price, mrp, className = "" }: { price: nu
     <div className={`flex items-center gap-2 ${className}`}>
       <span className="text-blue-700 font-bold">{formatPrice(price)}</span>
       {mrp && mrp > price && (
-        <span className="text-slate-400 text-sm line-through">{formatPrice(mrp)}</span>
+        <span className="text-slate-500 text-sm line-through">{formatPrice(mrp)}</span>
       )}
     </div>
   );

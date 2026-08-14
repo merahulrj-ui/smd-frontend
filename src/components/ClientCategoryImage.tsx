@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function ClientCategoryImage({ 
   primaryImage, 
@@ -15,20 +16,13 @@ export default function ClientCategoryImage({
 }) {
   const [error, setError] = useState(false);
   const [fallbackError, setFallbackError] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
 
   const currentSrc = !error && primaryImage ? `/backend-media/${primaryImage}` 
                    : !fallbackError && fallbackImage ? `/backend-media/${fallbackImage}` 
                    : null;
 
   useEffect(() => {
-    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth === 0) {
-      if (!error && primaryImage) {
-        setError(true);
-      } else if (!fallbackError && fallbackImage) {
-        setFallbackError(true);
-      }
-    }
+    // Relying on onError instead of naturalWidth polling for Next.js Image
   }, [currentSrc, error, fallbackError, primaryImage, fallbackImage]);
 
   if (!currentSrc) {
@@ -36,18 +30,21 @@ export default function ClientCategoryImage({
   }
 
   return (
-    <img 
-      ref={imgRef}
-      src={currentSrc} 
-      alt={alt} 
-      className="w-full h-full object-contain" 
-      onError={() => {
-        if (!error && primaryImage) {
-          setError(true);
-        } else {
-          setFallbackError(true);
-        }
-      }} 
-    />
+    <div className="relative w-full h-full">
+      <Image 
+        src={currentSrc} 
+        alt={alt} 
+        fill
+        sizes="(max-width: 768px) 150px, 200px"
+        className="object-contain" 
+        onError={() => {
+          if (!error && primaryImage) {
+            setError(true);
+          } else if (!fallbackError && fallbackImage) {
+            setFallbackError(true);
+          }
+        }}
+      />
+    </div>
   );
 }

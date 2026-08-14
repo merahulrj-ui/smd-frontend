@@ -12,10 +12,9 @@ interface ProductCardProps {
   mrp: number;
   image: string;
   isNew?: boolean;
-  priority?: boolean;
 }
 
-export default function ProductCard({ id, slug, name, price, mrp, image, isNew, priority = false }: ProductCardProps) {
+export default function ProductCard({ id, slug, name, price, mrp, image, isNew }: ProductCardProps) {
   const { addToCatalog, formatPrice } = useUI();
   const discount = mrp > price && price > 0 ? Math.round(((mrp - price) / mrp) * 100) : 0;
 
@@ -36,7 +35,6 @@ export default function ProductCard({ id, slug, name, price, mrp, image, isNew, 
           fill
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
           className="object-contain"
-          priority={priority}
         />
       </Link>
       
@@ -57,7 +55,7 @@ export default function ProductCard({ id, slug, name, price, mrp, image, isNew, 
             <>
               <span className="text-blue-700 font-bold text-sm">{formatPrice(price)}</span>
               {mrp > price && (
-                <span className="text-slate-400 text-xs line-through">{formatPrice(mrp)}</span>
+                <span className="text-slate-500 text-xs line-through">{formatPrice(mrp)}</span>
               )}
             </>
           ) : (

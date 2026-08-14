@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true, // Bypass Next.js strict private IP/SSRF blocking for WAMP localhost
+    unoptimized: process.env.NODE_ENV !== 'production', // Bypass SSRF locally, but optimize on Vercel
     remotePatterns: [
       {
         protocol: 'http',

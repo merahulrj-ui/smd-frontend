@@ -20,9 +20,9 @@ export default function ShopLayout({
         <GlobalModals />
 
         {/* Main Content Area */}
-        <div className="main-layout-content">
+        <main className="main-layout-content">
           {children}
-        </div>
+        </main>
 
 
 

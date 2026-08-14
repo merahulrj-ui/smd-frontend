@@ -92,10 +92,12 @@ export default async function Footer() {
             <p className="text-slate-500 text-sm text-center md:text-left">
                 &copy; {new Date().getFullYear()} SMD MEDICARE. All Rights Reserved.
             </p>
-            <div className="flex gap-4 text-sm text-slate-500">
-                <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-                <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
-            </div>
+            <ul className="flex gap-4 text-sm text-slate-300">
+                <li><Link href="#" className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Careers</Link></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Terms of Service</Link></li>
+            </ul>
         </div>
     </footer>
   );

@@ -93,7 +93,7 @@ export default async function Home() {
       <section className="py-6 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-4">
           <h2 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">Featured Medical Products & Supplies</h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">Sourced from certified medical manufacturers, serving laboratories, clinics, and hospitals.</p>
+          <p className="text-slate-600 max-w-2xl mx-auto">Sourced from certified medical manufacturers, serving laboratories, clinics, and hospitals.</p>
         </div>
         
         {/* Interactive Tailwind Horizontal Carousel */}
@@ -160,9 +160,15 @@ export default async function Home() {
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {dbBrands.map((brand: any) => (
-                <div key={brand.id} className="bg-slate-50 border border-slate-200 p-6 rounded-2xl hover:border-blue-300 hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 group cursor-pointer h-[120px]">
+                <div key={brand.id} className="relative min-w-[120px] h-[60px] md:min-w-[160px] md:h-[80px] bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center p-3 hover:shadow-md transition-shadow cursor-pointer group">
                   {brand.logo ? (
-                    <img src={brand.logo.startsWith('images/') ? `/backend-media/${brand.logo}` : `/backend-media/images/${brand.logo}`} alt={brand.name} loading="lazy" decoding="async" className="max-h-full max-w-full object-contain filter group-hover:brightness-110 transition-all" />
+                    <Image 
+                      src={brand.logo.startsWith('images/') ? `/backend-media/${brand.logo}` : `/backend-media/images/${brand.logo}`} 
+                      alt={brand.name} 
+                      fill
+                      sizes="(max-width: 768px) 120px, 160px"
+                      className="object-contain filter group-hover:brightness-110 transition-all p-2" 
+                    />
                   ) : (
                     <span className="font-bold text-slate-700 group-hover:text-blue-700 transition-colors text-center">{brand.name}</span>
                   )}
@@ -283,7 +289,7 @@ export default async function Home() {
               <div className="text-yellow-400 text-lg mb-4">★★★★★</div>
               <p className="text-slate-600 italic mb-6 text-sm">"The quality of the recombinant antigens from SMD MEDICARE is consistently excellent. Their reliable supply chain has been crucial for our production timelines."</p>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Dr. Anjali Sharma</h4>
+                <h3 className="font-bold text-slate-900 text-sm">Dr. Anjali Sharma</h3>
                 <p className="text-xs text-blue-600 font-medium mt-1">R&D Head, BioLabs Inc.</p>
               </div>
             </div>
@@ -293,7 +299,7 @@ export default async function Home() {
               <div className="text-yellow-400 text-lg mb-4">★★★★★</div>
               <p className="text-slate-600 italic mb-6 text-sm">"Switching to SMD MEDICARE for our ELISA kits was a game-changer. The cost-effectiveness combined with high accuracy has significantly improved our lab's efficiency."</p>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Mr. Rajeev Singh</h4>
+                <h3 className="font-bold text-slate-900 text-sm">Mr. Rajeev Singh</h3>
                 <p className="text-xs text-blue-600 font-medium mt-1">Lab Director, PathoCare Diagnostics</p>
               </div>
             </div>
@@ -303,7 +309,7 @@ export default async function Home() {
               <div className="text-yellow-400 text-lg mb-4">★★★★☆</div>
               <p className="text-slate-600 italic mb-6 text-sm">"Their technical support team is incredibly knowledgeable and responsive. They helped us troubleshoot a complex issue with a batch of rapid test kits, saving us valuable time."</p>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Priya Desai</h4>
+                <h3 className="font-bold text-slate-900 text-sm">Priya Desai</h3>
                 <p className="text-xs text-blue-600 font-medium mt-1">Procurement Manager, Apex Hospitals</p>
               </div>
             </div>
@@ -313,7 +319,7 @@ export default async function Home() {
               <div className="text-yellow-400 text-lg mb-4">★★★★★</div>
               <p className="text-slate-600 italic mb-6 text-sm">"We've been sourcing medical equipment from SMD MEDICARE for years. Their commitment to quality and post-sales service is unparalleled in the industry."</p>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Dr. Vikram Chauhan</h4>
+                <h3 className="font-bold text-slate-900 text-sm">Dr. Vikram Chauhan</h3>
                 <p className="text-xs text-blue-600 font-medium mt-1">Chief Medical Officer, City General Hospital</p>
               </div>
             </div>
