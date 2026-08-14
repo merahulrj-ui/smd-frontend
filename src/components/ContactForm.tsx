@@ -4,7 +4,7 @@ import { useOTPAuth } from '@/hooks/useOTPAuth';
 import OTPVerificationFlow from '@/components/OTPVerificationFlow';
 
 export default function ContactForm() {
-  const { user, isVerified } = useOTPAuth();
+  const { user, isVerified, login } = useOTPAuth();
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -107,7 +107,7 @@ export default function ContactForm() {
         {!isVerified ? (
             <div className="mt-2 pt-2 border-t border-slate-100">
                 <OTPVerificationFlow 
-                    onVerified={() => setIsVerified(true)} 
+                    onVerified={(verifiedUser) => login({ ...verifiedUser, isVerified: true })} 
                     title="Verify Your Details" 
                     description="Before you can send a message, we need to verify your email." 
                     prefilledData={{ name, email, phone }}
