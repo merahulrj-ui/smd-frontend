@@ -2,7 +2,15 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { sendMail } from '@/lib/mail';
 import { checkRateLimit } from '@/lib/rateLimit';
-const sanitize = (str: string) => str ? str.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+const sanitize = (str: string) => {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+};
 
 export async function POST(req: Request) {
   try {
@@ -20,6 +28,21 @@ export async function POST(req: Request) {
     
     if (!agree_terms) {
       return NextResponse.json({ success: false, error: 'Must agree to terms' }, { status: 400 });
+    }
+
+    if (!company_name || !rep_name || !email || !contact) {
+      return NextResponse.json({ success: false, error: 'Required fields are missing' }, { status: 400 });
+    }
+
+    if (
+        company_name.length > 100 || 
+        rep_name.length > 100 || 
+        email.length > 100 || 
+        contact.length > 20 || 
+        (rep_designation && rep_designation.length > 100) || 
+        (gst && gst.length > 20)
+    ) {
+        return NextResponse.json({ success: false, error: 'Input length exceeds maximum allowed limit' }, { status: 400 });
     }
 
     // 2. Backend Verification - Check if email exists in verified_users

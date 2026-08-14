@@ -3,7 +3,8 @@ import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 import MobileDrawer from "@/components/MobileDrawer";
 import GlobalModals from "@/components/GlobalModals";
-import JayantiChatbot from "@/components/JayantiChatbot";
+import dynamic from 'next/dynamic';
+const JayantiChatbot = dynamic(() => import('@/components/JayantiChatbot'), { ssr: false });
 import { UIProvider } from "@/context/UIContext";
 
 export default function ShopLayout({

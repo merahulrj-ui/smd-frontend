@@ -77,11 +77,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     // 4. Fetch Blog Posts
-    const [blogs] = await pool.query('SELECT slug, date FROM blog WHERE status = 1') as any[];
+    const [blogs] = await pool.query('SELECT slug FROM blog WHERE status = 1') as any[];
     blogs.forEach((blog: any) => {
       sitemapData.push({
         url: `${BASE_URL}/blog/${blog.slug}`,
-        lastModified: blog.date || new Date(),
+        lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.7,
       });

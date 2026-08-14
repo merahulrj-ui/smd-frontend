@@ -92,8 +92,8 @@ export default async function Home() {
       {/* Featured Products Section */}
       <section className="py-6 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-4">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">Featured Products</h2>
-          <p className="text-slate-500 max-w-2xl mx-auto">Sourced from certified manufacturers, serving laboratories, clinics, and hospitals.</p>
+          <h2 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">Featured Medical Products & Supplies</h2>
+          <p className="text-slate-500 max-w-2xl mx-auto">Sourced from certified medical manufacturers, serving laboratories, clinics, and hospitals.</p>
         </div>
         
         {/* Interactive Tailwind Horizontal Carousel */}
@@ -117,8 +117,8 @@ export default async function Home() {
       <section className="py-6 bg-slate-50 border-t border-slate-200">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-4">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">Browse by Category</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">Search through our dedicated categories of diagnostic kits and equipment.</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">Browse Medical Equipment by Category</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">Search through our dedicated categories of diagnostic kits and medical equipment.</p>
           </div>
           
           <ClientCarousel>
@@ -153,15 +153,15 @@ export default async function Home() {
         <section className="py-10 bg-white border-b border-slate-200">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Top Brands We Carry</h2>
-              <p className="text-slate-500 max-w-2xl mx-auto">Providing genuine equipment from the most trusted manufacturers.</p>
+              <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Top Medical Brands We Carry</h2>
+              <p className="text-slate-500 max-w-2xl mx-auto">Providing genuine medical equipment from the most trusted manufacturers.</p>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {dbBrands.map((brand: any) => (
                 <div key={brand.id} className="bg-slate-50 border border-slate-200 p-6 rounded-2xl hover:border-blue-300 hover:shadow-lg transition-all flex flex-col items-center justify-center gap-3 group cursor-pointer h-[120px]">
                   {brand.logo ? (
-                    <img src={brand.logo.startsWith('images/') ? `/backend-media/${brand.logo}` : `/backend-media/images/${brand.logo}`} alt={brand.name} className="max-h-full max-w-full object-contain filter group-hover:brightness-110 transition-all" />
+                    <img src={brand.logo.startsWith('images/') ? `/backend-media/${brand.logo}` : `/backend-media/images/${brand.logo}`} alt={brand.name} loading="lazy" decoding="async" className="max-h-full max-w-full object-contain filter group-hover:brightness-110 transition-all" />
                   ) : (
                     <span className="font-bold text-slate-700 group-hover:text-blue-700 transition-colors text-center">{brand.name}</span>
                   )}

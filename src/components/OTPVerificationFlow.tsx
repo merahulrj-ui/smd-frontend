@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useOTPAuth } from '@/hooks/useOTPAuth';
 
 interface OTPVerificationFlowProps {
@@ -9,9 +9,10 @@ interface OTPVerificationFlowProps {
     compact?: boolean;
     prefilledData?: { name: string; phone: string; email: string };
     hideInputs?: boolean;
+    context?: string;
 }
 
-export default function OTPVerificationFlow({ onVerified, title = "Verification Required", description = "Please verify your email to proceed.", compact = false, prefilledData, hideInputs = false }: OTPVerificationFlowProps) {
+export default function OTPVerificationFlow({ onVerified, title = "Verification Required", description = "Please verify your email to proceed.", compact = false, prefilledData, hideInputs = false, context = "Jayanti AI" }: OTPVerificationFlowProps) {
     const { login } = useOTPAuth();
     
     const [view, setView] = useState<'email' | 'otp'>('email');
@@ -59,7 +60,7 @@ export default function OTPVerificationFlow({ onVerified, title = "Verification 
             const res = await fetch('/api/jayanti/send-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, phone, email })
+                body: JSON.stringify({ name, phone, email, context })
             });
             const data = await res.json();
             if (data.success) {
@@ -120,16 +121,16 @@ export default function OTPVerificationFlow({ onVerified, title = "Verification 
                             <div className={compact ? 'space-y-4' : 'grid grid-cols-1 md:grid-cols-2 gap-4'}>
                                 <div>
                                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Your Name*</label>
-                                    <input type="text" value={name} onChange={e => setName(e.target.value)} required placeholder="John Doe" className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" />
+                                    <input type="text" value={name} onChange={e => setName(e.target.value)} required maxLength={100} placeholder="John Doe" className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Phone Number*</label>
-                                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} required placeholder="+91 99999 88888" className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" />
+                                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} required maxLength={20} placeholder="+91 99999 88888" className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" />
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">Email Address*</label>
-                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="john@example.com" className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" />
+                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required maxLength={100} placeholder="john@example.com" className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all" />
                             </div>
                         </>
                     )}

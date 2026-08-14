@@ -295,6 +295,7 @@ export default function GlobalModals() {
                               id="liveSearchInput"
                               value={searchQuery}
                               onChange={handleSearchChange}
+                              maxLength={100}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                   submitSearch(searchQuery);
@@ -515,26 +516,26 @@ export default function GlobalModals() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Your Name*</label>
-                                <input type="text" name="name" required value={inquiryName} onChange={e => setInquiryName(e.target.value)} placeholder="John Doe" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="text" name="name" required maxLength={100} value={inquiryName} onChange={e => setInquiryName(e.target.value)} placeholder="John Doe" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Official Email ID*</label>
-                                <input type="email" name="email" required value={inquiryEmail} onChange={e => setInquiryEmail(e.target.value)} readOnly={isVerified} placeholder="john@example.com" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
+                                <input type="email" name="email" required maxLength={100} value={inquiryEmail} onChange={e => setInquiryEmail(e.target.value)} readOnly={isVerified} placeholder="john@example.com" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Contact Number*</label>
-                                <input type="tel" name="phone" required value={inquiryPhone} onChange={e => setInquiryPhone(e.target.value)} readOnly={isVerified} placeholder="+91 98765 43210" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
+                                <input type="tel" name="phone" required maxLength={20} value={inquiryPhone} onChange={e => setInquiryPhone(e.target.value)} readOnly={isVerified} placeholder="+91 98765 43210" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Company Name*</label>
-                                <input type="text" name="company" required placeholder="MediTech Solutions" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="text" name="company" required maxLength={100} placeholder="MediTech Solutions" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                             </div>
                         </div>
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-1.5">Your Message / Requirements*</label>
-                            <textarea name="message" rows={4} required placeholder="Enter details..." 
+                            <textarea name="message" rows={4} required maxLength={1000} placeholder="Enter details..." 
                             className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white"
                             defaultValue={inquiryState.type === 'Pricing Request' ? `Hello, I would like to request wholesale pricing and packaging details for "${inquiryState.productName}".` : `Hello, I would like to get more information regarding the product "${inquiryState.productName}".`}></textarea>
                         </div>
@@ -548,6 +549,7 @@ export default function GlobalModals() {
                                     compact={true} 
                                     prefilledData={{ name: inquiryName, phone: inquiryPhone, email: inquiryEmail }}
                                     hideInputs={true}
+                                    context="Product Inquiry"
                                 />
                             </div>
                         ) : (
@@ -595,31 +597,31 @@ export default function GlobalModals() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Company Name*</label>
-                                <input type="text" name="company_name" required placeholder="E.g., SMD Medicare" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="text" name="company_name" required maxLength={100} placeholder="E.g., SMD Medicare" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Official Email ID*</label>
-                                <input type="email" name="email" required value={sellerEmail} onChange={e => setSellerEmail(e.target.value)} readOnly={isVerified} placeholder="partner@smd.com" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
+                                <input type="email" name="email" required maxLength={100} value={sellerEmail} onChange={e => setSellerEmail(e.target.value)} readOnly={isVerified} placeholder="partner@smd.com" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Representative Name*</label>
-                                <input type="text" name="rep_name" required value={sellerName} onChange={e => setSellerName(e.target.value)} placeholder="E.g., Rahul Singh" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="text" name="rep_name" required maxLength={100} value={sellerName} onChange={e => setSellerName(e.target.value)} placeholder="E.g., Rahul Singh" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Representative Designation*</label>
-                                <input type="text" name="rep_designation" required placeholder="E.g., Director" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="text" name="rep_designation" required maxLength={100} placeholder="E.g., Director" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">GST Number*</label>
-                                <input type="text" name="gst" required placeholder="GSTIN1234567890" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                                <input type="text" name="gst" required maxLength={20} placeholder="GSTIN1234567890" className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Contact Number*</label>
-                                <input type="tel" name="contact" required value={sellerPhone} onChange={e => setSellerPhone(e.target.value)} readOnly={isVerified} placeholder="+91 99999 88888" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
+                                <input type="tel" name="contact" required maxLength={20} value={sellerPhone} onChange={e => setSellerPhone(e.target.value)} readOnly={isVerified} placeholder="+91 99999 88888" className={`w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${isVerified ? 'bg-slate-100 text-slate-500' : 'bg-slate-50 focus:bg-white'}`} />
                             </div>
                         </div>
                         
@@ -645,6 +647,7 @@ export default function GlobalModals() {
                                     compact={true} 
                                     prefilledData={{ name: sellerName, phone: sellerPhone, email: sellerEmail }}
                                     hideInputs={true}
+                                    context="Seller Registration"
                                 />
                             </div>
                         ) : (

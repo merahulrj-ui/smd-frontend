@@ -2,7 +2,15 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { sendMail } from '@/lib/mail';
 import { checkRateLimit } from '@/lib/rateLimit';
-const sanitize = (str: string) => str ? str.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+const sanitize = (str: string) => {
+    if (!str) return '';
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+};
 
 export async function POST(req: Request) {
   try {
@@ -19,6 +27,10 @@ export async function POST(req: Request) {
     // 2. Validate inputs
     if (!name || !email || !phone || !message) {
       return NextResponse.json({ success: false, message: 'All fields are required' }, { status: 400 });
+    }
+    
+    if (name.length > 100 || email.length > 100 || phone.length > 20 || message.length > 1000) {
+      return NextResponse.json({ success: false, message: 'Input length exceeds maximum allowed limit' }, { status: 400 });
     }
 
     // 3. Backend Verification (Ensure OTP flow was actually completed)

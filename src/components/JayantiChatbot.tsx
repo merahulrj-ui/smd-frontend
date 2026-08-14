@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './JayantiChatbot.css';
 import { useOTPAuth } from '@/hooks/useOTPAuth';
 import OTPVerificationFlow from '@/components/OTPVerificationFlow';
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from 'dompurify';
 
 const AnimatedBotIcon = ({ className = "w-[28px] h-[28px]" }) => (
     <svg viewBox="0 0 100 100" className={className} xmlns="http://www.w3.org/2000/svg">
@@ -341,7 +341,9 @@ export default function JayantiChatbot() {
         parsedText = parsedText.replace(/\n/g, '<br>');
         
         // Sanitize the HTML to prevent Self-XSS (allow styling and custom actions)
-        parsedText = DOMPurify.sanitize(parsedText, { ADD_ATTR: ['target', 'class', 'style', 'data-name', 'onclick'] });
+        if (typeof window !== 'undefined') {
+            parsedText = DOMPurify.sanitize(parsedText, { ADD_ATTR: ['target', 'class', 'style', 'data-name', 'onclick'] });
+        }
         
         parsedText = parsedText.replace(
             /Talk to a Human on WhatsApp/gi,
@@ -355,6 +357,7 @@ export default function JayantiChatbot() {
             {!isOpen && (
                 <button 
                     onClick={toggleJayanti} 
+                    aria-label="Open Jayanti AI Chatbot"
                     className="relative w-16 h-16 cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110 hover:-translate-y-1 drop-shadow-[0_8px_15px_rgba(37,99,235,0.4)] animate-bounce"
                     style={{ animationDuration: '3s' }}
                 >
@@ -377,13 +380,13 @@ export default function JayantiChatbot() {
                         </div>
                     </div>
                     <div className="flex items-center gap-2.5">
-                        <button onClick={clearChat} className="bg-transparent border-none text-slate-500 text-base cursor-pointer transition-colors hover:text-red-500" title="Clear Chat History">
+                        <button onClick={clearChat} aria-label="Clear Chat History" className="bg-transparent border-none text-slate-500 text-base cursor-pointer transition-colors hover:text-red-500" title="Clear Chat History">
                             <i className="fas fa-trash-alt"></i>
                         </button>
                         <a href="https://wa.me/919555422455" target="_blank" rel="noreferrer" title="Talk to a Human on WhatsApp" className="text-[#25d366] text-lg hover:scale-110 transition-transform">
                             <i className="fab fa-whatsapp"></i>
                         </a>
-                        <button onClick={toggleJayanti} className="bg-transparent border-none text-slate-500 text-base cursor-pointer transition-colors hover:text-slate-900"><i className="fas fa-times"></i></button>
+                        <button onClick={toggleJayanti} aria-label="Close Chatbot" className="bg-transparent border-none text-slate-500 text-base cursor-pointer transition-colors hover:text-slate-900"><i className="fas fa-times"></i></button>
                     </div>
                 </div>
 
@@ -394,9 +397,9 @@ export default function JayantiChatbot() {
                         <p className="m-0 text-[13px] text-slate-600 leading-relaxed">To prevent spam and provide personalized assistance, please enter your details to start chatting. Or <a href="https://wa.me/919555422455" target="_blank" rel="noreferrer" className="text-blue-600 font-medium underline">Talk to a human on WhatsApp</a>.</p>
                     </div>
                     <div className="px-[15px] flex flex-col gap-2.5">
-                        <input type="text" placeholder="Your Name" value={name} onChange={e => setName(e.target.value)} required className="px-4 py-3 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-600 transition-colors bg-white" />
-                        <input type="text" placeholder="Mobile Number" value={phone} onChange={e => setPhone(e.target.value)} required className="px-4 py-3 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-600 transition-colors bg-white" />
-                        <input type="email" placeholder="Email ID" value={email} onChange={e => setEmail(e.target.value)} required className="px-4 py-3 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-600 transition-colors bg-white" />
+                        <input type="text" placeholder="Your Name" value={name} onChange={e => setName(e.target.value)} required maxLength={100} className="px-4 py-3 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-600 transition-colors bg-white" />
+                        <input type="text" placeholder="Mobile Number" value={phone} onChange={e => setPhone(e.target.value)} required maxLength={20} className="px-4 py-3 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-600 transition-colors bg-white" />
+                        <input type="email" placeholder="Email ID" value={email} onChange={e => setEmail(e.target.value)} required maxLength={100} className="px-4 py-3 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-600 transition-colors bg-white" />
                         <button onClick={sendOtp} disabled={isSendingOtp} className="p-3 bg-blue-600 text-white border-none rounded-lg text-sm font-semibold cursor-pointer transition-colors hover:bg-blue-700 disabled:opacity-50">
                             {isSendingOtp ? 'Sending...' : <>Send OTP <i className="fas fa-paper-plane ml-1"></i></>}
                         </button>
@@ -411,7 +414,7 @@ export default function JayantiChatbot() {
                         <p className="m-0 text-[13px] text-slate-600 leading-relaxed">We've sent a 6-digit OTP to <strong>{email}</strong>.</p>
                     </div>
                     <div className="px-[15px] flex flex-col gap-2.5">
-                        <input type="number" placeholder="Enter 6-digit OTP" value={otp} onChange={e => setOtp(e.target.value)} required className="px-4 py-3 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-600 transition-colors bg-white" />
+                        <input type="number" placeholder="Enter 6-digit OTP" value={otp} onChange={e => setOtp(e.target.value)} required maxLength={6} className="px-4 py-3 border border-slate-300 rounded-lg text-sm outline-none focus:border-blue-600 transition-colors bg-white" />
                         <button onClick={verifyOtp} disabled={isVerifyingOtp} className="p-3 bg-blue-600 text-white border-none rounded-lg text-sm font-semibold cursor-pointer transition-colors hover:bg-blue-700 disabled:opacity-50">
                             {isVerifyingOtp ? 'Verifying...' : <>Verify <i className="fas fa-check-circle ml-1"></i></>}
                         </button>
@@ -457,6 +460,7 @@ export default function JayantiChatbot() {
                         <button 
                             className={`w-11 h-11 rounded-full border border-slate-300 cursor-pointer flex items-center justify-center shrink-0 transition-all ${isRecording ? 'bg-red-500 text-white border-red-500' : 'bg-slate-100 text-slate-500 hover:bg-red-500 hover:text-white hover:border-red-500'}`} 
                             onClick={startVoice} 
+                            aria-label="Speak"
                             title="Speak"
                         >
                             <i className="fas fa-microphone"></i>
@@ -474,6 +478,7 @@ export default function JayantiChatbot() {
                         <button 
                             onClick={() => sendMessage(chatInput)} 
                             disabled={isTyping}
+                            aria-label="Send message"
                             className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white border-none cursor-pointer flex items-center justify-center shrink-0 transition-all hover:-translate-y-0.5 shadow-[0_4px_10px_rgba(99,102,241,0.2)] hover:shadow-[0_6px_15px_rgba(99,102,241,0.3)] disabled:opacity-50"
                         >
                             <i className="fas fa-paper-plane"></i>

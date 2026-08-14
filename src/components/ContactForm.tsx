@@ -54,6 +54,7 @@ export default function ContactForm() {
               type="text" 
               name="name" 
               required 
+              maxLength={100}
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="E.g., John Doe" 
@@ -67,6 +68,7 @@ export default function ContactForm() {
               type="email" 
               name="email" 
               required 
+              maxLength={100}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               readOnly={isVerified}
@@ -81,6 +83,7 @@ export default function ContactForm() {
               type="tel" 
               name="phone" 
               required 
+              maxLength={20}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               readOnly={isVerified}
@@ -95,6 +98,7 @@ export default function ContactForm() {
               name="message" 
               rows={4} 
               required 
+              maxLength={1000}
               placeholder="How can we help you?"
               className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all placeholder-slate-400 font-medium resize-none"
             ></textarea>
@@ -103,12 +107,12 @@ export default function ContactForm() {
         {!isVerified ? (
             <div className="mt-2 pt-2 border-t border-slate-100">
                 <OTPVerificationFlow 
-                    onVerified={() => {}} 
-                    title="Verify to Send Message" 
-                    description="We need to verify your email to prevent spam." 
-                    compact={true} 
-                    prefilledData={{ name, phone, email }}
+                    onVerified={() => setIsVerified(true)} 
+                    title="Verify Your Details" 
+                    description="Before you can send a message, we need to verify your email." 
+                    prefilledData={{ name, email, phone }}
                     hideInputs={true}
+                    context="SMD Medicare Contact Form"
                 />
             </div>
         ) : (

@@ -17,10 +17,14 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { name, phone, email } = body;
+        const { name, phone, email, context = 'SMD Medicare' } = body;
 
         if (!name || !phone || !email) {
             return NextResponse.json({ success: false, message: 'Missing fields' }, { status: 400 });
+        }
+
+        if (name.length > 100 || email.length > 100 || phone.length > 20 || (context && context.length > 100)) {
+            return NextResponse.json({ success: false, message: 'Input length exceeds maximum allowed limit' }, { status: 400 });
         }
 
         // Additional: Rate Limit per Email (Max 3 sends per 15 minutes per email)
@@ -67,7 +71,7 @@ export async function POST(request: Request) {
         const mailOptions = {
             from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
             to: email,
-            subject: 'Your Verification Code - Jayanti AI',
+            subject: `Your Verification Code - ${context}`,
             html: `
                 <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; padding: 40px 20px; text-align: center;">
                     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
@@ -82,7 +86,7 @@ export async function POST(request: Request) {
                             <h2 style="color: #0f172a; font-size: 20px; margin-top: 0; margin-bottom: 20px;">Verify Your Identity</h2>
                             <p style="color: #475569; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
                                 Hi <strong style="color: #0f172a;">${name}</strong>,<br><br>
-                                We received a request to access Jayanti AI. Please use the verification code below to securely log in to your account.
+                                We received a request to access ${context}. Please use the verification code below to securely log in to your account.
                             </p>
 
                             <!-- OTP Box -->
