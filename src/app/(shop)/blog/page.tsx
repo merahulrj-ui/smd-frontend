@@ -217,6 +217,7 @@ export default async function BlogPage() {
               placeholder="Enter your email address" 
               className="flex-grow px-5 py-4 rounded-xl bg-white/5 border border-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/10 text-white placeholder-slate-400 shadow-inner backdrop-blur-sm transition-all"
               required
+              maxLength={100}
             />
             <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(37,99,235,0.3)] whitespace-nowrap">
               Subscribe
