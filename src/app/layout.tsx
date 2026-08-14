@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import { Toaster } from "react-hot-toast";
+import FontAwesomeLoader from "@/components/FontAwesomeLoader";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -59,9 +61,9 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
       <body className={`${manrope.className} antialiased overflow-x-hidden`}>
+        <FontAwesomeLoader />
         {children}
       </body>
     </html>
