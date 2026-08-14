@@ -23,7 +23,7 @@ export default function ProductCard({ id, slug, name, price, mrp, image, isNew, 
     <div className="border border-slate-200 rounded-xl p-3 flex flex-col hover:border-blue-500 transition-colors bg-white h-full relative group shrink-0">
       {/* Discount Badge */}
       {discount > 0 && (
-        <span className="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10 shadow-sm">
+        <span className="absolute top-3 left-3 bg-red-700 text-white text-[10px] font-bold px-2 py-0.5 rounded z-10 shadow-sm">
           {discount}% OFF
         </span>
       )}
