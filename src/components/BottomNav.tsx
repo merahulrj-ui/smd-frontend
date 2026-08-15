@@ -15,7 +15,7 @@ export default function BottomNav() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 z-[90] lg:hidden flex justify-around items-end px-1 pb-2 pt-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]" style={{ WebkitTapHighlightColor: 'transparent' }}>
+    <nav className="fixed bottom-0 left-0 w-full h-[65px] bg-white border-t border-slate-200 z-[90] lg:hidden flex justify-around items-end px-1 pb-3 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]" style={{ WebkitTapHighlightColor: 'transparent' }}>
         <Link href="/" prefetch={true} className={`flex flex-col items-center justify-center w-[20%] gap-1 transition-colors outline-none ${isActive('/') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
             <i className="fas fa-home text-[20px] flex items-center justify-center h-[24px]"></i>
             <span className="text-[10px] font-medium whitespace-nowrap">Home</span>
