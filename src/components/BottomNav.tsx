@@ -16,12 +16,12 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 z-[90] lg:hidden flex justify-around items-end px-1 pb-2 pt-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-        <Link href="/" className={`flex flex-col items-center justify-center w-[20%] gap-1 transition-colors ${isActive('/') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
+        <Link href="/" prefetch={true} className={`flex flex-col items-center justify-center w-[20%] gap-1 transition-colors ${isActive('/') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
             <i className="fas fa-home text-[20px]"></i>
             <span className="text-[10px] font-medium">Home</span>
         </Link>
         
-        <Link href="/categories" className={`flex flex-col items-center justify-center w-[20%] gap-1 transition-colors ${isActive('/categories') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
+        <Link href="/categories" prefetch={true} className={`flex flex-col items-center justify-center w-[20%] gap-1 transition-colors ${isActive('/categories') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
             <i className="fas fa-layer-group text-[20px]"></i>
             <span className="text-[10px] font-medium">Categories</span>
         </Link>
