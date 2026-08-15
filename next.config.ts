@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  devIndicators: false,
   images: {
     unoptimized: process.env.NODE_ENV !== 'production', // Bypass SSRF locally, but optimize on Vercel
     remotePatterns: [

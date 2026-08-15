@@ -3,123 +3,49 @@ import Link from 'next/link';
 import { useUI } from '@/context/UIContext';
 import { usePathname } from 'next/navigation';
 
-const navStyle: React.CSSProperties = {
-  position: 'fixed',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  height: 68,
-  background: '#fff',
-  borderTop: '1px solid #e2e8f0',
-  zIndex: 90,
-  display: 'flex',
-  alignItems: 'stretch',
-  boxShadow: '0 -4px 16px rgba(0,0,0,0.05)',
-  WebkitTapHighlightColor: 'transparent',
-  userSelect: 'none',
-};
-
-const itemStyle: React.CSSProperties = {
-  flex: '1 1 0%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 3,
-  textDecoration: 'none',
-  outline: 'none',
-  border: 'none',
-  background: 'none',
-  cursor: 'pointer',
-  padding: 0,
-  color: '#64748b',
-};
-
-const activeColor = '#2563eb';
-
-const iconStyle: React.CSSProperties = {
-  fontSize: 21,
-  lineHeight: 1,
-};
-
-const labelStyle: React.CSSProperties = {
-  fontSize: 10,
-  fontWeight: 500,
-  whiteSpace: 'nowrap',
-  lineHeight: 1,
-};
-
-const activeLabelStyle: React.CSSProperties = {
-  ...labelStyle,
-  fontWeight: 700,
-};
-
-const searchContainerStyle: React.CSSProperties = {
-  flex: '1 1 0%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  position: 'relative',
-  paddingBottom: 9,
-};
-
-const fabStyle: React.CSSProperties = {
-  position: 'absolute',
-  top: -16,
-  width: 52,
-  height: 52,
-  borderRadius: '50%',
-  background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
-  color: '#fff',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  border: '4px solid #fff',
-  boxShadow: '0 6px 16px rgba(37,99,235,0.25)',
-  cursor: 'pointer',
-  outline: 'none',
-  fontSize: 19,
-};
-
 export default function BottomNav() {
   const { setMobileDrawerOpen, setSearchOpen } = useUI();
   const pathname = usePathname();
+
+  const openDrawer = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setMobileDrawerOpen(true);
+  };
+
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav style={navStyle} className="lg:hidden">
-      {/* Home */}
-      <Link href="/" prefetch={true} style={{ ...itemStyle, color: isActive('/') ? activeColor : '#64748b' }}>
-        <i className="fas fa-home" style={iconStyle}></i>
-        <span style={isActive('/') ? activeLabelStyle : labelStyle}>Home</span>
-      </Link>
-
-      {/* Categories */}
-      <Link href="/categories" prefetch={true} style={{ ...itemStyle, color: isActive('/categories') ? activeColor : '#64748b' }}>
-        <i className="fas fa-layer-group" style={iconStyle}></i>
-        <span style={isActive('/categories') ? activeLabelStyle : labelStyle}>Categories</span>
-      </Link>
-
-      {/* Search */}
-      <div style={searchContainerStyle}>
-        <button style={fabStyle} onClick={() => setSearchOpen(true)} aria-label="Search">
-          <i className="fas fa-search"></i>
+    <nav className="fixed bottom-0 left-0 w-full h-[64px] bg-white border-t border-slate-200 z-[90] lg:hidden flex justify-around items-end px-1 pb-2 pt-1 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] select-none [-webkit-tap-highlight-color:transparent]">
+        <Link href="/" prefetch={true} className={`flex-1 flex flex-col items-center justify-center gap-1 outline-none transition-none ${isActive('/') ? 'text-blue-600' : 'text-slate-500'}`}>
+            <i className="fas fa-home text-[20px]"></i>
+            <span className="text-[10px] font-medium whitespace-nowrap">Home</span>
+        </Link>
+        
+        <Link href="/categories" prefetch={true} className={`flex-1 flex flex-col items-center justify-center gap-1 outline-none transition-none ${isActive('/categories') ? 'text-blue-600' : 'text-slate-500'}`}>
+            <i className="fas fa-layer-group text-[20px]"></i>
+            <span className="text-[10px] font-medium whitespace-nowrap">Category</span>
+        </Link>
+        
+        <button 
+            className="flex-1 flex flex-col items-center justify-center relative group outline-none"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Search"
+        >
+            <div className="absolute -top-7 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white active:scale-95 transition-transform">
+                <i className="fas fa-search text-[18px]"></i>
+            </div>
+            <span className="text-[10px] font-medium text-slate-500 mt-6 whitespace-nowrap">Search</span>
         </button>
-        <span style={{ ...labelStyle, color: '#64748b' }}>Search</span>
-      </div>
-
-      {/* Contact */}
-      <Link href="/contact" prefetch={true} style={{ ...itemStyle, color: isActive('/contact') ? activeColor : '#64748b' }}>
-        <i className="fas fa-headset" style={iconStyle}></i>
-        <span style={isActive('/contact') ? activeLabelStyle : labelStyle}>Contact</span>
-      </Link>
-
-      {/* Menu */}
-      <button style={itemStyle} onClick={() => setMobileDrawerOpen(true)} aria-label="Menu">
-        <i className="fas fa-bars" style={iconStyle}></i>
-        <span style={labelStyle}>Menu</span>
-      </button>
+        
+        <Link href="/contact" className={`flex-1 flex flex-col items-center justify-center gap-1 outline-none transition-none ${isActive('/contact') ? 'text-blue-600' : 'text-slate-500'}`}>
+            <i className="fas fa-headset text-[20px]"></i>
+            <span className="text-[10px] font-medium whitespace-nowrap">Contact</span>
+        </Link>
+        
+        <button className="flex-1 flex flex-col items-center justify-center gap-1 text-slate-500 outline-none transition-none" onClick={openDrawer}>
+            <i className="fas fa-bars text-[20px]"></i>
+            <span className="text-[10px] font-medium whitespace-nowrap">Menu</span>
+        </button>
     </nav>
   );
 }
