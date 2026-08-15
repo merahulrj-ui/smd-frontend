@@ -15,19 +15,19 @@ export default function BottomNav() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 z-[90] lg:hidden flex justify-around items-end px-1 pb-2 pt-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-        <Link href="/" prefetch={true} className={`flex flex-col items-center justify-center w-[20%] gap-1 transition-colors ${isActive('/') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
+    <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 z-[90] lg:hidden flex justify-around items-end px-1 pb-2 pt-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] select-none">
+        <Link href="/" prefetch={true} className={`flex-1 flex flex-col items-center justify-center gap-1 transition-colors ${isActive('/') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
             <i className="fas fa-home text-[20px]"></i>
             <span className="text-[10px] font-medium">Home</span>
         </Link>
         
-        <Link href="/categories" prefetch={true} className={`flex flex-col items-center justify-center w-[20%] gap-1 transition-colors ${isActive('/categories') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
+        <Link href="/categories" prefetch={true} className={`flex-1 flex flex-col items-center justify-center gap-1 transition-colors ${isActive('/categories') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
             <i className="fas fa-layer-group text-[20px]"></i>
-            <span className="text-[10px] font-medium">Categories</span>
+            <span className="text-[10px] font-medium truncate max-w-full">Category</span>
         </Link>
         
         <button 
-            className="flex flex-col items-center justify-center w-[20%] relative group"
+            className="flex-1 flex flex-col items-center justify-center relative group"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
         >
@@ -37,12 +37,12 @@ export default function BottomNav() {
             <span className="text-[10px] font-medium text-slate-500 mt-6">Search</span>
         </button>
         
-        <Link href="/contact" className={`flex flex-col items-center justify-center w-[20%] gap-1 transition-colors ${isActive('/contact') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
+        <Link href="/contact" className={`flex-1 flex flex-col items-center justify-center gap-1 transition-colors ${isActive('/contact') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-500'}`}>
             <i className="fas fa-headset text-[20px]"></i>
             <span className="text-[10px] font-medium">Contact</span>
         </Link>
         
-        <button className="flex flex-col items-center justify-center w-[20%] gap-1 text-slate-500 hover:text-blue-500 transition-colors" onClick={openDrawer}>
+        <button className="flex-1 flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-blue-500 transition-colors" onClick={openDrawer}>
             <i className="fas fa-bars text-[20px]"></i>
             <span className="text-[10px] font-medium">Menu</span>
         </button>
