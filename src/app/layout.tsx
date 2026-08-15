@@ -19,31 +19,34 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://smdmedicare.in'),
+  applicationName: 'SMD MEDICARE',
   title: {
-    default: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
+    default: "SMD MEDICARE - Wholesale Medical Equipment Supplies Online",
     template: "%s | SMD MEDICARE",
   },
   description: "Buy premium medical equipment, surgical instruments, hospital furniture & diagnostic test kits online in India at wholesale prices from SMD Medicare.",
-  keywords: ["medical equipment", "hospital furniture", "surgical instruments", "wholesale medical supplies", "diagnostic kits", "SMD Medicare"],
-  authors: [{ name: "SMD Medicare" }],
-  creator: "SMD Medicare",
-  publisher: "SMD Medicare",
+  keywords: ["SMD MEDICARE", "SMD Medicare", "medical equipment", "hospital furniture", "surgical instruments", "wholesale medical supplies", "diagnostic kits"],
+  authors: [{ name: "SMD MEDICARE" }],
+  creator: "SMD MEDICARE",
+  publisher: "SMD MEDICARE",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
+    title: "SMD MEDICARE - Wholesale Medical Equipment Supplies Online",
     description: "Buy premium medical equipment, surgical instruments, hospital furniture & diagnostic test kits online in India at wholesale prices from SMD Medicare.",
     url: 'https://smdmedicare.in',
-    siteName: 'SMD Medicare',
+    siteName: 'SMD MEDICARE',
     locale: 'en_IN',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
+    site: '@smd_medicare',
+    creator: '@smd_medicare',
+    title: "SMD MEDICARE - Wholesale Medical Equipment Supplies Online",
     description: "Buy premium medical equipment, surgical instruments, hospital furniture & diagnostic test kits online in India at wholesale prices from SMD Medicare.",
   },
   icons: {
@@ -62,6 +65,14 @@ export const metadata: Metadata = {
   },
 };
 
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "SMD MEDICARE",
+  "alternateName": ["SMD Medicare", "SMD MEDICARE INDIA", "smdmedicare.in"],
+  "url": "https://smdmedicare.in"
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -71,7 +82,11 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
       </head>
       <body className={`${manrope.className} antialiased overflow-x-hidden`}>
         {/* Google Analytics (gtag.js) */}

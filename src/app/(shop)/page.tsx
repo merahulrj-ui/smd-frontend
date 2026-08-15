@@ -39,13 +39,31 @@ export default async function Home() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'MedicalOrganization',
-    name: 'SMD Medicare',
+    name: 'SMD MEDICARE',
+    alternateName: ['SMD Medicare', 'smdmedicare.in'],
     url: 'https://smdmedicare.in',
-    logo: 'https://smdmedicare.in/images/logo.png',
+    logo: 'https://smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp',
     description: 'Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits in India.',
+    sameAs: [
+      'https://www.instagram.com/smd_medicare',
+      'https://x.com/smd_medicare',
+      'https://facebook.com/smdmedicare',
+      'https://linkedin.com/company/smdmedicare'
+    ],
     address: {
       '@type': 'PostalAddress',
+      streetAddress: 'Shakumbari Vihar, Phase 2, Ganeshpur',
+      addressLocality: 'Roorkee',
+      addressRegion: 'Uttarakhand',
+      postalCode: '247667',
       addressCountry: 'IN'
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+91-9555422455',
+      contactType: 'customer service',
+      areaServed: 'IN',
+      availableLanguage: ['English', 'Hindi']
     }
   };
 

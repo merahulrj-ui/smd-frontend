@@ -29,10 +29,10 @@ export default async function Footer() {
                     <a href="https://facebook.com/smdmedicare" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-[#1877F2] hover:scale-110 transition-transform">
                         <i className="fab fa-facebook-f text-lg" aria-hidden="true"></i>
                     </a>
-                    <a href="https://twitter.com/smdmedicare" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-[#1DA1F2] hover:scale-110 transition-transform">
-                        <i className="fab fa-twitter text-lg" aria-hidden="true"></i>
+                    <a href="https://x.com/smd_medicare" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-white hover:scale-110 transition-transform">
+                        <i className="fab fa-x-twitter text-lg" aria-hidden="true"></i>
                     </a>
-                    <a href="https://instagram.com/smdmedicare" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-[#E4405F] hover:scale-110 transition-transform">
+                    <a href="https://www.instagram.com/smd_medicare" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-[#E4405F] hover:scale-110 transition-transform">
                         <i className="fab fa-instagram text-lg" aria-hidden="true"></i>
                     </a>
                     <a href="https://linkedin.com/company/smdmedicare" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-[#0A66C2] hover:scale-110 transition-transform">
@@ -41,32 +41,30 @@ export default async function Footer() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-5 md:gap-10 col-span-1 md:col-span-2 lg:col-span-2">
-                <div className="flex flex-col">
-                    <h3 className="text-white text-lg font-bold mb-5 tracking-wide">Quick Links</h3>
-                    <ul className="flex flex-col gap-3">
-                        <li><Link href="/" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Home</Link></li>
-                        <li><Link href="/categories" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Product Categories</Link></li>
-                        <li><Link href="/about" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> About Us</Link></li>
-                        <li><Link href="/contact" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Contact Us</Link></li>
-                        <li><Link href="/blog" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Our Blogs</Link></li>
-                    </ul>
-                </div>
+            <div className="flex flex-col">
+                <h3 className="text-white text-lg font-bold mb-5 tracking-wide">Quick Links</h3>
+                <ul className="flex flex-col gap-3">
+                    <li><Link href="/" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Home</Link></li>
+                    <li><Link href="/categories" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Product Categories</Link></li>
+                    <li><Link href="/about" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> About Us</Link></li>
+                    <li><Link href="/contact" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Contact Us</Link></li>
+                    <li><Link href="/blog" className="text-slate-400 hover:text-blue-400 transition-colors text-sm flex items-center gap-2"><i className="fas fa-angle-right text-[0.7em]"></i> Our Blogs</Link></li>
+                </ul>
+            </div>
 
-                <div className="flex flex-col">
-                    <h3 className="text-white text-lg font-bold mb-5 tracking-wide">Our Categories</h3>
-                    <ul className="flex flex-col gap-3">
-                        {categories.length > 0 ? categories.map((cat) => (
-                          <li key={cat.slug}>
-                            <Link href={`/category/${cat.slug}`} className="text-slate-400 hover:text-blue-400 transition-colors text-[13px] sm:text-sm flex items-center gap-2">
-                              <i className="fas fa-angle-right text-[0.7em] shrink-0"></i> <span className="line-clamp-1">{cat.name}</span>
-                            </Link>
-                          </li>
-                        )) : (
-                          <li><span className="text-slate-500 text-sm">Loading categories...</span></li>
-                        )}
-                    </ul>
-                </div>
+            <div className="flex flex-col">
+                <h3 className="text-white text-lg font-bold mb-5 tracking-wide">Our Categories</h3>
+                <ul className="flex flex-col gap-3">
+                    {categories.length > 0 ? categories.map((cat) => (
+                      <li key={cat.slug}>
+                        <Link href={`/category/${cat.slug}`} className="text-slate-400 hover:text-blue-400 transition-colors text-[13px] sm:text-sm flex items-center gap-2">
+                          <i className="fas fa-angle-right text-[0.7em] shrink-0"></i> <span className="line-clamp-1">{cat.name}</span>
+                        </Link>
+                      </li>
+                    )) : (
+                      <li><span className="text-slate-500 text-sm">Loading categories...</span></li>
+                    )}
+                </ul>
             </div>
 
             <div className="flex flex-col">
@@ -93,10 +91,10 @@ export default async function Footer() {
                 &copy; {new Date().getFullYear()} SMD MEDICARE. All Rights Reserved.
             </p>
             <ul className="flex gap-4 text-sm text-slate-300">
-                <li><Link href="#" className="hover:text-white transition-colors">About Us</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Careers</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
             </ul>
         </div>
     </footer>
