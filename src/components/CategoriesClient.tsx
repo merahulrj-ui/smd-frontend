@@ -38,10 +38,10 @@ export default function CategoriesClient({ categories }: Props) {
   };
 
   return (
-    <div className="flex flex-row max-w-[1400px] mx-auto bg-white min-h-[calc(100vh-160px)] md:min-h-[600px] shadow-sm border border-slate-200 md:mt-6 mb-20 md:rounded-xl overflow-hidden">
+    <div className="flex flex-row max-w-[1400px] mx-auto bg-white shadow-sm border border-slate-200 md:mt-6 mb-8 md:mb-12 md:rounded-xl overflow-hidden md:h-[800px]">
       
       {/* Sidebar */}
-      <div className="w-[35%] md:w-1/4 bg-slate-50 border-r border-slate-200 overflow-y-auto h-[calc(100vh-160px)] md:h-[800px] custom-scrollbar">
+      <div className="w-[35%] md:w-1/4 bg-slate-50 border-r border-slate-200 md:overflow-y-auto md:h-full custom-scrollbar">
         <ul className="py-2 md:py-4">
           {categories.map((cat) => {
             const isActive = activeCategoryId === cat.id;
@@ -67,7 +67,7 @@ export default function CategoriesClient({ categories }: Props) {
       </div>
 
       {/* Content Area */}
-      <div className="w-[65%] md:w-3/4 p-4 md:p-10 bg-white overflow-y-auto h-[calc(100vh-160px)] md:h-[800px] custom-scrollbar">
+      <div className="w-[65%] md:w-3/4 p-4 md:p-10 bg-white md:overflow-y-auto md:h-full custom-scrollbar">
         {activeCategory ? (
           <div>
             <h1 className="text-xs md:text-2xl font-bold text-slate-900 mb-3 md:mb-8 pb-2 md:pb-4 border-b border-slate-100">

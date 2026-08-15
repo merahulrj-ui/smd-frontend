@@ -15,37 +15,121 @@ export default function BottomNav() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full h-[64px] bg-white border-t border-slate-200 z-[90] lg:hidden flex justify-around items-end px-1 pb-2 pt-1 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] select-none [-webkit-tap-highlight-color:transparent]">
-        <Link href="/" prefetch={true} className={`flex-1 flex flex-col items-center justify-center gap-1 outline-none transition-none ${isActive('/') ? 'text-blue-600' : 'text-slate-500'}`}>
-            <i className="fas fa-home text-[20px]"></i>
-            <span className="text-[10px] font-medium whitespace-nowrap">Home</span>
-        </Link>
-        
-        <Link href="/categories" prefetch={true} className={`flex-1 flex flex-col items-center justify-center gap-1 outline-none transition-none ${isActive('/categories') ? 'text-blue-600' : 'text-slate-500'}`}>
-            <i className="fas fa-layer-group text-[20px]"></i>
-            <span className="text-[10px] font-medium whitespace-nowrap">Category</span>
-        </Link>
-        
-        <button 
-            className="flex-1 flex flex-col items-center justify-center relative group outline-none"
-            onClick={() => setSearchOpen(true)}
-            aria-label="Search"
+    <nav
+      className="lg:hidden bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] select-none"
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        height: '70px',
+        zIndex: 9999,
+        transform: 'translateZ(0)',
+        WebkitTapHighlightColor: 'transparent',
+      }}
+    >
+      <div className="grid grid-cols-5 h-full w-full max-w-md mx-auto items-center px-1">
+        {/* 1. Home */}
+        <Link
+          href="/"
+          prefetch={true}
+          className={`flex flex-col items-center justify-center h-full py-1.5 group transition-colors ${
+            isActive('/') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-600'
+          }`}
         >
-            <div className="absolute -top-7 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white active:scale-95 transition-transform">
-                <i className="fas fa-search text-[18px]"></i>
-            </div>
-            <span className="text-[10px] font-medium text-slate-500 mt-6 whitespace-nowrap">Search</span>
-        </button>
-        
-        <Link href="/contact" className={`flex-1 flex flex-col items-center justify-center gap-1 outline-none transition-none ${isActive('/contact') ? 'text-blue-600' : 'text-slate-500'}`}>
-            <i className="fas fa-headset text-[20px]"></i>
-            <span className="text-[10px] font-medium whitespace-nowrap">Contact</span>
+          <div
+            className={`w-12 h-8 rounded-full flex items-center justify-center transition-all ${
+              isActive('/') ? 'bg-blue-50 text-blue-600' : ''
+            }`}
+          >
+            <i className="fas fa-home text-[21px]"></i>
+          </div>
+          <span
+            className={`text-[11px] tracking-tight leading-none mt-1 whitespace-nowrap ${
+              isActive('/') ? 'font-bold text-blue-600' : 'font-medium'
+            }`}
+          >
+            Home
+          </span>
         </Link>
-        
-        <button className="flex-1 flex flex-col items-center justify-center gap-1 text-slate-500 outline-none transition-none" onClick={openDrawer}>
-            <i className="fas fa-bars text-[20px]"></i>
-            <span className="text-[10px] font-medium whitespace-nowrap">Menu</span>
+
+        {/* 2. Categories */}
+        <Link
+          href="/categories"
+          prefetch={true}
+          className={`flex flex-col items-center justify-center h-full py-1.5 group transition-colors ${
+            isActive('/categories') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-600'
+          }`}
+        >
+          <div
+            className={`w-12 h-8 rounded-full flex items-center justify-center transition-all ${
+              isActive('/categories') ? 'bg-blue-50 text-blue-600' : ''
+            }`}
+          >
+            <i className="fas fa-layer-group text-[21px]"></i>
+          </div>
+          <span
+            className={`text-[11px] tracking-tight leading-none mt-1 whitespace-nowrap ${
+              isActive('/categories') ? 'font-bold text-blue-600' : 'font-medium'
+            }`}
+          >
+            Categories
+          </span>
+        </Link>
+
+        {/* 3. Search (Center Floating Round Blue FAB) */}
+        <div className="flex flex-col items-center justify-center h-full relative">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="absolute -top-5 w-[52px] h-[52px] rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/30 border-4 border-white active:scale-95 transition-transform outline-none"
+            aria-label="Search"
+          >
+            <i className="fas fa-search text-[19px]"></i>
+          </button>
+          <span className="text-[11px] font-semibold text-slate-500 tracking-tight leading-none mt-7 whitespace-nowrap">
+            Search
+          </span>
+        </div>
+
+        {/* 4. Contact */}
+        <Link
+          href="/contact"
+          prefetch={true}
+          className={`flex flex-col items-center justify-center h-full py-1.5 group transition-colors ${
+            isActive('/contact') ? 'text-blue-600' : 'text-slate-500 hover:text-blue-600'
+          }`}
+        >
+          <div
+            className={`w-12 h-8 rounded-full flex items-center justify-center transition-all ${
+              isActive('/contact') ? 'bg-blue-50 text-blue-600' : ''
+            }`}
+          >
+            <i className="fas fa-headset text-[21px]"></i>
+          </div>
+          <span
+            className={`text-[11px] tracking-tight leading-none mt-1 whitespace-nowrap ${
+              isActive('/contact') ? 'font-bold text-blue-600' : 'font-medium'
+            }`}
+          >
+            Contact
+          </span>
+        </Link>
+
+        {/* 5. Menu */}
+        <button
+          onClick={openDrawer}
+          className="flex flex-col items-center justify-center h-full py-1.5 text-slate-500 hover:text-blue-600 group outline-none"
+          aria-label="Menu"
+        >
+          <div className="w-12 h-8 rounded-full flex items-center justify-center group-active:scale-95 transition-transform">
+            <i className="fas fa-bars text-[21px]"></i>
+          </div>
+          <span className="text-[11px] font-medium tracking-tight leading-none mt-1 whitespace-nowrap">
+            Menu
+          </span>
         </button>
+      </div>
     </nav>
   );
 }

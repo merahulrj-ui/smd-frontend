@@ -34,7 +34,7 @@ export default async function CategoriesPage() {
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-20 pt-[76px]">
+    <div className="bg-slate-50 min-h-screen pb-6 pt-[76px]">
       {/* Breadcrumbs Banner */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
           <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">

@@ -1,4 +1,3 @@
-import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 import Image from 'next/image';
 import pool from '@/lib/db';
@@ -56,7 +55,6 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar />
       
       {/* Next-Gen Tailwind Hero Section */}
       <section className="relative mt-[76px] bg-gradient-to-br from-blue-900 via-slate-900 to-blue-950 md:rounded-b-[40px] mb-4 md:mb-6 border-b border-blue-800/30 shadow-xl md:shadow-2xl overflow-hidden transform-gpu w-full">

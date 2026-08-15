@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import BottomNav from "@/components/BottomNav";
 import LazyComponents from "@/components/LazyComponents";
 import JayantiChatbotWrapper from "@/components/JayantiChatbotWrapper";
+import ScreenDebugger from "@/components/ScreenDebugger";
 import { UIProvider } from "@/context/UIContext";
 
 export default function ShopLayout({
@@ -18,7 +19,7 @@ export default function ShopLayout({
         <LazyComponents />
 
         {/* Main Content Area */}
-        <main className="main-layout-content">
+        <main className="main-layout-content pb-20 lg:pb-0">
           {children}
         </main>
 
