@@ -18,7 +18,7 @@ export default function ShopLayout({
         <LazyComponents />
 
         {/* Main Content Area */}
-        <main className="main-layout-content pb-20 lg:pb-0">
+        <main className="main-layout-content">
           {children}
         </main>
 

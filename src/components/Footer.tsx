@@ -18,7 +18,7 @@ export default async function Footer() {
   }
 
   return (
-    <footer className="bg-slate-950 text-slate-300 pt-8 pb-8 border-t-4 border-blue-600">
+    <footer className="bg-[#0b132b] text-slate-300 pt-10 pb-28 lg:pb-10 border-t border-blue-900/40">
         <div className="max-w-[1400px] mx-auto px-5 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 mb-10 md:mb-12">
             <div className="flex flex-col">
                 <Image src="/images/img_68ae826eb6cc47.12112340_logo.webp" alt="SMD Medicare" width={121} height={69} className="h-[50px] w-auto bg-white p-2 rounded-lg object-contain mb-5 self-start" />
