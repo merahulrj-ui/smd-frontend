@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
+import Script from "next/script";
 import FontAwesomeLoader from "@/components/FontAwesomeLoader";
 import "./globals.css";
 
@@ -73,6 +74,21 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
       <body className={`${manrope.className} antialiased overflow-x-hidden`}>
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-P4S7S7G36W"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-P4S7S7G36W', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
         <FontAwesomeLoader />
         {children}
       </body>
