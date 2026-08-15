@@ -38,6 +38,9 @@ export const metadata: Metadata = {
     title: "Wholesale Medical Equipment Supplies Online - SMD MEDICARE",
     description: "Buy premium medical equipment, surgical instruments, hospital furniture & diagnostic test kits online in India at wholesale prices from SMD Medicare.",
   },
+  icons: {
+    icon: '/images/img_68ae826eb6cc47.12112340_logo.webp',
+  },
   robots: {
     index: true,
     follow: true,
