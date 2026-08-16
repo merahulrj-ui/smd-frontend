@@ -69,11 +69,77 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     return notFound();
   }
 
+  const productUrl = `https://smdmedicare.in/product/${slug}`;
+  const imageUrl = product.image ? `https://smdmedicare.in/backend-media/${product.image}` : 'https://smdmedicare.in/images/logo.png';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: imageUrl,
+    description: product.short_description || `High-quality ${product.name}`,
+    sku: product.hsn_code || product.id.toString(),
+    brand: {
+      '@type': 'Brand',
+      name: product.brand || 'SMD Medicare'
+    },
+    offers: {
+      '@type': 'Offer',
+      url: productUrl,
+      priceCurrency: 'INR',
+      price: product.price || 0,
+      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+      availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'IN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 7,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn'
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: 0,
+          currency: 'INR'
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'IN'
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: 1,
+            maxValue: 2,
+            unitCode: 'd'
+          },
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: 3,
+            maxValue: 7,
+            unitCode: 'd'
+          }
+        }
+      }
+    }
+  };
+
   return (
-    <ProductClient 
-      product={product} 
-      relatedProducts={relatedProducts} 
-      brandLogo={brandLogo} 
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ProductClient 
+        product={product} 
+        relatedProducts={relatedProducts} 
+        brandLogo={brandLogo} 
+      />
+    </>
   );
 }
