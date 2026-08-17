@@ -49,16 +49,22 @@ export async function saveBlogAction(formData: FormData) {
             return { error: 'Content must be a valid JSON array of blocks' };
         }
 
-        let imagePath = (formData.get('existing_image') as string) || '';
+        let imagePath = (formData.get('image_path') as string) || (formData.get('existing_image') as string) || 'images/blog_hospital_furniture_guide.jpg';
         const file = (formData.get('blog_image') as File) || (formData.get('image') as File);
         
         if (file && file.size > 0 && typeof file.arrayBuffer === 'function') {
-            const ext = path.extname(file.name).toLowerCase() || '.jpg';
-            const buffer = Buffer.from(await file.arrayBuffer());
-            const filename = 'blog_' + Date.now() + ext;
-            const dest = path.join(process.cwd(), 'public', 'backend-media', 'images', filename);
-            await writeFile(dest, buffer);
-            imagePath = 'images/' + filename;
+            try {
+                const ext = path.extname(file.name).toLowerCase() || '.jpg';
+                const buffer = Buffer.from(await file.arrayBuffer());
+                const filename = 'blog_' + Date.now() + ext;
+                const dest = path.join(process.cwd(), 'public', 'backend-media', 'images', filename);
+                await writeFile(dest, buffer);
+                imagePath = 'images/' + filename;
+            } catch (fsErr) {
+                console.warn('Serverless read-only filesystem (EROFS), using bundled image fallback:', fsErr);
+                // On Vercel, use the bundled image path
+                imagePath = (formData.get('image_path') as string) || 'images/blog_hospital_furniture_guide.jpg';
+            }
         }
 
         if (id) {

@@ -141,16 +141,22 @@ export default function BlogsClient({ dbBlogs }: { dbBlogs: any[] }) {
                                     <input type="text" name="author" defaultValue={editingBlog?.author_name || editingBlog?.author || 'Admin'} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 outline-none bg-slate-50 focus:bg-white" />
                                 </div>
                                 <div className="col-span-2">
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Cover Image (Optional)</label>
-                                    <input 
-                                        type="file" 
-                                        name="blog_image" 
-                                        accept="image/*" 
-                                        className="w-full px-4 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer" 
-                                    />
-                                    {editingBlog?.blog_image && (
-                                        <p className="text-xs text-slate-500 mt-1">Current: {editingBlog.blog_image}</p>
-                                    )}
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Cover Image</label>
+                                    <div className="space-y-2">
+                                        <input 
+                                            type="file" 
+                                            name="blog_image" 
+                                            accept="image/*" 
+                                            className="w-full px-4 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer" 
+                                        />
+                                        <input 
+                                            type="text" 
+                                            name="image_path" 
+                                            defaultValue={editingBlog?.blog_image || editingBlog?.image || 'images/blog_hospital_furniture_guide.jpg'} 
+                                            placeholder="Image Path / URL (Default: images/blog_hospital_furniture_guide.jpg)"
+                                            className="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50 text-slate-600 focus:bg-white outline-none" 
+                                        />
+                                    </div>
                                 </div>
                                 <div className="col-span-2">
                                     <label className="block text-sm font-semibold text-slate-700 mb-1.5">Content (JSON Blocks)</label>
