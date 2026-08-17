@@ -89,6 +89,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       priceCurrency: 'INR',
       price: product.price || 0,
       priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+      validFrom: '2026-01-01',
       availability: 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       hasMerchantReturnPolicy: {
