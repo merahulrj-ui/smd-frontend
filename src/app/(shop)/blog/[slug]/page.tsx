@@ -8,13 +8,30 @@ import ShareButtons from '@/components/ShareButtons';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const [rows] = await pool.query('SELECT title, content, image FROM blog WHERE slug = ? LIMIT 1', [slug]) as any[];
+    const [rows] = await pool.query('SELECT * FROM blog WHERE slug = ? LIMIT 1', [slug]) as any[];
     if (rows.length > 0) {
       const article = rows[0];
       const title = `${article.title} | SMD MEDICARE Blog`;
-      const description = typeof article.content === 'string' ? article.content.replace(/<[^>]*>?/gm, '').substring(0, 160) + '...' : 'Read the latest from SMD Medicare';
+      
+      let description = 'Read medical equipment and diagnostics insights on SMD Medicare.';
+      if (typeof article.content === 'string') {
+        try {
+          const parsed = JSON.parse(article.content);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            description = (parsed[0].paragraph || parsed[0].content || article.title).substring(0, 160);
+          }
+        } catch {
+          description = article.content.replace(/<[^>]*>?/gm, '').substring(0, 160);
+        }
+      }
+      
       const url = `https://www.smdmedicare.in/blog/${slug}`;
-      const imageUrl = article.image ? `https://www.smdmedicare.in/backend-media/${article.image}` : 'https://www.smdmedicare.in/images/logo.png';
+      const imgRaw = article.blog_image || article.image || 'images/blog_hospital_furniture_guide.jpg';
+      const imageUrl = imgRaw.startsWith('http') 
+        ? imgRaw 
+        : (imgRaw.startsWith('/') 
+            ? `https://www.smdmedicare.in${imgRaw}` 
+            : `https://www.smdmedicare.in/backend-media/${imgRaw}`);
       
       return {
         title,
@@ -23,7 +40,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           title,
           description,
           url,
-          images: [{ url: imageUrl }],
+          images: [
+            {
+              url: imageUrl,
+              width: 1200,
+              height: 630,
+              alt: article.title,
+            }
+          ],
           type: 'article',
         },
         twitter: {
@@ -103,7 +127,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   }
 
   const articleUrl = `https://www.smdmedicare.in/blog/${slug}`;
-  const imageUrl = article.image ? `https://www.smdmedicare.in/backend-media/${article.image}` : 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp';
+  const rawImg = article.blog_image || article.image || 'images/blog_hospital_furniture_guide.jpg';
+  const imageUrl = rawImg.startsWith('http') 
+    ? rawImg 
+    : (rawImg.startsWith('/') 
+        ? `https://www.smdmedicare.in${rawImg}` 
+        : `https://www.smdmedicare.in/backend-media/${rawImg}`);
+  const displayCoverImg = rawImg.startsWith('http') 
+    ? rawImg 
+    : (rawImg.startsWith('/') ? rawImg : `/backend-media/${rawImg}`);
   
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -222,10 +254,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl border border-slate-100">
           
           {/* Cover Image */}
-          {article.blog_image && (
+          {displayCoverImg && (
             <div className="w-full rounded-xl overflow-hidden mb-12 shadow-sm border border-slate-100">
               <Image 
-                src={`/backend-media/${article.blog_image}`} 
+                src={displayCoverImg} 
                 alt={article.title} 
                 width={1200}
                 height={480}
