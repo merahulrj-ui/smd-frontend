@@ -170,52 +170,34 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             '@type': 'QuantitativeValue',
             minValue: 3,
             maxValue: 7,
-            unitCode: 'd'
           }
         }
+      }
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: reviews && reviews.length > 0 
-        ? (reviews.reduce((acc: number, r: any) => acc + (r.rating || 5), 0) / reviews.length).toFixed(1)
-        : '4.8',
-      reviewCount: reviews && reviews.length > 0 ? reviews.length.toString() : '8',
-      bestRating: '5',
-      worstRating: '1'
-    },
-    review: reviews && reviews.length > 0 
-      ? reviews.map((r: any) => ({
-          '@type': 'Review',
-          author: {
-            '@type': 'Person',
-            name: r.user_name || 'Verified Buyer'
-          },
-          datePublished: r.created_at ? new Date(r.created_at).toISOString().split('T')[0] : '2026-01-01',
-          reviewBody: r.comment || 'Authentic certified medical equipment.',
-          reviewRating: {
-            '@type': 'Rating',
-            bestRating: '5',
-            ratingValue: (r.rating || 5).toString(),
-            worstRating: '1'
-          }
-        }))
-      : [
-          {
-            '@type': 'Review',
-            author: {
-              '@type': 'Person',
-              name: 'Verified Healthcare Professional'
-            },
-            datePublished: '2026-01-10',
-            reviewBody: `Genuine hospital grade ${product.name} with reliable performance and quality certification.`,
-            reviewRating: {
-              '@type': 'Rating',
-              bestRating: '5',
-              ratingValue: '5',
-              worstRating: '1'
-            }
-          }
-        ]
+    ...(reviews && reviews.length > 0 ? {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: (reviews.reduce((acc: number, r: any) => acc + (r.rating || 5), 0) / reviews.length).toFixed(1),
+        reviewCount: reviews.length.toString(),
+        bestRating: '5',
+        worstRating: '1'
+      },
+      review: reviews.map((r: any) => ({
+        '@type': 'Review',
+        author: {
+          '@type': 'Person',
+          name: r.user_name || 'Verified Customer'
+        },
+        datePublished: r.created_at ? new Date(r.created_at).toISOString().split('T')[0] : '2026-01-01',
+        reviewBody: r.comment || 'Verified product review.',
+        reviewRating: {
+          '@type': 'Rating',
+          bestRating: '5',
+          ratingValue: (r.rating || 5).toString(),
+          worstRating: '1'
+        }
+      }))
+    } : {})
   };
 
   return (
