@@ -31,7 +31,11 @@ export default function BlogsClient({ dbBlogs }: { dbBlogs: any[] }) {
     const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        if (editingBlog) formData.append('id', editingBlog.id);
+        if (editingBlog) {
+            formData.append('id', editingBlog.id);
+            if (editingBlog.blog_image) formData.append('existing_image', editingBlog.blog_image);
+            else if (editingBlog.image) formData.append('existing_image', editingBlog.image);
+        }
         
         startTransition(async () => {
             const res = await saveBlogAction(formData);
@@ -134,7 +138,19 @@ export default function BlogsClient({ dbBlogs }: { dbBlogs: any[] }) {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-slate-700 mb-1.5">Author</label>
-                                    <input type="text" name="author" defaultValue={editingBlog?.author || 'Admin'} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 outline-none bg-slate-50 focus:bg-white" />
+                                    <input type="text" name="author" defaultValue={editingBlog?.author_name || editingBlog?.author || 'Admin'} className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 outline-none bg-slate-50 focus:bg-white" />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Cover Image (Optional)</label>
+                                    <input 
+                                        type="file" 
+                                        name="blog_image" 
+                                        accept="image/*" 
+                                        className="w-full px-4 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer" 
+                                    />
+                                    {editingBlog?.blog_image && (
+                                        <p className="text-xs text-slate-500 mt-1">Current: {editingBlog.blog_image}</p>
+                                    )}
                                 </div>
                                 <div className="col-span-2">
                                     <label className="block text-sm font-semibold text-slate-700 mb-1.5">Content (JSON Blocks)</label>

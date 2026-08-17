@@ -2,6 +2,8 @@
 
 import pool from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { writeFile } from 'fs/promises';
+import path from 'path';
 import { isAdmin } from '@/lib/adminAuth';
 
 export async function deleteBlogAction(id: number) {
@@ -47,36 +49,62 @@ export async function saveBlogAction(formData: FormData) {
             return { error: 'Content must be a valid JSON array of blocks' };
         }
 
+        let imagePath = (formData.get('existing_image') as string) || '';
+        const file = (formData.get('blog_image') as File) || (formData.get('image') as File);
+        
+        if (file && file.size > 0 && typeof file.arrayBuffer === 'function') {
+            const ext = path.extname(file.name).toLowerCase() || '.jpg';
+            const buffer = Buffer.from(await file.arrayBuffer());
+            const filename = 'blog_' + Date.now() + ext;
+            const dest = path.join(process.cwd(), 'public', 'backend-media', 'images', filename);
+            await writeFile(dest, buffer);
+            imagePath = 'images/' + filename;
+        }
+
         if (id) {
             try {
                 await pool.query(
-                    'UPDATE blog SET title=?, slug=?, author_name=?, content=? WHERE id=?',
-                    [title, slug, author, content, id]
+                    'UPDATE blog SET title=?, slug=?, author_name=?, blog_image=?, content=? WHERE id=?',
+                    [title, slug, author, imagePath, content, id]
                 );
             } catch (err) {
-                await pool.query(
-                    'UPDATE blog SET title=?, slug=?, content=? WHERE id=?',
-                    [title, slug, content, id]
-                );
+                try {
+                    await pool.query(
+                        'UPDATE blog SET title=?, slug=?, author_name=?, image=?, content=? WHERE id=?',
+                        [title, slug, author, imagePath, content, id]
+                    );
+                } catch (err2) {
+                    await pool.query(
+                        'UPDATE blog SET title=?, slug=?, content=? WHERE id=?',
+                        [title, slug, content, id]
+                    );
+                }
             }
         } else {
             try {
                 await pool.query(
-                    'INSERT INTO blog (title, slug, author_name, content, status, read_time, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
-                    [title, slug, author, content, 'published', '5']
+                    'INSERT INTO blog (title, slug, author_name, blog_image, content, status, read_time, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())',
+                    [title, slug, author, imagePath, content, 'published', '5']
                 );
             } catch (err: any) {
-                console.error('Insert with author_name failed, trying minimal columns:', err);
+                console.error('Insert with blog_image failed, trying image column:', err);
                 try {
                     await pool.query(
-                        'INSERT INTO blog (title, slug, author, content, status) VALUES (?, ?, ?, ?, ?)',
-                        [title, slug, author, content, 'published']
+                        'INSERT INTO blog (title, slug, author_name, image, content, status, read_time, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())',
+                        [title, slug, author, imagePath, content, 'published', '5']
                     );
                 } catch (err2: any) {
-                    await pool.query(
-                        'INSERT INTO blog (title, slug, content, status) VALUES (?, ?, ?, ?)',
-                        [title, slug, content, 'published']
-                    );
+                    try {
+                        await pool.query(
+                            'INSERT INTO blog (title, slug, author_name, content, status, read_time, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+                            [title, slug, author, content, 'published', '5']
+                        );
+                    } catch (err3: any) {
+                        await pool.query(
+                            'INSERT INTO blog (title, slug, content, status) VALUES (?, ?, ?, ?)',
+                            [title, slug, content, 'published']
+                        );
+                    }
                 }
             }
         }
