@@ -1,6 +1,22 @@
 import pool from '@/lib/db';
 import SearchClient from './SearchClient';
 
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ query: string }> | { query: string } 
+}) {
+  const resolvedParams = await params;
+  const query = decodeURIComponent(resolvedParams.query || '');
+  return {
+    title: `Search results for "${query}" | SMD MEDICARE`,
+    robots: {
+      index: false,
+      follow: true,
+    },
+  };
+}
+
 export default async function SearchResultsPage({ 
   params, 
   searchParams 

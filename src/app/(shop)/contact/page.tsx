@@ -2,21 +2,52 @@ import Link from 'next/link';
 import ContactForm from '@/components/ContactForm';
 
 export const metadata = {
-  title: 'Contact Us | SMD MEDICARE',
-  description: 'Contact SMD Medicare for inquiries about hospital equipment, reagents, and medical supplies.',
+  title: 'Contact Us | SMD MEDICARE - Wholesale Medical Supplies Inquiry',
+  description: 'Get in touch with SMD Medicare for wholesale inquiries on medical equipment, hospital furniture, diagnostic reagents, and bulk dealer supplies in India.',
   openGraph: {
-    title: 'Contact Us | SMD MEDICARE',
-    description: 'Contact SMD Medicare for inquiries about hospital equipment, reagents, and medical supplies.',
-    url: 'https://smdmedicare.in/contact',
+    title: 'Contact Us | SMD MEDICARE - Wholesale Medical Supplies Inquiry',
+    description: 'Get in touch with SMD Medicare for wholesale inquiries on medical equipment, hospital furniture, diagnostic reagents, and bulk dealer supplies in India.',
+    url: 'https://www.smdmedicare.in/contact',
+    siteName: 'SMD MEDICARE',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contact Us | SMD MEDICARE - Wholesale Medical Supplies Inquiry',
+    description: 'Get in touch with SMD Medicare for wholesale inquiries on medical equipment, hospital furniture, diagnostic reagents, and bulk dealer supplies in India.',
   },
   alternates: {
-    canonical: 'https://smdmedicare.in/contact',
+    canonical: 'https://www.smdmedicare.in/contact',
   }
 };
 
 export default function ContactPage() {
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.smdmedicare.in',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Contact Us',
+        item: 'https://www.smdmedicare.in/contact',
+      },
+    ],
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-20 pt-[76px]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Breadcrumbs */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">

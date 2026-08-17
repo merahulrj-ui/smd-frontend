@@ -13,17 +13,43 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const targetSlug = resolvedParams.slug;
   
   let name = targetSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  let image = 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp';
   
   try {
-    const [cats] = await pool.query('SELECT name FROM categories WHERE slug = ? OR REPLACE(LOWER(name), " ", "-") = ? LIMIT 1', [targetSlug, targetSlug]) as any[];
+    const [cats] = await pool.query('SELECT name, image FROM categories WHERE slug = ? OR REPLACE(LOWER(name), " ", "-") = ? LIMIT 1', [targetSlug, targetSlug]) as any[];
     if (cats && cats.length > 0) {
       name = cats[0].name;
+      if (cats[0].image) {
+        image = cats[0].image.startsWith('http') ? cats[0].image : `https://www.smdmedicare.in/backend-media/${cats[0].image}`;
+      }
     }
   } catch(e) {}
   
+  const title = `${name} at Wholesale Price in India | SMD MEDICARE`;
+  const description = `Buy high quality ${name} online at wholesale prices in India. Certified hospital supplies, diagnostic equipment & surgical instruments from SMD Medicare.`;
+  const url = `https://www.smdmedicare.in/category/${targetSlug}`;
+
   return {
-    title: `${name} - Buy Wholesale Medical Equipment - SMD MEDICARE`,
-    description: `Shop for high-quality ${name} online at wholesale prices on SMD Medicare.`
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'SMD MEDICARE',
+      locale: 'en_IN',
+      type: 'website',
+      images: [{ url: image }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+    },
+    alternates: {
+      canonical: url,
+    }
   };
 }
 
@@ -145,8 +171,60 @@ export default async function MainCategoryPage({
   // FAQ logic
   const faqSource = categoryObj;
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.smdmedicare.in',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Categories',
+        item: 'https://www.smdmedicare.in/categories',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: categoryName,
+        item: `https://www.smdmedicare.in/category/${baseCatSlug}`,
+      },
+    ],
+  };
+
+  const collectionJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${categoryName} - Medical Equipment & Supplies`,
+    description: `Explore top-quality ${categoryName} at wholesale prices in India from SMD Medicare.`,
+    url: `https://www.smdmedicare.in/category/${baseCatSlug}`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: products.slice(0, 10).map((prod: any, index: number) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `https://www.smdmedicare.in/product/${prod.slug || prod.id}`,
+        name: prod.name,
+      })),
+    },
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-12 pt-[76px]">
+      {/* JSON-LD Schemas */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+
       {/* Tailwind Breadcrumbs */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">

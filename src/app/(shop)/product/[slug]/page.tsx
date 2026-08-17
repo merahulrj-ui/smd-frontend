@@ -8,24 +8,25 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const resolvedParams = await params;
   
   try {
-    const [rows] = await pool.query('SELECT name, category_id, image, description FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
+    const [rows] = await pool.query('SELECT name, category_id, image, description, short_description FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
     if (rows && rows.length > 0) {
       const product = rows[0];
-      const title = `${product.name} - Buy Online at SMD MEDICARE`;
+      const title = `${product.name} - Buy Online at Wholesale Price | SMD MEDICARE`;
       
       // Extract plain text from description or use default
-      let descriptionText = `Shop for high-quality ${product.name} online at wholesale prices on SMD Medicare.`;
-      if (product.description) {
-        // Simple strip HTML tags and limit to 150 chars
+      let descriptionText = `Buy ${product.name} online at wholesale prices in India. Certified medical equipment & supplies with nationwide delivery and warranty from SMD Medicare.`;
+      if (product.short_description) {
+        descriptionText = product.short_description.replace(/<[^>]*>?/gm, '').trim();
+      } else if (product.description) {
         const plainText = product.description.replace(/<[^>]*>?/gm, '').trim();
         if (plainText.length > 10) {
-          descriptionText = plainText.substring(0, 150) + (plainText.length > 150 ? '...' : '');
+          descriptionText = plainText.substring(0, 155) + (plainText.length > 155 ? '...' : '');
         }
       }
       
       const description = descriptionText;
-      const url = `https://smdmedicare.in/product/${resolvedParams.slug}`;
-      const imageUrl = product.image ? `https://smdmedicare.in/backend-media/${product.image}` : 'https://smdmedicare.in/images/logo.png';
+      const url = `https://www.smdmedicare.in/product/${resolvedParams.slug}`;
+      const imageUrl = product.image ? `https://www.smdmedicare.in/backend-media/${product.image}` : 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp';
       
       return {
         title,
@@ -34,6 +35,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           title,
           description,
           url,
+          siteName: 'SMD MEDICARE',
+          locale: 'en_IN',
           images: [{ url: imageUrl }],
           type: 'website',
         },
@@ -65,9 +68,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   let brandLogo: string | null = null;
   
   try {
-    // 1. Fetch main product (join with categories for category name)
+    // 1. Fetch main product (join with categories for category name & slug)
     const [prodRows] = await pool.query(`
-      SELECT p.*, c.name as category_name 
+      SELECT p.*, c.name as category_name, c.slug as category_slug 
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.id 
       WHERE p.slug = ? LIMIT 1
@@ -120,8 +123,35 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     return notFound();
   }
 
-  const productUrl = `https://smdmedicare.in/product/${slug}`;
-  const imageUrl = product.image ? `https://smdmedicare.in/backend-media/${product.image}` : 'https://smdmedicare.in/images/logo.png';
+  const productUrl = `https://www.smdmedicare.in/product/${slug}`;
+  const imageUrl = product.image ? `https://www.smdmedicare.in/backend-media/${product.image}` : 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp';
+  const catSlug = product.category_slug || (product.category ? product.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'categories');
+  const catName = product.category_name || product.category || 'Medical Equipment';
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.smdmedicare.in',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: catName,
+        item: `https://www.smdmedicare.in/category/${catSlug}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: product.name,
+        item: productUrl,
+      },
+    ],
+  };
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -202,6 +232,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import pool from '@/lib/db';
 
-const BASE_URL = 'https://smdmedicare.in';
+const BASE_URL = 'https://www.smdmedicare.in';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemapData: MetadataRoute.Sitemap = [
@@ -39,14 +39,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     // 1. Fetch Categories
-    const [categories] = await pool.query('SELECT slug FROM categories WHERE status = 1') as any[];
+    const [categories] = await pool.query('SELECT slug FROM categories WHERE status = 1 OR status = "1"') as any[];
     categories.forEach((cat: any) => {
-      sitemapData.push({
-        url: `${BASE_URL}/category/${cat.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.9,
-      });
+      if (cat.slug) {
+        sitemapData.push({
+          url: `${BASE_URL}/category/${cat.slug}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.9,
+        });
+      }
     });
 
     // 2. Fetch Subcategories
@@ -54,37 +56,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       SELECT sc.slug as sub_slug, c.slug as cat_slug 
       FROM sub_categories sc 
       JOIN categories c ON sc.category_id = c.id 
-      WHERE sc.status = 1 AND c.status = 1
+      WHERE (sc.status = 1 OR sc.status = "1") AND (c.status = 1 OR c.status = "1")
     `) as any[];
     subcategories.forEach((sub: any) => {
-      sitemapData.push({
-        url: `${BASE_URL}/category/${sub.cat_slug}/${sub.sub_slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
+      if (sub.cat_slug && sub.sub_slug) {
+        sitemapData.push({
+          url: `${BASE_URL}/category/${sub.cat_slug}/${sub.sub_slug}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.8,
+        });
+      }
     });
 
     // 3. Fetch Products
-    const [products] = await pool.query('SELECT slug FROM products WHERE status = "live" OR status = "1"') as any[];
+    const [products] = await pool.query('SELECT slug FROM products WHERE status = "live" OR status = "1" OR status = 1') as any[];
     products.forEach((prod: any) => {
-      sitemapData.push({
-        url: `${BASE_URL}/product/${prod.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 0.8,
-      });
+      if (prod.slug) {
+        sitemapData.push({
+          url: `${BASE_URL}/product/${prod.slug}`,
+          lastModified: new Date(),
+          changeFrequency: 'daily',
+          priority: 0.8,
+        });
+      }
     });
 
     // 4. Fetch Blog Posts
-    const [blogs] = await pool.query('SELECT slug FROM blog WHERE status = 1') as any[];
+    const [blogs] = await pool.query('SELECT slug FROM blog WHERE status = 1 OR status = "1" OR status = "published"') as any[];
     blogs.forEach((blog: any) => {
-      sitemapData.push({
-        url: `${BASE_URL}/blog/${blog.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.7,
-      });
+      if (blog.slug) {
+        sitemapData.push({
+          url: `${BASE_URL}/blog/${blog.slug}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.7,
+        });
+      }
     });
 
   } catch (error) {

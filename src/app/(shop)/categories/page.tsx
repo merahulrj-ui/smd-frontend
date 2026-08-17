@@ -3,8 +3,24 @@ import Link from 'next/link';
 import CategoriesClient from '@/components/CategoriesClient';
 
 export const metadata = {
-  title: 'Medical Equipment Categories - SMD MEDICARE',
-  description: 'Explore a wide range of hospital equipment categories. Find reliable and high-quality medical equipment designed for hospitals, clinics, and healthcare facilities.'
+  title: 'Medical Equipment Categories & Supplies List | SMD MEDICARE',
+  description: 'Explore our complete list of medical equipment categories. Wholesale hospital supplies, ICU equipment, surgical instruments, and diagnostic test kits in India.',
+  openGraph: {
+    title: 'Medical Equipment Categories & Supplies List | SMD MEDICARE',
+    description: 'Explore our complete list of medical equipment categories. Wholesale hospital supplies, ICU equipment, surgical instruments, and diagnostic test kits in India.',
+    url: 'https://www.smdmedicare.in/categories',
+    siteName: 'SMD MEDICARE',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Medical Equipment Categories & Supplies List | SMD MEDICARE',
+    description: 'Explore our complete list of medical equipment categories. Wholesale hospital supplies, ICU equipment, surgical instruments, and diagnostic test kits in India.',
+  },
+  alternates: {
+    canonical: 'https://www.smdmedicare.in/categories',
+  }
 };
 
 export const dynamic = 'force-dynamic';
@@ -33,8 +49,32 @@ export default async function CategoriesPage() {
     console.error("Error fetching live data for categories page:", error);
   }
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.smdmedicare.in',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'All Categories',
+        item: 'https://www.smdmedicare.in/categories',
+      },
+    ],
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-6 pt-[76px]">
+      {/* Breadcrumb Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Breadcrumbs Banner */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
           <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">

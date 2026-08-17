@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://smdmedicare.in';
+const BASE_URL = 'https://www.smdmedicare.in';
 
 export default function robots(): MetadataRoute.Robots {
   return {

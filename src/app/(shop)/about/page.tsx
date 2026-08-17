@@ -2,15 +2,23 @@ import Link from 'next/link';
 import pool from '@/lib/db';
 
 export const metadata = {
-  title: 'About Us | SMD MEDICARE',
-  description: 'Learn about SMD Medicare\'s decade-long journey in diagnostic excellence, our mission, vision, and the team dedicated to providing quality healthcare solutions in India.',
+  title: 'About Us | SMD MEDICARE - Healthcare & Medical Equipment Leader',
+  description: 'Learn about SMD Medicare\'s journey in healthcare excellence, wholesale medical equipment supply, and our dedicated mission to serve hospitals and labs across India.',
   openGraph: {
-    title: 'About Us | SMD MEDICARE',
-    description: 'Learn about SMD Medicare\'s decade-long journey in diagnostic excellence, our mission, vision, and the team dedicated to providing quality healthcare solutions in India.',
-    url: 'https://smdmedicare.in/about',
+    title: 'About Us | SMD MEDICARE - Healthcare & Medical Equipment Leader',
+    description: 'Learn about SMD Medicare\'s journey in healthcare excellence, wholesale medical equipment supply, and our dedicated mission to serve hospitals and labs across India.',
+    url: 'https://www.smdmedicare.in/about',
+    siteName: 'SMD MEDICARE',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Us | SMD MEDICARE - Healthcare & Medical Equipment Leader',
+    description: 'Learn about SMD Medicare\'s journey in healthcare excellence, wholesale medical equipment supply, and our dedicated mission to serve hospitals and labs across India.',
   },
   alternates: {
-    canonical: 'https://smdmedicare.in/about',
+    canonical: 'https://www.smdmedicare.in/about',
   }
 };
 
@@ -41,8 +49,31 @@ export default async function AboutPage() {
     console.error("Failed to fetch categories for about page", error);
   }
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.smdmedicare.in',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'About Us',
+        item: 'https://www.smdmedicare.in/about',
+      },
+    ],
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-10 pt-[76px]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Breadcrumbs */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">

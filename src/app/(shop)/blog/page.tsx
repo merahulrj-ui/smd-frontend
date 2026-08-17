@@ -8,10 +8,10 @@ export const metadata = {
   openGraph: {
     title: 'Blog & Insights | SMD MEDICARE',
     description: 'Read the latest updates, guides, and diagnostic sector insights from SMD Medicare.',
-    url: 'https://smdmedicare.in/blog',
+    url: 'https://www.smdmedicare.in/blog',
   },
   alternates: {
-    canonical: 'https://smdmedicare.in/blog',
+    canonical: 'https://www.smdmedicare.in/blog',
   }
 };
 
@@ -59,9 +59,31 @@ export default async function BlogPage() {
   const featuredArticle = articles.length > 0 ? articles[0] : null;
   const gridArticles = articles.length > 0 ? articles.slice(1) : [];
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.smdmedicare.in',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: 'https://www.smdmedicare.in/blog',
+      },
+    ],
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen font-sans pt-[76px]">
-      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Breadcrumbs Banner */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
           <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2">

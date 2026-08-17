@@ -69,8 +69,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     return notFound();
   }
 
-  const productUrl = `https://smdmedicare.in/product/${slug}`;
-  const imageUrl = product.image ? `https://smdmedicare.in/backend-media/${product.image}` : 'https://smdmedicare.in/images/logo.png';
+  const productUrl = `https://www.smdmedicare.in/product/${slug}`;
+  const imageUrl = product.image ? `https://www.smdmedicare.in/backend-media/${product.image}` : 'https://www.smdmedicare.in/images/logo.png';
 
   const jsonLd = {
     '@context': 'https://schema.org',

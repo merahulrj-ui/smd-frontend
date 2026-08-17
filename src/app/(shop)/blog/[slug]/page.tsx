@@ -13,8 +13,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       const article = rows[0];
       const title = `${article.title} | SMD MEDICARE Blog`;
       const description = typeof article.content === 'string' ? article.content.replace(/<[^>]*>?/gm, '').substring(0, 160) + '...' : 'Read the latest from SMD Medicare';
-      const url = `https://smdmedicare.in/blog/${slug}`;
-      const imageUrl = article.image ? `https://smdmedicare.in/backend-media/${article.image}` : 'https://smdmedicare.in/images/logo.png';
+      const url = `https://www.smdmedicare.in/blog/${slug}`;
+      const imageUrl = article.image ? `https://www.smdmedicare.in/backend-media/${article.image}` : 'https://www.smdmedicare.in/images/logo.png';
       
       return {
         title,
@@ -102,30 +102,65 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     // Not JSON, keep as string
   }
 
-  const articleUrl = `https://smdmedicare.in/blog/${slug}`;
-  const imageUrl = article.image ? `https://smdmedicare.in/backend-media/${article.image}` : 'https://smdmedicare.in/images/logo.png';
+  const articleUrl = `https://www.smdmedicare.in/blog/${slug}`;
+  const imageUrl = article.image ? `https://www.smdmedicare.in/backend-media/${article.image}` : 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp';
+  
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://www.smdmedicare.in',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: 'https://www.smdmedicare.in/blog',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: article.title,
+        item: articleUrl,
+      },
+    ],
+  };
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': articleUrl,
+    },
     headline: article.title,
     image: imageUrl,
-    datePublished: article.date || new Date().toISOString(),
+    datePublished: article.created_at || article.date || new Date().toISOString(),
     author: {
-      '@type': 'Organization',
-      name: 'SMD Medicare'
+      '@type': 'Person',
+      name: article.author_name || 'SMD Editorial Team'
     },
     publisher: {
       '@type': 'Organization',
-      name: 'SMD Medicare',
+      name: 'SMD MEDICARE',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://smdmedicare.in/images/logo.png'
+        url: 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp'
       }
-    }
+    },
+    description: typeof article.content === 'string' ? article.content.replace(/<[^>]*>?/gm, '').substring(0, 160) : 'Read medical equipment and diagnostics insights on SMD Medicare.',
   };
 
   return (
     <div className="bg-slate-50 min-h-screen font-sans pb-20 pt-[76px]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

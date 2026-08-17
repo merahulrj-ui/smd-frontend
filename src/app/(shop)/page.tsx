@@ -41,8 +41,8 @@ export default async function Home() {
     '@type': 'MedicalOrganization',
     name: 'SMD MEDICARE',
     alternateName: ['SMD Medicare', 'smdmedicare.in'],
-    url: 'https://smdmedicare.in',
-    logo: 'https://smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp',
+    url: 'https://www.smdmedicare.in',
+    logo: 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp',
     description: 'Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits in India.',
     sameAs: [
       'https://www.instagram.com/smd_medicare',
