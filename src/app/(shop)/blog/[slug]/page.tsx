@@ -11,9 +11,12 @@ export const revalidate = 0;
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
+    const cleanSlug = decodeURIComponent(slug).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const decodedSlug = decodeURIComponent(slug).trim();
+    
     const [rows] = await pool.query(
-      'SELECT * FROM blog WHERE slug = ? OR REPLACE(LOWER(title), " ", "-") = ? OR id = ? LIMIT 1',
-      [slug, slug, isNaN(Number(slug)) ? 0 : Number(slug)]
+      'SELECT * FROM blog WHERE slug = ? OR slug = ? OR REPLACE(LOWER(title), " ", "-") = ? OR title = ? OR id = ? LIMIT 1',
+      [slug, cleanSlug, cleanSlug, decodedSlug, isNaN(Number(slug)) ? 0 : Number(slug)]
     ) as any[];
     if (rows.length > 0) {
       const article = rows[0];
@@ -31,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         }
       }
       
-      const url = `https://www.smdmedicare.in/blog/${slug}`;
+      const url = `https://www.smdmedicare.in/blog/${article.slug || cleanSlug}`;
       const imgRaw = article.blog_image || article.image || 'images/blog_hospital_furniture_guide.jpg';
       const imageUrl = imgRaw.startsWith('http') 
         ? imgRaw 
@@ -73,14 +76,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const cleanSlug = decodeURIComponent(slug).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+  const decodedSlug = decodeURIComponent(slug).trim();
   let article: any = null;
   let relatedBlogs: any[] = [];
   let relatedProducts: any[] = [];
   
   try {
     const [rows] = await pool.query(
-      'SELECT * FROM blog WHERE slug = ? OR REPLACE(LOWER(title), " ", "-") = ? OR id = ? LIMIT 1',
-      [slug, slug, isNaN(Number(slug)) ? 0 : Number(slug)]
+      'SELECT * FROM blog WHERE slug = ? OR slug = ? OR REPLACE(LOWER(title), " ", "-") = ? OR title = ? OR id = ? LIMIT 1',
+      [slug, cleanSlug, cleanSlug, decodedSlug, isNaN(Number(slug)) ? 0 : Number(slug)]
     ) as any[];
     if (rows.length === 0) {
       notFound();
