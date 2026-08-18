@@ -201,6 +201,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             '@type': 'QuantitativeValue',
             minValue: 3,
             maxValue: 7,
+            unitCode: 'd'
           }
         }
       }
