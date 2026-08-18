@@ -6,12 +6,16 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { slug } = await params;
-    const decodedSlug = decodeURIComponent(slug).trim();
+    const resolvedParams = await params;
+    const rawSlug = resolvedParams?.slug || '';
+    const slug = decodeURIComponent(rawSlug).trim();
     
     const [rows] = await pool.query(
-      'SELECT * FROM products WHERE slug = ? OR slug = ? LIMIT 1',
-      [slug, decodedSlug]
+      `SELECT p.*, c.name as category_name 
+       FROM products p 
+       LEFT JOIN categories c ON p.category_id = c.id 
+       WHERE p.slug = ? OR p.slug = ? OR p.id = ? LIMIT 1`,
+      [rawSlug, slug, isNaN(Number(slug)) ? 0 : Number(slug)]
     ) as any[];
 
     if (rows && rows.length > 0) {
