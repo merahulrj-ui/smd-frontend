@@ -32,7 +32,7 @@ export default function ProductCard({ id, slug, name, price, mrp, image, isNew, 
       <Link href={`/product/${slug}`} className="flex items-center justify-center mb-3 outline-none relative overflow-hidden group-hover:scale-105 transition-transform duration-300 h-[150px] w-full shrink-0">
         <Image 
           src={image ? (image.startsWith('http') || image.startsWith('/') ? image : `/backend-media/${image}`) : '/placeholder-product.png'} 
-          alt={name}
+          alt={`${name} - Buy Wholesale in India | SMD MEDICARE`}
           fill
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
           priority={priority}

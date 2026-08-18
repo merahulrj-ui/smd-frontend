@@ -136,7 +136,7 @@ export default function ProductClient({
               <div className="aspect-square flex items-center justify-center bg-white rounded-2xl mb-4 p-4 border border-slate-100 overflow-hidden">
                 <img 
                   src={activeImage} 
-                  alt={product.name} 
+                  alt={`${product.name} - Medical Equipment & Supplies | SMD MEDICARE`} 
                   className="max-w-full max-h-full object-contain transition-all duration-300"
                 />
               </div>
@@ -149,7 +149,7 @@ export default function ProductClient({
                       onClick={() => setActiveImage(img)}
                       className={`w-20 h-20 rounded-xl border-2 flex items-center justify-center p-2 transition-all bg-white ${activeImage === img ? 'border-blue-600 shadow-sm' : 'border-slate-200 hover:border-blue-300'}`}
                     >
-                      <img src={img} alt="" className="max-w-full max-h-full object-contain" />
+                      <img src={img} alt={`${product.name} gallery image ${idx + 1}`} className="max-w-full max-h-full object-contain" />
                     </button>
                   ))}
                 </div>
