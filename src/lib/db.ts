@@ -7,9 +7,9 @@ const isTiDB = process.env.DB_HOST?.includes('tidbcloud.com') || process.env.DB_
 const dbConfig: mysql.PoolOptions = {
   host: process.env.DB_HOST || '127.0.0.1',
   port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
-  user: process.env.DB_USER || 'root',
+  user: process.env.DB_USER || process.env.DB_USERNAME || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'smd_medicare',
+  database: process.env.DB_NAME || process.env.DB_DATABASE || 'smd_medicare',
   ssl: isTiDB ? { minVersion: 'TLSv1.2', rejectUnauthorized: true } : undefined,
   waitForConnections: true,
   connectionLimit: 10,
