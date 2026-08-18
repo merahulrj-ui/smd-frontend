@@ -5,10 +5,16 @@ import { notFound } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import ShareButtons from '@/components/ShareButtons';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const [rows] = await pool.query('SELECT * FROM blog WHERE slug = ? LIMIT 1', [slug]) as any[];
+    const [rows] = await pool.query(
+      'SELECT * FROM blog WHERE slug = ? OR REPLACE(LOWER(title), " ", "-") = ? OR id = ? LIMIT 1',
+      [slug, slug, isNaN(Number(slug)) ? 0 : Number(slug)]
+    ) as any[];
     if (rows.length > 0) {
       const article = rows[0];
       const title = `${article.title} | SMD MEDICARE Blog`;
@@ -72,7 +78,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   let relatedProducts: any[] = [];
   
   try {
-    const [rows] = await pool.query('SELECT * FROM blog WHERE slug = ?', [slug]) as any[];
+    const [rows] = await pool.query(
+      'SELECT * FROM blog WHERE slug = ? OR REPLACE(LOWER(title), " ", "-") = ? OR id = ? LIMIT 1',
+      [slug, slug, isNaN(Number(slug)) ? 0 : Number(slug)]
+    ) as any[];
     if (rows.length === 0) {
       notFound();
     }
