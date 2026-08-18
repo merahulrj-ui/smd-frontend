@@ -87,45 +87,35 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       'SELECT * FROM blog WHERE slug = ? OR slug = ? OR REPLACE(LOWER(title), " ", "-") = ? OR title = ? OR id = ? LIMIT 1',
       [slug, cleanSlug, cleanSlug, decodedSlug, isNaN(Number(slug)) ? 0 : Number(slug)]
     ) as any[];
-    if (rows.length === 0) {
+    if (!rows || rows.length === 0) {
       notFound();
     }
     article = rows[0];
-    
-    // Fetch related blogs
-    const [relRows] = await pool.query('SELECT * FROM blog WHERE status = "published" AND id != ? ORDER BY created_at DESC LIMIT 3', [article.id]) as any[];
-    relatedBlogs = relRows;
-
-    // Fetch related products based on blog title keywords
-    const keywords = article.title.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter((w: string) => w.length > 3 && !['best', 'practices', 'guide', 'essential', 'standards', '2026', 'maintenance'].includes(w));
-    
-    let prodQuery = 'SELECT id, slug, name, price, mrp, image FROM products WHERE status = "live" AND (';
-    let prodParams: any[] = [];
-    
-    if (keywords.length > 0) {
-      const likeClauses = keywords.map(() => 'name LIKE ?');
-      prodQuery += likeClauses.join(' OR ');
-      prodParams = keywords.map((k: string) => `%${k}%`);
-      prodQuery += ') ORDER BY RAND() LIMIT 4';
-      
-      const [matchedRows] = await pool.query(prodQuery, prodParams) as any[];
-      relatedProducts = matchedRows;
-    }
-
-    // Fallback to random if not enough matched
-    if (relatedProducts.length < 4) {
-      const needed = 4 - relatedProducts.length;
-      const excludeIds = relatedProducts.length > 0 ? relatedProducts.map((p:any) => p.id).join(',') : '0';
-      const [fallbackRows] = await pool.query(`SELECT id, slug, name, price, mrp, image FROM products WHERE status = "live" AND id NOT IN (${excludeIds}) ORDER BY RAND() LIMIT ?`, [needed]) as any[];
-      relatedProducts = [...relatedProducts, ...fallbackRows];
-    }
-
-    // Increment views (fire and forget)
-    pool.query('UPDATE blog SET views = views + 1 WHERE id = ?', [article.id]).catch(e => console.error(e));
   } catch (error) {
     console.error("Error fetching blog post:", error);
     notFound();
   }
+
+  // Fetch related blogs (isolated)
+  try {
+    const [relRows] = await pool.query('SELECT * FROM blog WHERE status = "published" AND id != ? ORDER BY created_at DESC LIMIT 3', [article.id]) as any[];
+    relatedBlogs = relRows || [];
+  } catch (e) {
+    console.error("Error fetching related blogs:", e);
+  }
+
+  // Fetch related products (isolated)
+  try {
+    const [randomProds] = await pool.query('SELECT id, slug, name, price, mrp, image FROM products WHERE status = "live" ORDER BY id DESC LIMIT 4') as any[];
+    relatedProducts = randomProds || [];
+  } catch (e) {
+    console.error("Error fetching related products:", e);
+  }
+
+  // Increment views
+  try {
+    pool.query('UPDATE blog SET views = views + 1 WHERE id = ?', [article.id]).catch(() => {});
+  } catch (e) {}
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
