@@ -5,13 +5,18 @@ import ProductClient from './ProductClient';
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = await params;
-  
   try {
-    const [rows] = await pool.query('SELECT name, category_id, image, description, short_description FROM products WHERE slug = ? LIMIT 1', [resolvedParams.slug]) as any[];
+    const { slug } = await params;
+    const decodedSlug = decodeURIComponent(slug).trim();
+    
+    const [rows] = await pool.query(
+      'SELECT name, category_id, image, description, short_description, price FROM products WHERE slug = ? OR slug = ? OR id = ? LIMIT 1',
+      [slug, decodedSlug, isNaN(Number(slug)) ? 0 : Number(slug)]
+    ) as any[];
+
     if (rows && rows.length > 0) {
       const product = rows[0];
-      const title = `${product.name} - Buy Online at Wholesale Price | SMD MEDICARE`;
+      const title = `${product.name} - Buy at Wholesale Price`;
       
       // Extract plain text from description or use default
       let descriptionText = `Buy ${product.name} online at wholesale prices in India. Certified medical equipment & supplies with nationwide delivery and warranty from SMD Medicare.`;
@@ -25,24 +30,46 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       }
       
       const description = descriptionText;
-      const url = `https://www.smdmedicare.in/product/${resolvedParams.slug}`;
-      const imageUrl = product.image ? `https://www.smdmedicare.in/backend-media/${product.image}` : 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp';
+      const url = `https://www.smdmedicare.in/product/${slug}`;
+      
+      let imageUrl = 'https://www.smdmedicare.in/icon-512.png';
+      if (product.image) {
+        const cleanImg = product.image.trim();
+        if (cleanImg.startsWith('http://') || cleanImg.startsWith('https://')) {
+          imageUrl = cleanImg;
+        } else if (cleanImg.startsWith('/')) {
+          imageUrl = `https://www.smdmedicare.in${cleanImg}`;
+        } else if (cleanImg.startsWith('backend-media/')) {
+          imageUrl = `https://www.smdmedicare.in/${cleanImg}`;
+        } else {
+          imageUrl = `https://www.smdmedicare.in/backend-media/${cleanImg}`;
+        }
+      }
       
       return {
         title,
         description,
         openGraph: {
-          title,
+          title: `${product.name} - Wholesale Price in India | SMD MEDICARE`,
           description,
           url,
           siteName: 'SMD MEDICARE',
           locale: 'en_IN',
-          images: [{ url: imageUrl }],
+          images: [
+            {
+              url: imageUrl,
+              secureUrl: imageUrl,
+              width: 800,
+              height: 800,
+              alt: `${product.name} - SMD MEDICARE`,
+              type: 'image/jpeg',
+            }
+          ],
           type: 'website',
         },
         twitter: {
           card: 'summary_large_image',
-          title,
+          title: `${product.name} - Buy Online | SMD MEDICARE`,
           description,
           images: [imageUrl],
         },
@@ -51,10 +78,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         }
       };
     }
-  } catch(e) {}
+  } catch(e) {
+    console.error('generateMetadata error:', e);
+  }
   
   return {
-    title: 'Product Not Found - SMD MEDICARE',
+    title: 'Product - SMD MEDICARE',
   };
 }
 
