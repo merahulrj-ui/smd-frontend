@@ -10,8 +10,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const decodedSlug = decodeURIComponent(slug).trim();
     
     const [rows] = await pool.query(
-      'SELECT name, category_id, image, description, short_description, price FROM products WHERE slug = ? OR slug = ? OR id = ? LIMIT 1',
-      [slug, decodedSlug, isNaN(Number(slug)) ? 0 : Number(slug)]
+      'SELECT * FROM products WHERE slug = ? OR slug = ? LIMIT 1',
+      [slug, decodedSlug]
     ) as any[];
 
     if (rows && rows.length > 0) {
