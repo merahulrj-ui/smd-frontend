@@ -213,6 +213,38 @@ export default async function MainCategoryPage({
     },
   };
 
+  const defaultFaqs = [
+    {
+      question: `What is the wholesale price and minimum order quantity (MOQ) for ${categoryName}?`,
+      answer: `SMD Medicare offers competitive wholesale pricing and flexible MOQs for ${categoryName} for hospitals, clinics, pathology labs, and medical dealers across India. Contact our sales team for instant bulk quotations.`
+    },
+    {
+      question: `Does SMD Medicare provide Pan-India delivery for ${categoryName}?`,
+      answer: `Yes, we deliver ${categoryName} across all states and major cities in India with secure transit packaging and reliable logistics tracking.`
+    },
+    {
+      question: `Are the products in ${categoryName} certified and compliant with healthcare standards?`,
+      answer: `All ${categoryName} products supplied by SMD Medicare are manufactured in compliance with strict clinical, ISO, and medical regulatory standards.`
+    },
+    {
+      question: `How can I request a bulk quote or product specifications for ${categoryName}?`,
+      answer: `You can click the "Inquire" button on any product page or contact our medical procurement specialists directly at +91 95554 22455 or info@smdmedicare.in.`
+    }
+  ];
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: defaultFaqs.map(f => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.answer,
+      }
+    }))
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-12 pt-[76px]">
       {/* JSON-LD Schemas */}
@@ -223,6 +255,10 @@ export default async function MainCategoryPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* Tailwind Breadcrumbs */}
@@ -318,37 +354,53 @@ export default async function MainCategoryPage({
         )}
 
         {/* FAQs Section */}
-        {faqSource && ((faqSource.how_to_use && faqSource.how_to_use.trim() !== '') || (faqSource.faq && faqSource.faq.trim() !== '')) && (
-          <div className="max-w-4xl mx-auto mt-16 mb-8 space-y-8">
-            <style dangerouslySetInnerHTML={{__html: `
-              .rich-text-content h1, .rich-text-content h2, .rich-text-content h3, .rich-text-content h4, .rich-text-content h5 { color: #1e293b; font-bold; margin-top: 1.5em; margin-bottom: 0.5em; }
-              .rich-text-content p { margin-bottom: 1em; color: #475569; line-height: 1.7; }
-              .rich-text-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1em; color: #475569; }
-              .rich-text-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1em; color: #475569; }
-              .rich-text-content li { margin-bottom: 0.3em; }
-              .rich-text-content strong, .rich-text-content b { font-weight: 700; color: #0f172a; }
-              .rich-text-content a { color: #2563eb; text-decoration: underline; }
-            `}} />
+        <div className="max-w-4xl mx-auto mt-16 mb-8 space-y-8">
+          <style dangerouslySetInnerHTML={{__html: `
+            .rich-text-content h1, .rich-text-content h2, .rich-text-content h3, .rich-text-content h4, .rich-text-content h5 { color: #1e293b; font-bold; margin-top: 1.5em; margin-bottom: 0.5em; }
+            .rich-text-content p { margin-bottom: 1em; color: #475569; line-height: 1.7; }
+            .rich-text-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1em; color: #475569; }
+            .rich-text-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1em; color: #475569; }
+            .rich-text-content li { margin-bottom: 0.3em; }
+            .rich-text-content strong, .rich-text-content b { font-weight: 700; color: #0f172a; }
+            .rich-text-content a { color: #2563eb; text-decoration: underline; }
+          `}} />
 
-            {faqSource.how_to_use && faqSource.how_to_use.trim() !== '' && (
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
-                <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                  <i className="fas fa-info-circle text-blue-600"></i> How to Use {faqSource.name}
-                </h3>
-                <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: faqSource.how_to_use }}></div>
-              </div>
-            )}
+          {faqSource?.how_to_use && faqSource.how_to_use.trim() !== '' && (
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                <i className="fas fa-info-circle text-blue-600"></i> How to Use {faqSource.name}
+              </h3>
+              <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: faqSource.how_to_use }}></div>
+            </div>
+          )}
 
-            {faqSource.faq && faqSource.faq.trim() !== '' && (
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
-                <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                  <i className="fas fa-question-circle text-blue-600"></i> Frequently Asked Questions
-                </h3>
-                <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: faqSource.faq }}></div>
+          {faqSource?.faq && faqSource.faq.trim() !== '' ? (
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                <i className="fas fa-question-circle text-blue-600"></i> Frequently Asked Questions
+              </h3>
+              <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: faqSource.faq }}></div>
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                <i className="fas fa-question-circle text-blue-600"></i> Frequently Asked Questions about {categoryName}
+              </h3>
+              <div className="space-y-4">
+                {defaultFaqs.map((faq, idx) => (
+                  <div key={idx} className="border border-slate-100 rounded-xl p-5 bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                    <h4 className="text-base font-bold text-slate-900 mb-2 flex items-start gap-2">
+                      <span className="text-blue-600 font-extrabold">Q.</span> {faq.question}
+                    </h4>
+                    <p className="text-sm text-slate-600 leading-relaxed pl-5">
+                      {faq.answer}
+                    </p>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </section>
     </div>
   );
