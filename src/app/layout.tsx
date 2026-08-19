@@ -86,16 +86,61 @@ export const metadata: Metadata = {
 
 const websiteSchema = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "SMD MEDICARE",
-  "alternateName": [
-    "SMD Medicare", 
-    "SMD MEDICARE INDIA", 
-    "smdmedicare", 
-    "smdmedicare.in", 
-    "www.smdmedicare.in"
-  ],
-  "url": "https://www.smdmedicare.in/"
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://www.smdmedicare.in/#website",
+      "name": "SMD MEDICARE",
+      "alternateName": [
+        "SMD Medicare", 
+        "SMD MEDICARE INDIA", 
+        "smdmedicare", 
+        "smdmedicare.in", 
+        "www.smdmedicare.in"
+      ],
+      "url": "https://www.smdmedicare.in/",
+      "publisher": {
+        "@id": "https://www.smdmedicare.in/#organization"
+      }
+    },
+    {
+      "@type": "MedicalBusiness",
+      "@id": "https://www.smdmedicare.in/#organization",
+      "name": "SMD MEDICARE",
+      "alternateName": ["SMD Medicare", "SMD MEDICARE INDIA"],
+      "url": "https://www.smdmedicare.in/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.smdmedicare.in/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://www.smdmedicare.in/icon-512.png",
+      "telephone": "+91-9555422455",
+      "email": "info@smdmedicare.in",
+      "priceRange": "₹₹ - ₹₹₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Shakumbari Vihar, Phase 2, Ganeshpur",
+        "addressLocality": "Roorkee",
+        "addressRegion": "Uttarakhand",
+        "postalCode": "247667",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 29.8543,
+        "longitude": 77.8880
+      },
+      "sameAs": [
+        "https://www.indiamart.com/smd-medicare-roorkee/",
+        "https://facebook.com/smdmedicare",
+        "https://linkedin.com/company/smdmedicare",
+        "https://www.instagram.com/smd_medicare",
+        "https://x.com/smd_medicare"
+      ]
+    }
+  ]
 };
 
 export default function RootLayout({

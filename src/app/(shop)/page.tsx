@@ -40,15 +40,17 @@ export default async function Home() {
     '@context': 'https://schema.org',
     '@type': 'MedicalOrganization',
     name: 'SMD MEDICARE',
-    alternateName: ['SMD Medicare', 'smdmedicare.in'],
-    url: 'https://www.smdmedicare.in',
-    logo: 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp',
+    alternateName: ['SMD Medicare', 'SMD MEDICARE INDIA', 'smdmedicare.in'],
+    url: 'https://www.smdmedicare.in/',
+    logo: 'https://www.smdmedicare.in/icon-512.png',
+    image: 'https://www.smdmedicare.in/icon-512.png',
     description: 'Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits in India.',
     sameAs: [
-      'https://www.instagram.com/smd_medicare',
-      'https://x.com/smd_medicare',
+      'https://www.indiamart.com/smd-medicare-roorkee/',
       'https://facebook.com/smdmedicare',
-      'https://linkedin.com/company/smdmedicare'
+      'https://linkedin.com/company/smdmedicare',
+      'https://www.instagram.com/smd_medicare',
+      'https://x.com/smd_medicare'
     ],
     address: {
       '@type': 'PostalAddress',
