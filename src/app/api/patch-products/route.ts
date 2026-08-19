@@ -39,6 +39,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ success: true, updates: results });
   } catch (error: any) {
     console.error('Patch products error:', error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: error?.message || String(error) }, { status: 200 });
   }
 }
