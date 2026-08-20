@@ -15,7 +15,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  allowedDevOrigins: ['10.151.27.217', '10.151.27.217:3000', '10.194.242.217', '192.168.0.0/16', '10.0.0.0/8', '192.168.29.118', 'localhost:3000'],
+  async redirects() {
+    return [
+      {
+        source: '/blogs/:slug*',
+        destination: '/blog/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/product/products/:slug*',
+        destination: '/product/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      }
+    ];
+  },
   async headers() {
     return [
       {

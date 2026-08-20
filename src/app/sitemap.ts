@@ -70,7 +70,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     // 3. Fetch Products
-    const [products] = await pool.query('SELECT slug FROM products WHERE status = "live" OR status = "1" OR status = 1') as any[];
+    const [products] = await pool.query(`
+      SELECT slug 
+      FROM products 
+      WHERE status = 'live' OR status = 'active' OR status = '1' OR status = 1 OR status IS NULL
+    `) as any[];
     products.forEach((prod: any) => {
       if (prod.slug) {
         sitemapData.push({
