@@ -133,6 +133,7 @@ const websiteSchema = {
         "longitude": 77.8880
       },
       "sameAs": [
+        "https://g.page/r/CXI_hn0yUh7JEAI",
         "https://www.indiamart.com/smd-medicare-roorkee/",
         "https://facebook.com/smdmedicare",
         "https://linkedin.com/company/smdmedicare",

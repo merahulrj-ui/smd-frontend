@@ -42,11 +42,63 @@ export default function ContactPage() {
     ],
   };
 
+  const contactJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Contact SMD MEDICARE',
+    description: 'Wholesale medical equipment, hospital furniture, and diagnostic kit inquiries.',
+    url: 'https://www.smdmedicare.in/contact',
+    mainEntity: {
+      '@type': 'MedicalBusiness',
+      name: 'SMD MEDICARE',
+      alternateName: ['SMD Medicare', 'SMD MEDICARE INDIA'],
+      url: 'https://www.smdmedicare.in/',
+      logo: 'https://www.smdmedicare.in/icon-512.png',
+      image: 'https://www.smdmedicare.in/icon-512.png',
+      telephone: '+91-9555422455',
+      email: 'info@smdmedicare.in',
+      priceRange: '₹₹ - ₹₹₹₹',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Shakumbari Vihar, Phase 2, Ganeshpur',
+        addressLocality: 'Roorkee',
+        addressRegion: 'Uttarakhand',
+        postalCode: '247667',
+        addressCountry: 'IN'
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 29.8543,
+        longitude: 77.8880
+      },
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+          opens: '09:00',
+          closes: '19:00'
+        }
+      ],
+      sameAs: [
+        'https://g.page/r/CXI_hn0yUh7JEAI',
+        'https://www.indiamart.com/smd-medicare-roorkee/',
+        'https://facebook.com/smdmedicare',
+        'https://linkedin.com/company/smdmedicare',
+        'https://www.instagram.com/smd_medicare',
+        'https://x.com/smd_medicare'
+      ]
+    }
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-20 pt-[76px]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
       />
       {/* Breadcrumbs */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
@@ -91,11 +143,9 @@ export default function ContactPage() {
                               <i className="fas fa-map-marker-alt text-lg"></i>
                           </div>
                           <div>
-                              <strong className="block text-slate-900 text-sm tracking-wide uppercase mb-1">Address</strong>
-                              <span className="text-slate-600 font-medium leading-relaxed block">
-                                  Shakumbari Vihar, Phase 2, Ganeshpur,<br/>
-                                  Roorkee, Haridwar — 247667,<br/>
-                                  Uttarakhand, India
+                              <strong className="block text-slate-900 text-sm tracking-wide uppercase mb-1">Official Address</strong>
+                              <span className="text-slate-600 font-medium leading-relaxed block text-[15px]">
+                                  Shakumbari Vihar Phase 2, behind Nambardar Farmhouse, Ganeshpur, Rajendra Nagar, Roorkee, Uttarakhand 247667
                               </span>
                           </div>
                       </div>
@@ -107,7 +157,7 @@ export default function ContactPage() {
                           <div>
                               <strong className="block text-slate-900 text-sm tracking-wide uppercase mb-1">Phone / WhatsApp</strong>
                               <a href="tel:+919555422455" className="text-teal-600 font-bold hover:text-teal-700 transition-colors text-lg">
-                                  +91-95554 22455
+                                  095554 22455
                               </a>
                           </div>
                       </div>
@@ -130,11 +180,31 @@ export default function ContactPage() {
                           </div>
                           <div>
                               <strong className="block text-slate-900 text-sm tracking-wide uppercase mb-1">Working Hours</strong>
-                              <span className="text-slate-600 font-medium leading-relaxed block">
-                                  Monday — Saturday: 9:00 AM — 6:00 PM<br/>
-                                  <span className="text-rose-500 text-sm font-semibold mt-1 inline-block bg-rose-50 px-2 py-0.5 rounded">Closed on Sundays</span>
+                              <span className="text-slate-600 font-medium leading-relaxed block text-sm">
+                                  Monday — Saturday: 10:00 AM — 7:00 PM<br/>
+                                  <span className="text-rose-500 text-xs font-semibold mt-1 inline-block bg-rose-50 px-2 py-0.5 rounded">Closed on Sundays</span>
                               </span>
                           </div>
+                      </div>
+
+                      {/* Quick Route & Review Buttons */}
+                      <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                        <a 
+                          href="https://www.google.com/maps/dir/?api=1&destination=SMD+MEDICARE+Shakumbari+Vihar+Phase+2+behind+Nambardar+Farmhouse+Ganeshpur+Rajendra+Nagar+Roorkee+Uttarakhand+247667" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm text-center transition-all shadow-sm flex items-center justify-center gap-2"
+                        >
+                          <i className="fas fa-directions text-base"></i> Get Route / Directions
+                        </a>
+                        <a 
+                          href="https://g.page/r/CXI_hn0yUh7JEAI/review" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex-1 py-3 px-4 bg-amber-50 hover:bg-amber-100 text-amber-900 rounded-xl font-bold text-sm text-center transition-all border border-amber-200 shadow-sm flex items-center justify-center gap-2"
+                        >
+                          <i className="fas fa-star text-amber-500 text-base"></i> Write a Google Review
+                        </a>
                       </div>
                   </div>
               </div>
@@ -153,16 +223,31 @@ export default function ContactPage() {
               </div>
           </div>
 
-          {/* Map iframe container */}
-          <div className="h-[450px] w-full rounded-2xl overflow-hidden shadow-sm border border-slate-200 relative group">
-              <div className="absolute inset-0 bg-slate-900/5 group-hover:bg-transparent transition-colors pointer-events-none"></div>
-              <iframe 
-                  src="https://maps.google.com/maps?q=Shakumbari%20Vihar%2C%20Phase%202%2C%20Ganeshpur%2C%20Roorkee%2C%20Haridwar&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                  allowFullScreen={false} 
-                  loading="lazy" 
-                  className="w-full h-full border-none grayscale-[0.2] contrast-[1.05]"
-                  title="SMD Medicare Location Map">
-              </iframe>
+          {/* Map iframe container with exact SMD MEDICARE Pin */}
+          <div className="w-full rounded-2xl overflow-hidden shadow-sm border border-slate-200 bg-white p-2">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-map-marked-alt text-blue-600 text-lg"></i>
+                  <span className="font-bold text-slate-800 text-sm">SMD MEDICARE — Live Google Maps Location &amp; Route</span>
+                </div>
+                <a 
+                  href="https://www.google.com/maps/dir/?api=1&destination=SMD+MEDICARE+Shakumbari+Vihar+Phase+2+behind+Nambardar+Farmhouse+Ganeshpur+Rajendra+Nagar+Roorkee+Uttarakhand+247667" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
+                >
+                  Open in Google Maps <i className="fas fa-external-link-alt text-[10px]"></i>
+                </a>
+              </div>
+              <div className="h-[420px] w-full rounded-xl overflow-hidden">
+                <iframe 
+                    src="https://maps.google.com/maps?q=SMD%20MEDICARE%2C%20Shakumbari%20Vihar%20Phase%202%2C%20behind%20Nambardar%20Farmhouse%2C%20Ganeshpur%2C%20Rajendra%20Nagar%2C%20Roorkee%2C%20Uttarakhand%20247667&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                    allowFullScreen={false} 
+                    loading="lazy" 
+                    className="w-full h-full border-none"
+                    title="SMD MEDICARE Official Location Map">
+                </iframe>
+              </div>
           </div>
       </div>
     </div>

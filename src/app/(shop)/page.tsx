@@ -46,6 +46,7 @@ export default async function Home() {
     image: 'https://www.smdmedicare.in/icon-512.png',
     description: 'Trusted wholesale supplier of premium medical equipment, surgical instruments, hospital furniture, and diagnostic kits in India.',
     sameAs: [
+      'https://g.page/r/CXI_hn0yUh7JEAI',
       'https://www.indiamart.com/smd-medicare-roorkee/',
       'https://facebook.com/smdmedicare',
       'https://linkedin.com/company/smdmedicare',
