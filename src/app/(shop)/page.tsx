@@ -242,37 +242,62 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-6 bg-slate-100">
+
+
+      {/* Why Healthcare Providers Choose SMD MEDICARE */}
+      <section className="py-12 bg-white border-t border-slate-200">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-4">
-            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Why Choose SMD MEDICARE?</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">Decade-long experience, serving wholesale and bulk order demands with quality focus.</p>
+          <div className="mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-blue-900 font-bold text-xs mb-3 shadow-sm">
+              <i className="fas fa-certificate text-blue-600"></i> Trusted Healthcare Partner
+            </div>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">Why Healthcare Providers Choose SMD MEDICARE</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto text-sm">Direct wholesale supplier of certified hospital equipment, diagnostic kits, and surgical tools.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-              <div className="w-12 h-12 mx-auto rounded-full bg-sky-100 text-sky-600 flex items-center justify-center text-xl mb-4">
-                <i className="fas fa-award"></i>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-4">
+            {/* Card 1 */}
+            <div className="bg-slate-50 rounded-2xl p-6 text-left border border-slate-200 shadow-sm relative hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-4">
+                <i className="fas fa-headset"></i>
               </div>
-              <h3 className="text-lg font-bold text-slate-800 mb-2">Trusted Supplier</h3>
-              <p className="text-slate-600 text-sm">A trusted medical equipment partner serving hospitals nationwide.</p>
+              <div className="text-purple-600 text-sm font-bold mb-2">Expert Guidance</div>
+              <h3 className="font-bold text-slate-900 text-base mb-2">Technical &amp; Installation Support</h3>
+              <p className="text-slate-600 text-xs leading-relaxed mb-4">Dedicated pre-purchase assistance and technical guidance for hospital equipment setup and operations.</p>
+              <span className="text-xs font-semibold text-slate-500 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">Full Setup Assistance</span>
             </div>
             
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-              <div className="w-12 h-12 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4">
+            {/* Card 2 */}
+            <div className="bg-slate-50 rounded-2xl p-6 text-left border border-slate-200 shadow-sm relative hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl mb-4">
                 <i className="fas fa-shield-alt"></i>
               </div>
-              <h3 className="text-lg font-bold text-slate-800 mb-2">High-Quality Certified</h3>
-              <p className="text-slate-600 text-sm">Premium medical supplies meeting ISO & CE quality benchmarks.</p>
+              <div className="text-teal-600 text-sm font-bold mb-2">100% Certified</div>
+              <h3 className="font-bold text-slate-900 text-base mb-2">Medical Grade Standards</h3>
+              <p className="text-slate-600 text-xs leading-relaxed mb-4">All equipment and SS 304 surgical instruments meet rigorous clinical quality, accuracy, and hospital safety standards.</p>
+              <span className="text-xs font-semibold text-slate-500 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">ISO &amp; CE Compliant</span>
             </div>
             
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-              <div className="w-12 h-12 mx-auto rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl mb-4">
-                <i className="fas fa-check-circle"></i>
+            {/* Card 3 */}
+            <div className="bg-slate-50 rounded-2xl p-6 text-left border border-slate-200 shadow-sm relative hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-4">
+                <i className="fas fa-truck-fast"></i>
               </div>
-              <h3 className="text-lg font-bold text-slate-800 mb-2">Regulatory Compliant</h3>
-              <p className="text-slate-600 text-sm">Your go-to source for wholesale medical supplies and bulk orders.</p>
+              <div className="text-blue-600 text-sm font-bold mb-2">Nationwide Coverage</div>
+              <h3 className="font-bold text-slate-900 text-base mb-2">Pan-India Insured Dispatch</h3>
+              <p className="text-slate-600 text-xs leading-relaxed mb-4">Safe, damage-proof packaging with insured courier logistics delivering across all states and union territories.</p>
+              <span className="text-xs font-semibold text-slate-500 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">24hr Order Dispatch</span>
+            </div>
+            
+            {/* Card 4 */}
+            <div className="bg-slate-50 rounded-2xl p-6 text-left border border-slate-200 shadow-sm relative hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl mb-4">
+                <i className="fas fa-file-invoice-dollar"></i>
+              </div>
+              <div className="text-indigo-600 text-sm font-bold mb-2">B2B Wholesale</div>
+              <h3 className="font-bold text-slate-900 text-base mb-2">Direct Manufacturer Rates</h3>
+              <p className="text-slate-600 text-xs leading-relaxed mb-4">Institutional wholesale pricing, compliant GST billing, and dedicated quotation assistance for hospitals and dealers.</p>
+              <span className="text-xs font-semibold text-slate-500 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">GST Invoice Provided</span>
             </div>
           </div>
         </div>
@@ -291,57 +316,6 @@ export default async function Home() {
             <Link href="/contact" className="px-6 py-3 bg-white text-blue-900 font-bold rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:-translate-y-1 transition-all flex items-center gap-2 whitespace-nowrap">
               <i className="fas fa-envelope"></i> Contact Us
             </Link>
-          </div>
-        </div>
-      </section>
-    {/* Client Testimonials */}
-      <section className="py-6 bg-white">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-4">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">What Our Clients Say</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">Reviews from laboratories, hospitals, and R&D divisions.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-4">
-            <div className="bg-slate-50 rounded-2xl p-6 text-left border border-slate-100 shadow-sm relative hover:shadow-md transition-shadow">
-              <i className="fas fa-quote-left text-4xl text-blue-100 absolute top-6 right-6"></i>
-              <div className="text-yellow-400 text-lg mb-4">★★★★★</div>
-              <p className="text-slate-600 italic mb-6 text-sm">"The quality of the recombinant antigens from SMD MEDICARE is consistently excellent. Their reliable supply chain has been crucial for our production timelines."</p>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Dr. Anjali Sharma</h3>
-                <p className="text-xs text-blue-600 font-medium mt-1">R&D Head, BioLabs Inc.</p>
-              </div>
-            </div>
-            
-            <div className="bg-slate-50 rounded-2xl p-6 text-left border border-slate-100 shadow-sm relative hover:shadow-md transition-shadow">
-              <i className="fas fa-quote-left text-4xl text-blue-100 absolute top-6 right-6"></i>
-              <div className="text-yellow-400 text-lg mb-4">★★★★★</div>
-              <p className="text-slate-600 italic mb-6 text-sm">"Switching to SMD MEDICARE for our ELISA kits was a game-changer. The cost-effectiveness combined with high accuracy has significantly improved our lab's efficiency."</p>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Mr. Rajeev Singh</h3>
-                <p className="text-xs text-blue-600 font-medium mt-1">Lab Director, PathoCare Diagnostics</p>
-              </div>
-            </div>
-            
-            <div className="bg-slate-50 rounded-2xl p-6 text-left border border-slate-100 shadow-sm relative hover:shadow-md transition-shadow">
-              <i className="fas fa-quote-left text-4xl text-blue-100 absolute top-6 right-6"></i>
-              <div className="text-yellow-400 text-lg mb-4">★★★★☆</div>
-              <p className="text-slate-600 italic mb-6 text-sm">"Their technical support team is incredibly knowledgeable and responsive. They helped us troubleshoot a complex issue with a batch of rapid test kits, saving us valuable time."</p>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Priya Desai</h3>
-                <p className="text-xs text-blue-600 font-medium mt-1">Procurement Manager, Apex Hospitals</p>
-              </div>
-            </div>
-            
-            <div className="bg-slate-50 rounded-2xl p-6 text-left border border-slate-100 shadow-sm relative hover:shadow-md transition-shadow">
-              <i className="fas fa-quote-left text-4xl text-blue-100 absolute top-6 right-6"></i>
-              <div className="text-yellow-400 text-lg mb-4">★★★★★</div>
-              <p className="text-slate-600 italic mb-6 text-sm">"We've been sourcing medical equipment from SMD MEDICARE for years. Their commitment to quality and post-sales service is unparalleled in the industry."</p>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Dr. Vikram Chauhan</h3>
-                <p className="text-xs text-blue-600 font-medium mt-1">Chief Medical Officer, City General Hospital</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -407,39 +381,39 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Trust Stats Section (Moved from Hero) */}
+      {/* Trust Badges Section */}
       <section className="pt-6 pb-2 md:pt-10 md:pb-6 bg-slate-50 border-t border-slate-200">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Desktop Version (Cards) */}
           <div className="hidden md:grid grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="bg-white border border-slate-200 rounded-2xl p-6 flex items-center gap-5 text-left transform-gpu transition-transform hover:-translate-y-1 hover:shadow-lg shadow-sm">
-              <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl shrink-0">
-                <i className="fas fa-microscope"></i>
+              <div className="w-14 h-14 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 text-2xl shrink-0">
+                <i className="fas fa-shield-check"></i>
               </div>
               <div>
-                <div className="text-2xl font-bold text-slate-900 mb-1">10,000+</div>
-                <div className="text-sm text-slate-500 font-medium">Quality Products</div>
+                <div className="text-xl font-extrabold text-slate-900 mb-1">100% Certified</div>
+                <div className="text-sm text-slate-500 font-medium">ISO &amp; CE Standards</div>
               </div>
             </div>
             
             <div className="bg-white border border-slate-200 rounded-2xl p-6 flex items-center gap-5 text-left transform-gpu transition-transform hover:-translate-y-1 hover:shadow-lg shadow-sm">
-              <div className="w-14 h-14 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 text-2xl shrink-0">
-                <i className="fas fa-hospital-user"></i>
+              <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl shrink-0">
+                <i className="fas fa-truck-fast"></i>
               </div>
               <div>
-                <div className="text-2xl font-bold text-slate-900 mb-1">5,000+</div>
-                <div className="text-sm text-slate-500 font-medium">Hospitals & Labs</div>
+                <div className="text-xl font-extrabold text-slate-900 mb-1">Pan-India Delivery</div>
+                <div className="text-sm text-slate-500 font-medium">Insured Safe Shipping</div>
               </div>
             </div>
 
             <div className="bg-white border border-slate-200 rounded-2xl p-6 flex items-center gap-5 text-left transform-gpu transition-transform hover:-translate-y-1 hover:shadow-lg shadow-sm">
               <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl shrink-0">
-                <i className="fas fa-shipping-fast"></i>
+                <i className="fas fa-medal"></i>
               </div>
               <div>
-                <div className="text-2xl font-bold text-slate-900 mb-1">100%</div>
-                <div className="text-sm text-slate-500 font-medium">Express Delivery</div>
+                <div className="text-xl font-extrabold text-slate-900 mb-1">Factory Warranty</div>
+                <div className="text-sm text-slate-500 font-medium">Direct OEM Spares Support</div>
               </div>
             </div>
           </div>
@@ -447,25 +421,25 @@ export default async function Home() {
           {/* Mobile Version (Unified Strip) */}
           <div className="md:hidden flex items-center justify-between w-full max-w-sm mx-auto bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
              <div className="flex flex-col items-center flex-1">
-                <i className="fas fa-microscope text-blue-500 text-2xl mb-1.5 drop-shadow-sm"></i>
-                <div className="text-slate-900 font-extrabold text-[15px] tracking-wide">10k+</div>
-                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">Products</div>
+                <i className="fas fa-shield-check text-teal-500 text-2xl mb-1.5 drop-shadow-sm"></i>
+                <div className="text-slate-900 font-extrabold text-[14px] tracking-tight">100%</div>
+                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">Certified</div>
              </div>
              
              <div className="w-[1px] h-12 bg-slate-200"></div>
              
              <div className="flex flex-col items-center flex-1">
-                <i className="fas fa-hospital-user text-sky-500 text-2xl mb-1.5 drop-shadow-sm"></i>
-                <div className="text-slate-900 font-extrabold text-[15px] tracking-wide">5k+</div>
-                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">Hospitals</div>
-             </div>
-             
-             <div className="w-[1px] h-12 bg-slate-200"></div>
-             
-             <div className="flex flex-col items-center flex-1">
-                <i className="fas fa-shipping-fast text-indigo-500 text-2xl mb-1.5 drop-shadow-sm"></i>
-                <div className="text-slate-900 font-extrabold text-[15px] tracking-wide">100%</div>
+                <i className="fas fa-truck-fast text-blue-500 text-2xl mb-1.5 drop-shadow-sm"></i>
+                <div className="text-slate-900 font-extrabold text-[14px] tracking-tight">Pan-India</div>
                 <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">Delivery</div>
+             </div>
+             
+             <div className="w-[1px] h-12 bg-slate-200"></div>
+             
+             <div className="flex flex-col items-center flex-1">
+                <i className="fas fa-medal text-indigo-500 text-2xl mb-1.5 drop-shadow-sm"></i>
+                <div className="text-slate-900 font-extrabold text-[14px] tracking-tight">Direct</div>
+                <div className="text-slate-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">Warranty</div>
              </div>
           </div>
 

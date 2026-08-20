@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -46,8 +46,11 @@ export async function GET(req: Request) {
         }
         const cleanDesc = (p.short_description || p.description || `Buy ${p.name} at wholesale prices in India from SMD Medicare.`).replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
 
+        const prodSku = p.sku || ('SMD-' + String(p.id).padStart(3, '0'));
+
         xml += `    <item>
-      <g:id>${p.id}</g:id>
+      <g:id>${prodSku}</g:id>
+      <g:mpn>${prodSku}</g:mpn>
       <g:title><![CDATA[${p.name}]]></g:title>
       <g:description><![CDATA[${cleanDesc}]]></g:description>
       <g:link>${prodLink}</g:link>
@@ -89,6 +92,7 @@ export async function GET(req: Request) {
     const lines = [headers.join(',')];
 
     for (const p of products) {
+      const prodSku = p.sku || ('SMD-' + String(p.id).padStart(3, '0'));
       const prodPrice = p.price && Number(p.price) > 0 ? `${Number(p.price).toFixed(2)} INR` : '100.00 INR';
       const prodLink = `https://www.smdmedicare.in/product/${p.slug || p.id}`;
       let imgUrl = 'https://www.smdmedicare.in/icon-512.png';
@@ -102,7 +106,7 @@ export async function GET(req: Request) {
       const cleanDesc = (p.short_description || p.description || `Buy ${p.name} online at wholesale prices in India with nationwide delivery from SMD Medicare.`).replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
 
       const row = [
-        escapeCsv(p.id),
+        escapeCsv(prodSku),
         escapeCsv(p.name),
         escapeCsv(cleanDesc),
         escapeCsv('in stock'),

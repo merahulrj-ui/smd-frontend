@@ -191,8 +191,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     '@type': 'Product',
     name: product.name,
     image: imageUrl,
-    description: product.short_description || `High-quality ${product.name}`,
-    sku: product.hsn_code || product.id.toString(),
+    sku: product.sku || ('SMD-' + String(product.id).padStart(3, '0')),
+    mpn: product.sku || ('SMD-' + String(product.id).padStart(3, '0')),
     brand: {
       '@type': 'Brand',
       name: product.brand || 'SMD Medicare'
