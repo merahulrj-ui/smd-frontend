@@ -5,8 +5,7 @@ import { notFound } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import ShareButtons from '@/components/ShareButtons';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -24,13 +23,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       
       let description = 'Read medical equipment and diagnostics insights on SMD Medicare.';
       if (typeof article.content === 'string') {
-        try {
-          const parsed = JSON.parse(article.content);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            description = (parsed[0].paragraph || parsed[0].content || article.title).substring(0, 160);
+        const trimmed = article.content.trim();
+        if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const firstBlock = parsed[0];
+              const rawText = firstBlock.paragraph || firstBlock.content || firstBlock.body || firstBlock.text || '';
+              description = (rawText.replace(/<[^>]*>?/gm, '').trim() || article.title).substring(0, 160);
+            }
+          } catch {
+            description = article.content.replace(/<[^>]*>?/gm, '').trim().substring(0, 160);
           }
-        } catch {
-          description = article.content.replace(/<[^>]*>?/gm, '').substring(0, 160);
+        } else {
+          description = article.content.replace(/<[^>]*>?/gm, '').trim().substring(0, 160);
         }
       }
       
@@ -104,10 +110,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     console.error("Error fetching related blogs:", e);
   }
 
-  // Fetch related products (isolated)
+  // Fetch matching related products (isolated)
   try {
-    const [randomProds] = await pool.query('SELECT id, slug, name, price, mrp, image FROM products WHERE status = "live" ORDER BY id DESC LIMIT 4') as any[];
-    relatedProducts = randomProds || [];
+    let kw = (article.category || article.title || '').toLowerCase()
+      .replace(/guide|buying|hospital|clinic|india|2026|best|top|how|to|clinical|protocol|essential/gi, ' ')
+      .trim().split(/\s+/)[0] || '';
+    
+    let matchedProds: any[] = [];
+    if (kw && kw.length >= 3) {
+      const [rows] = await pool.query(
+        'SELECT id, slug, name, price, mrp, image FROM products WHERE status = "live" AND (category LIKE ? OR name LIKE ?) ORDER BY id DESC LIMIT 4',
+        [`%${kw}%`, `%${kw}%`]
+      ) as any[];
+      matchedProds = rows || [];
+    }
+
+    if (matchedProds.length > 0) {
+      relatedProducts = matchedProds;
+    } else {
+      const [randomProds] = await pool.query('SELECT id, slug, name, price, mrp, image FROM products WHERE status = "live" ORDER BY id DESC LIMIT 4') as any[];
+      relatedProducts = randomProds || [];
+    }
   } catch (e) {
     console.error("Error fetching related products:", e);
   }
@@ -166,6 +189,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     ],
   };
 
+  let cleanDescription = 'Read medical equipment and diagnostics insights on SMD Medicare.';
+  if (typeof article.content === 'string') {
+    const trimmed = article.content.trim();
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const firstBlock = parsed[0];
+          const rawText = firstBlock.paragraph || firstBlock.content || firstBlock.body || firstBlock.text || '';
+          cleanDescription = (rawText.replace(/<[^>]*>?/gm, '').trim() || article.title).substring(0, 160);
+        }
+      } catch {
+        cleanDescription = article.content.replace(/<[^>]*>?/gm, '').trim().substring(0, 160);
+      }
+    } else {
+      cleanDescription = article.content.replace(/<[^>]*>?/gm, '').trim().substring(0, 160);
+    }
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -175,7 +217,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     },
     headline: article.title,
     image: imageUrl,
-    datePublished: article.created_at || article.date || new Date().toISOString(),
+    datePublished: article.created_at ? new Date(article.created_at).toISOString() : new Date().toISOString(),
+    dateModified: article.updated_at ? new Date(article.updated_at).toISOString() : (article.created_at ? new Date(article.created_at).toISOString() : new Date().toISOString()),
     author: {
       '@type': 'Person',
       name: article.author_name || 'SMD Editorial Team'
@@ -188,7 +231,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         url: 'https://www.smdmedicare.in/images/img_68ae826eb6cc47.12112340_logo.webp'
       }
     },
-    description: typeof article.content === 'string' ? article.content.replace(/<[^>]*>?/gm, '').substring(0, 160) : 'Read medical equipment and diagnostics insights on SMD Medicare.',
+    description: cleanDescription,
+    ...(relatedProducts && relatedProducts.length > 0 ? {
+      about: relatedProducts.map((p: any) => ({
+        '@type': 'Product',
+        name: p.name,
+        url: `https://www.smdmedicare.in/product/${p.slug || p.id}`
+      }))
+    } : {})
   };
 
   return (

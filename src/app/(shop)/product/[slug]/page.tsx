@@ -2,7 +2,7 @@ import pool from '@/lib/db';
 import { notFound } from 'next/navigation';
 import ProductClient from './ProductClient';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // Edge Cache for 1 hour with ISR
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -20,20 +20,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     if (rows && rows.length > 0) {
       const product = rows[0];
-      const title = `${product.name} - Buy at Wholesale Price`;
+      const brandStr = product.brand && product.brand !== '0' ? ` (${product.brand})` : '';
+      const title = `${product.name}${brandStr} Price, Specs & Buy Online India | SMD Medicare`;
       
-      // Extract plain text from description or use default
-      let descriptionText = `Buy ${product.name} online at wholesale prices in India. Certified medical equipment & supplies with nationwide delivery and warranty from SMD Medicare.`;
+      // Extract clean plain text for SEO meta description
+      let cleanDesc = `Buy ${product.name} online at wholesale B2B price in India. 100% Genuine with OEM Warranty, GST invoice & fast insured dispatch from SMD Medicare.`;
       if (product.short_description) {
-        descriptionText = product.short_description.replace(/<[^>]*>?/gm, '').trim();
+        const text = product.short_description.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+        if (text.length > 20) cleanDesc = text.substring(0, 155) + (text.length > 155 ? '...' : '');
       } else if (product.description) {
-        const plainText = product.description.replace(/<[^>]*>?/gm, '').trim();
-        if (plainText.length > 10) {
-          descriptionText = plainText.substring(0, 155) + (plainText.length > 155 ? '...' : '');
-        }
+        const text = product.description.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+        if (text.length > 20) cleanDesc = text.substring(0, 155) + (text.length > 155 ? '...' : '');
       }
       
-      const description = descriptionText;
+      const description = cleanDesc;
       const url = `https://www.smdmedicare.in/product/${slug}`;
       
       let imageUrl = 'https://www.smdmedicare.in/icon-512.png';
@@ -49,10 +49,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           imageUrl = `https://www.smdmedicare.in/backend-media/${cleanImg}`;
         }
       }
+
+      const keywords = [
+        product.name,
+        `${product.name} price`,
+        `${product.name} specifications`,
+        `buy ${product.name} online india`,
+        product.brand,
+        product.category_name,
+        'medical equipment supplier delhi',
+        'hospital equipment wholesale india',
+        'SMD Medicare'
+      ].filter(Boolean);
       
       return {
         title,
         description,
+        keywords: keywords.join(', '),
+        alternates: {
+          canonical: url,
+        },
         openGraph: {
           title: `${product.name} - Wholesale Price in India | SMD MEDICARE`,
           description,
@@ -65,7 +81,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
               secureUrl: imageUrl,
               width: 800,
               height: 800,
-              alt: `${product.name} - SMD MEDICARE`,
+              alt: `${product.name} - SMD MEDICARE Medical Equipment`,
               type: 'image/jpeg',
             }
           ],
@@ -77,8 +93,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           description,
           images: [imageUrl],
         },
-        alternates: {
-          canonical: url,
+        robots: {
+          index: true,
+          follow: true,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+          'max-video-preview': -1,
         }
       };
     }
@@ -87,7 +107,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
   
   return {
-    title: 'Product - SMD MEDICARE',
+    title: 'Medical Equipment & Hospital Supplies | SMD MEDICARE',
   };
 }
 
@@ -99,13 +119,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   let relatedProducts: any[] = [];
   let reviews: any[] = [];
   let brandLogo: string | null = null;
+  let relatedBlogs: any[] = [];
   
   try {
-    // 1. Fetch main product (join with categories for category name & slug)
+    // 1. Fetch main product
     const [prodRows] = await pool.query(`
-      SELECT p.*, c.name as category_name, c.slug as category_slug 
+      SELECT p.*, c.name as category_name, c.slug as category_slug, sc.name as sub_category_name
       FROM products p 
       LEFT JOIN categories c ON p.category_id = c.id 
+      LEFT JOIN sub_categories sc ON p.sub_category_id = sc.id
       WHERE p.slug = ? LIMIT 1
     `, [slug]) as any[];
     
@@ -113,11 +135,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       return notFound();
     }
     product = prodRows[0];
-    // We keep product.category as it is from the database.
-    // If it's missing, we fallback to category_name.
-    product.category = product.category || product.category_name || 'Uncategorized';
+    product.category = product.category || product.category_name || 'Medical Equipment';
     
-    // Attempt to parse JSON specifications if stored as string, otherwise keep as is
     if (typeof product.specification === 'string') {
       try {
         product.specifications = JSON.parse(product.specification);
@@ -137,7 +156,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       }
     }
 
-    // 3. Fetch Related Products (same category, excluding current product)
+    // 3. Fetch Related Products
     const [relRows] = await pool.query(
       "SELECT id, name, slug, image, price, mrp FROM products WHERE category = ? AND id != ? AND status = 'live' ORDER BY RAND() LIMIT 8", 
       [product.category, product.id]
@@ -151,6 +170,44 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ) as any[];
     reviews = reviewRows || [];
 
+    // 5. Fetch Strictly Matching Clinical Blogs / Buying Guides (No Unrelated Fallback)
+    try {
+      const catKeyword = (product.category_name || product.category || '').toLowerCase().trim();
+      const nameKeyword = (product.name || '').toLowerCase().trim();
+      
+      const stopWords = new Set([
+        'equipment', 'hospital', 'medical', 'care', 'supplies', 'device', 'devices', 
+        'products', 'general', 'machine', 'machines', 'portable', 'channel', 'digital', 
+        'single', 'double', 'twelve', 'three', 'six', 'with', 'gold', 'plus', 'pro', 
+        'mini', 'model', 'series', 'system', 'india', 'best', 'top', 'buy', 'online',
+        'critical', 'icu', 'delhi', 'wholesale'
+      ]);
+      
+      const rawTokens = [
+        ...catKeyword.replace(/[^a-z0-9]+/g, ' ').split(/\s+/),
+        ...nameKeyword.replace(/[^a-z0-9]+/g, ' ').split(/\s+/)
+      ];
+      
+      const keywords = Array.from(new Set(rawTokens)).filter(k => k.length >= 3 && !stopWords.has(k));
+      
+      if (keywords.length > 0) {
+        const conditions = keywords.map(() => "(LOWER(title) LIKE ? OR LOWER(slug) LIKE ?)").join(" OR ");
+        const params = keywords.flatMap(k => [`%${k}%`, `%${k}%`]);
+        
+        const [rows] = await pool.query(
+          `SELECT * FROM blog WHERE status = 'published' AND (${conditions}) ORDER BY created_at DESC LIMIT 3`,
+          params
+        ) as any[];
+        
+        relatedBlogs = rows || [];
+      } else {
+        relatedBlogs = [];
+      }
+    } catch (e) {
+      console.error("Error fetching related blogs for product:", e);
+      relatedBlogs = [];
+    }
+
   } catch (err) {
     console.error("Failed to fetch product", err);
     return notFound();
@@ -161,6 +218,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const catSlug = product.category_slug || (product.category ? product.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'categories');
   const catName = product.category_name || product.category || 'Medical Equipment';
 
+  // Plain text description for schema
+  const plainDescription = (product.short_description || product.description || `Buy ${product.name} at wholesale prices from SMD Medicare.`)
+    .replace(/<[^>]*>?/gm, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // 1. Breadcrumbs Schema
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -186,13 +250,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ],
   };
 
+  // 2. Product Schema with Rich Snippet Attributes
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
-    image: imageUrl,
+    image: [imageUrl],
+    description: plainDescription.substring(0, 300),
     sku: product.sku || ('SMD-' + String(product.id).padStart(3, '0')),
     mpn: product.sku || ('SMD-' + String(product.id).padStart(3, '0')),
+    category: catName,
     brand: {
       '@type': 'Brand',
       name: product.brand || 'SMD Medicare'
@@ -206,6 +273,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       validFrom: '2026-01-01',
       availability: 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
+      seller: {
+        '@type': 'Organization',
+        name: 'SMD Medicare',
+        url: 'https://www.smdmedicare.in'
+      },
       hasMerchantReturnPolicy: {
         '@type': 'MerchantReturnPolicy',
         applicableCountry: 'IN',
@@ -251,10 +323,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         '@type': 'Review',
         author: {
           '@type': 'Person',
-          name: r.user_name || 'Verified Customer'
+          name: r.name || 'Verified Biomedical Buyer'
         },
         datePublished: r.created_at ? new Date(r.created_at).toISOString().split('T')[0] : '2026-01-01',
-        reviewBody: r.comment || 'Verified product review.',
+        reviewBody: r.review_text || 'Verified medical product review.',
         reviewRating: {
           '@type': 'Rating',
           bestRating: '5',
@@ -262,7 +334,54 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           worstRating: '1'
         }
       }))
+    } : {}),
+    ...(relatedBlogs && relatedBlogs.length > 0 ? {
+      subjectOf: {
+        '@type': 'Article',
+        headline: relatedBlogs[0].title,
+        url: `https://www.smdmedicare.in/blog/${relatedBlogs[0].slug}`
+      }
     } : {})
+  };
+
+  // 3. FAQPage Schema for Rich SERP Accordion Snippets
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: `What warranty and support is provided with the ${product.name}?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `All medical equipment carries official 1 to 2 Years OEM Manufacturer Warranty covering manufacturing defects and factory biomedical engineering evaluation.`
+        }
+      },
+      {
+        '@type': 'Question',
+        name: `How is the ${product.name} packed and delivered?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `We use damage-proof wooden crate packaging and insured freight logistics delivering across all Indian states with real-time tracking within 3 to 7 business days.`
+        }
+      },
+      {
+        '@type': 'Question',
+        name: `Do you provide official GST Invoices for ${product.name}?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `Yes, 100% compliant GST invoices with standard HSN codes are provided for hospitals, clinics, and dealers to claim full Input Tax Credit (ITC).`
+        }
+      },
+      {
+        '@type': 'Question',
+        name: `How is installation and clinical setup handled for ${product.name}?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `We provide pre-installation technical checklists, complete user operating manuals, and video/on-site biomedical engineer guidance for seamless clinical deployment.`
+        }
+      }
+    ]
   };
 
   return (
@@ -275,11 +394,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <ProductClient 
         product={product} 
         relatedProducts={relatedProducts} 
         reviews={reviews}
         brandLogo={brandLogo} 
+        relatedBlogs={relatedBlogs}
       />
     </>
   );

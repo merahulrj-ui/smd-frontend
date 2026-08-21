@@ -29,14 +29,14 @@ export default function ProductCard({ id, slug, name, price, mrp, image, isNew, 
       )}
       
       {/* Image */}
-      <Link href={`/product/${slug}`} className="flex items-center justify-center mb-3 outline-none relative overflow-hidden group-hover:scale-105 transition-transform duration-300 h-[150px] w-full shrink-0">
+      <Link href={`/product/${slug}`} className="flex items-center justify-center mb-3 outline-none relative overflow-hidden group-hover:scale-105 transition-transform duration-300 h-[160px] w-full shrink-0">
         <Image 
           src={image ? (image.startsWith('http') || image.startsWith('/') ? image : `/backend-media/${image}`) : '/placeholder-product.png'} 
           alt={`${name} - Buy Wholesale in India | SMD MEDICARE`}
           fill
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
           priority={priority}
-          className="object-contain"
+          className="object-contain p-2"
         />
       </Link>
       
@@ -66,19 +66,19 @@ export default function ProductCard({ id, slug, name, price, mrp, image, isNew, 
         </div>
         
         {/* Actions */}
-        <div className="flex gap-2 w-full">
-          <div className="flex-1">
-            <InquireButton productName={name} />
+        <div className="flex gap-2 w-full h-[38px]">
+          <div className="flex-1 h-full">
+            <InquireButton productName={name} className="w-full h-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[12px] rounded-lg transition-colors shadow-sm flex items-center justify-center" />
           </div>
           <button 
-            className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-600 hover:bg-blue-50 transition-all active:scale-95"
+            className="flex-shrink-0 w-[38px] h-[38px] flex items-center justify-center rounded-lg border-2 border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-600 hover:bg-blue-50 transition-all active:scale-95"
             onClick={(e) => {
               e.preventDefault();
               addToCatalog({ id, name, price, mrp, image, slug });
             }}
             title="Add to Catalog"
           >
-            <i className="fas fa-folder-plus text-xs"></i>
+            <i className="fas fa-folder-plus text-sm"></i>
           </button>
         </div>
       </div>
