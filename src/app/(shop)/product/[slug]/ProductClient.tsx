@@ -980,7 +980,7 @@ export default function ProductClient({
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
               {relatedBlogs.map((b: any) => {
                 const blogImg = b.blog_image || b.image || 'images/blog_hospital_furniture_guide.jpg';
                 const imgSrc = blogImg.startsWith('http') 
@@ -992,14 +992,15 @@ export default function ProductClient({
                   <Link 
                     key={b.id} 
                     href={`/blog/${b.slug || b.id}`}
-                    className="bg-white rounded-2xl border border-slate-200/90 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden group h-full"
+                    className="bg-white rounded-2xl border border-slate-200/90 hover:border-blue-300 shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col justify-between overflow-hidden group"
                   >
                     <div>
-                      <div className="relative w-full h-44 sm:h-48 bg-slate-100 overflow-hidden">
+                      <div className="relative w-full aspect-[16/10] bg-slate-100 overflow-hidden">
                         <img 
                           src={imgSrc} 
                           alt={b.title} 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="eager"
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           onError={(e: any) => {
                             e.target.src = '/backend-media/images/blog_hospital_furniture_guide.jpg';
                           }}
