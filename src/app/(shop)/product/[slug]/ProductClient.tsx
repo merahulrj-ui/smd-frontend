@@ -980,7 +980,7 @@ export default function ProductClient({
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
               {relatedBlogs.map((b: any) => {
                 const blogImg = b.blog_image || b.image || 'images/blog_hospital_furniture_guide.jpg';
                 const imgSrc = blogImg.startsWith('http') 
@@ -1000,6 +1000,7 @@ export default function ProductClient({
                           src={imgSrc} 
                           alt={b.title} 
                           loading="eager"
+                          decoding="sync"
                           className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           onError={(e: any) => {
                             e.target.src = '/backend-media/images/blog_hospital_furniture_guide.jpg';
