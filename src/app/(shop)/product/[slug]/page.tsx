@@ -170,7 +170,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ) as any[];
     reviews = reviewRows || [];
 
-    // 5. Fetch Strictly Matching Clinical Blogs / Buying Guides (No Unrelated Fallback)
+    // 5. Fetch Clinical Blogs / Buying Guides (Prioritize Matched, Fallback to Latest)
     try {
       const catKeyword = (product.category_name || product.category || '').toLowerCase().trim();
       const nameKeyword = (product.name || '').toLowerCase().trim();
@@ -179,8 +179,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         'equipment', 'hospital', 'medical', 'care', 'supplies', 'device', 'devices', 
         'products', 'general', 'machine', 'machines', 'portable', 'channel', 'digital', 
         'single', 'double', 'twelve', 'three', 'six', 'with', 'gold', 'plus', 'pro', 
-        'mini', 'model', 'series', 'system', 'india', 'best', 'top', 'buy', 'online',
-        'critical', 'icu', 'delhi', 'wholesale'
+        'mini', 'model', 'series', 'system', 'india', 'best', 'top', 'buy', 'online'
       ]);
       
       const rawTokens = [
@@ -190,6 +189,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       
       const keywords = Array.from(new Set(rawTokens)).filter(k => k.length >= 3 && !stopWords.has(k));
       
+      let matchedRows: any[] = [];
       if (keywords.length > 0) {
         const conditions = keywords.map(() => "(LOWER(title) LIKE ? OR LOWER(slug) LIKE ?)").join(" OR ");
         const params = keywords.flatMap(k => [`%${k}%`, `%${k}%`]);
@@ -198,10 +198,20 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           `SELECT * FROM blog WHERE status = 'published' AND (${conditions}) ORDER BY created_at DESC LIMIT 3`,
           params
         ) as any[];
-        
-        relatedBlogs = rows || [];
+        matchedRows = rows || [];
+      }
+      
+      if (matchedRows.length >= 3) {
+        relatedBlogs = matchedRows;
       } else {
-        relatedBlogs = [];
+        const excludeIds = matchedRows.map(b => b.id);
+        const [latestRows] = await pool.query(
+          excludeIds.length > 0 
+            ? `SELECT * FROM blog WHERE status = 'published' AND id NOT IN (${excludeIds.join(',')}) ORDER BY created_at DESC LIMIT ${3 - matchedRows.length}`
+            : `SELECT * FROM blog WHERE status = 'published' ORDER BY created_at DESC LIMIT 3`
+        ) as any[];
+        
+        relatedBlogs = [...matchedRows, ...(latestRows || [])];
       }
     } catch (e) {
       console.error("Error fetching related blogs for product:", e);
