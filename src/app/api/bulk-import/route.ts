@@ -39,8 +39,8 @@ export async function GET(req: Request) {
       }
 
       const [result] = await pool.query(
-        "INSERT INTO products (name, slug, brand, category_id, mrp, price, stock_quantity, description, specification, image, image2, image3, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'live')",
-        [p.name, p.slug, p.brand, p.category_id, p.mrp, p.price, 10, p.description, p.specification, p.image, p.image2 || null, p.image3 || null]
+        "INSERT INTO products (name, slug, brand, category, category_id, mrp, price, stock_quantity, description, specification, image, image2, image3, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'live')",
+        [p.name, p.slug, p.brand, 'X-Ray Machines', p.category_id, p.mrp, p.price, 10, p.description, p.specification, p.image, p.image2 || null, p.image3 || null]
       ) as any;
       results.push({ slug: p.slug, status: 'inserted', id: result.insertId });
     } catch (e: any) {
