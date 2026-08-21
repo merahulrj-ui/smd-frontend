@@ -992,35 +992,35 @@ export default function ProductClient({
                   <Link 
                     key={b.id} 
                     href={`/blog/${b.slug || b.id}`}
-                    className="bg-white rounded-2xl border border-slate-200/90 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden group"
+                    className="bg-white rounded-2xl border border-slate-200/90 hover:border-blue-300 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden group h-full"
                   >
-                    <div className="relative w-full h-44 sm:h-48 bg-slate-100 overflow-hidden">
-                      <img 
-                        src={imgSrc} 
-                        alt={b.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e: any) => {
-                          e.target.src = '/backend-media/images/blog_hospital_furniture_guide.jpg';
-                        }}
-                      />
-                      <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-lg text-[10px] font-bold text-blue-700 shadow-sm">
-                        {b.category || 'Clinical Guide'}
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
-                      <div>
-                        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-slate-400 font-medium mb-2">
-                          <span><i className="far fa-calendar-alt mr-1"></i> {dateStr}</span>
-                          <span>•</span>
-                          <span><i className="far fa-clock mr-1"></i> 5 min read</span>
+                    <div>
+                      <div className="relative w-full h-44 sm:h-48 bg-slate-100 overflow-hidden">
+                        <img 
+                          src={imgSrc} 
+                          alt={b.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e: any) => {
+                            e.target.src = '/backend-media/images/blog_hospital_furniture_guide.jpg';
+                          }}
+                        />
+                        <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-lg text-[10px] font-bold text-blue-700 shadow-sm">
+                          {b.category || 'Clinical Guide'}
                         </div>
-                        <h3 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug">
+                      </div>
+                      
+                      <div className="p-4 sm:p-5 pb-0">
+                        <div className="flex items-center text-[10px] sm:text-[11px] text-slate-400 font-medium mb-2">
+                          <span><i className="far fa-calendar-alt mr-1.5 text-blue-600"></i> Published: {dateStr}</span>
+                        </div>
+                        <h3 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-2 min-h-[2.75rem] group-hover:text-blue-600 transition-colors leading-snug">
                           {b.title}
                         </h3>
                       </div>
-                      
-                      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
+                    </div>
+                    
+                    <div className="p-4 sm:p-5 pt-3">
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600">
                         <span>Read Clinical Protocol</span>
                         <i className="fas fa-chevron-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
                       </div>
