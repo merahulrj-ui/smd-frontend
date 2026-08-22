@@ -187,6 +187,17 @@ export default function ContactPage() {
                           </div>
                       </div>
 
+                      {/* SEO Keyword Filler Block */}
+                      <div className="pt-4 border-t border-slate-100 mt-2">
+                          <strong className="block text-slate-900 text-sm tracking-wide uppercase mb-3 text-center md:text-left">Core Supply Expertise</strong>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-600 font-medium">
+                              <p className="flex items-center gap-2"><i className="fas fa-check-circle text-teal-500 text-xs"></i> Hospital Furniture</p>
+                              <p className="flex items-center gap-2"><i className="fas fa-check-circle text-teal-500 text-xs"></i> X-Ray & Imaging</p>
+                              <p className="flex items-center gap-2"><i className="fas fa-check-circle text-teal-500 text-xs"></i> Surgical Instruments</p>
+                              <p className="flex items-center gap-2"><i className="fas fa-check-circle text-teal-500 text-xs"></i> Clinical Diagnostics</p>
+                          </div>
+                      </div>
+
                       {/* Quick Route & Review Buttons */}
                       <div className="mt-auto pt-6 flex flex-col sm:flex-row gap-3">
                         <a 
