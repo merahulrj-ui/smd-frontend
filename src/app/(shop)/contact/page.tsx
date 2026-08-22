@@ -127,7 +127,7 @@ export default function ContactPage() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8 mb-12">
               {/* Left details card */}
-              <div className="flex-1 bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden group">
+              <div className="flex-1 h-fit self-start bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-teal-500 to-blue-600"></div>
                   
                   <h2 className="text-2xl font-bold text-slate-900 mb-8 pb-4 border-b border-slate-100 flex items-center gap-3">
