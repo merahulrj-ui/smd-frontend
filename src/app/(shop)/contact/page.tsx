@@ -211,14 +211,73 @@ export default function ContactPage() {
 
               {/* Right form */}
               <div className="flex-[1.2] bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-200">
-                  <h2 className="text-2xl font-bold text-slate-900 mb-8 pb-4 border-b border-slate-100 flex items-center gap-3">
+                  <h2 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                         <i className="fas fa-paper-plane text-lg"></i>
                       </div>
                       Send an Enquiry
                   </h2>
+                  <p className="text-sm text-slate-500 mb-6 font-medium">
+                      ⏱️ Get a detailed bulk quotation from our procurement experts within <strong className="text-slate-700">2-4 business hours</strong>.
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-3 mb-8 pb-6 border-b border-slate-100">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">
+                          <i className="fas fa-certificate"></i> ISO Certified Quality
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100">
+                          <i className="fas fa-shield-alt"></i> 100% Genuine Products
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-purple-50 text-purple-700 text-xs font-bold border border-purple-100">
+                          <i className="fas fa-truck-fast"></i> Pan-India Logistics
+                      </span>
+                  </div>
+
                   <div className="bg-white rounded-xl">
                       <ContactForm />
+                  </div>
+              </div>
+          </div>
+
+          {/* Areas We Serve - Local SEO Booster */}
+          <div className="w-full bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-10 mb-12">
+              <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-3">
+                      <i className="fas fa-globe-asia text-teal-600 mr-2"></i> Pan-India Wholesale Supply Network
+                  </h3>
+                  <p className="text-slate-600 font-medium max-w-3xl mx-auto">
+                      SMD Medicare is a trusted supplier of medical equipment, hospital furniture, and surgical instruments across all major cities and healthcare hubs in India.
+                  </p>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm text-slate-700 font-medium">
+                  <div className="space-y-2">
+                      <strong className="block text-slate-900 mb-3 pb-2 border-b border-slate-100">North India</strong>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Delhi NCR</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Dehradun, Uttarakhand</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Lucknow, UP</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Chandigarh & Punjab</p>
+                  </div>
+                  <div className="space-y-2">
+                      <strong className="block text-slate-900 mb-3 pb-2 border-b border-slate-100">West & Central India</strong>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Mumbai, Maharashtra</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Pune & Nagpur</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Ahmedabad, Gujarat</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Bhopal & Indore, MP</p>
+                  </div>
+                  <div className="space-y-2">
+                      <strong className="block text-slate-900 mb-3 pb-2 border-b border-slate-100">South India</strong>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Bengaluru, Karnataka</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Chennai, Tamil Nadu</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Hyderabad, Telangana</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Kochi, Kerala</p>
+                  </div>
+                  <div className="space-y-2">
+                      <strong className="block text-slate-900 mb-3 pb-2 border-b border-slate-100">East & North East</strong>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Kolkata, West Bengal</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Patna, Bihar</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Bhubaneswar, Odisha</p>
+                      <p className="hover:text-blue-600 transition-colors cursor-default"><i className="fas fa-check text-teal-500 mr-2 text-xs"></i> Guwahati, Assam</p>
                   </div>
               </div>
           </div>
