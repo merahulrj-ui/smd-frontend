@@ -127,7 +127,7 @@ export default function ContactPage() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8 mb-12">
               {/* Left details card */}
-              <div className="flex-1 h-fit self-start bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden group">
+              <div className="flex-1 flex flex-col bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-teal-500 to-blue-600"></div>
                   
                   <h2 className="text-2xl font-bold text-slate-900 mb-8 pb-4 border-b border-slate-100 flex items-center gap-3">
@@ -137,7 +137,7 @@ export default function ContactPage() {
                     Contact Information
                   </h2>
                   
-                  <div className="space-y-6">
+                  <div className="space-y-6 flex-grow flex flex-col">
                       <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
                           <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-1">
                               <i className="fas fa-map-marker-alt text-lg"></i>
@@ -188,7 +188,7 @@ export default function ContactPage() {
                       </div>
 
                       {/* Quick Route & Review Buttons */}
-                      <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                      <div className="mt-auto pt-6 flex flex-col sm:flex-row gap-3">
                         <a 
                           href="https://www.google.com/maps/dir/?api=1&destination=SMD+MEDICARE+Shakumbari+Vihar+Phase+2+behind+Nambardar+Farmhouse+Ganeshpur+Rajendra+Nagar+Roorkee+Uttarakhand+247667" 
                           target="_blank" 
