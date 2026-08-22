@@ -66,6 +66,21 @@ export default function ContactPage() {
         postalCode: '247667',
         addressCountry: 'IN'
       },
+      areaServed: [
+        { '@type': 'Country', name: 'Worldwide' },
+        { '@type': 'Country', name: 'India' },
+        { '@type': 'City', name: 'Delhi NCR' },
+        { '@type': 'City', name: 'Mumbai' },
+        { '@type': 'City', name: 'Pune' },
+        { '@type': 'City', name: 'Bengaluru' },
+        { '@type': 'City', name: 'Hyderabad' },
+        { '@type': 'City', name: 'Chennai' },
+        { '@type': 'City', name: 'Kolkata' },
+        { '@type': 'City', name: 'Ahmedabad' },
+        { '@type': 'City', name: 'Dehradun' },
+        { '@type': 'City', name: 'Lucknow' },
+        { '@type': 'City', name: 'Chandigarh' }
+      ],
       geo: {
         '@type': 'GeoCoordinates',
         latitude: 29.8543,

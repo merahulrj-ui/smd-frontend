@@ -254,6 +254,29 @@ export default async function CategoryPage({
     },
   };
 
+  let customFaqs = null;
+  const targetSlug = currentSubcatSlug || baseCatSlug;
+  
+  if (targetSlug === 'x-ray-machines') {
+      customFaqs = [
+          { question: "What is the wholesale price of X-Ray machines in India?", answer: "At SMD Medicare, the wholesale price of X-Ray machines starts from ₹1.5 Lakhs for portable models to ₹8 Lakhs for high-frequency 300mA/500mA installations, depending on AERB certifications and bulk quantity." },
+          { question: "Are your X-Ray machines AERB approved?", answer: "Yes, all our X-Ray machines, including Sunmax 100mA and 300mA variants, are completely AERB approved and comply with strict radiation safety standards." },
+          { question: "Do you supply X-Ray machine spare parts globally?", answer: "Yes, we are a leading exporter of X-Ray spare parts, tubes, and diagnostic imaging equipment, supplying across India and worldwide." },
+          { question: "What is the warranty and installation support for bulk orders?", answer: "We provide standard 1-year warranty and pan-India installation support for all heavy diagnostic equipment." }
+      ];
+  } else if (targetSlug === 'hospital-furniture') {
+      customFaqs = [
+          { question: "Do you manufacture custom wholesale hospital furniture?", answer: "Yes, we provide bulk supply of ICU beds, fowler beds, examination tables, and medical cabinets with customization options for new hospital setups." },
+          { question: "What is the MOQ for ICU beds and ward furniture?", answer: "Our Minimum Order Quantity (MOQ) is flexible depending on your clinic or hospital size. However, we offer significant discounts on bulk orders of 10+ beds." },
+          { question: "Is pan-India delivery available for bulky hospital furniture?", answer: "Absolutely. We have a robust logistics network ensuring safe, damage-free delivery of bulky hospital furniture across India." }
+      ];
+  } else if (targetSlug === 'surgical-instruments') {
+      customFaqs = [
+          { question: "Can I buy surgical instruments in bulk at dealer prices?", answer: "Yes, we offer specialized dealer pricing for surgical instruments, OT equipment, and medical disposables for retailers and bulk purchasers." },
+          { question: "What grade of steel is used in your surgical instruments?", answer: "We supply premium, medical-grade stainless steel (304/316) surgical instruments that are autoclavable and rust-resistant." }
+      ];
+  }
+
   const defaultFaqs = [
     {
       question: `What is the wholesale price and minimum order quantity (MOQ) for ${displayTitle}?`,
@@ -272,11 +295,13 @@ export default async function CategoryPage({
       answer: `You can click the "Inquire" button on any product page or contact our medical procurement specialists directly at +91 95554 22455 or info@smdmedicare.in.`
     }
   ];
+  
+  const finalFaqs = customFaqs || defaultFaqs;
 
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: defaultFaqs.map(f => ({
+    mainEntity: finalFaqs.map(f => ({
       '@type': 'Question',
       name: f.question,
       acceptedAnswer: {
@@ -321,26 +346,27 @@ export default async function CategoryPage({
         </div>
       </div>
 
-      {/* Light Blue Hero Section */}
-      <section className="relative overflow-hidden bg-white py-12 lg:py-16 mb-8 border-b border-slate-200">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-slate-50 to-indigo-50 opacity-80"></div>
-        <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[150%] bg-blue-200/40 blur-3xl rounded-full mix-blend-multiply pointer-events-none"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[30%] h-[150%] bg-indigo-200/40 blur-3xl rounded-full mix-blend-multiply pointer-events-none"></div>
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span className="inline-block py-1.5 px-4 rounded-full bg-blue-100 text-blue-700 font-semibold text-sm mb-4 border border-blue-200">
-              <i className="fas fa-boxes mr-2"></i> EXPLORE SUBCATEGORY
+      {/* Premium Dark Hero Section (Like Blog) */}
+      <section className="relative overflow-hidden bg-slate-900 py-16 lg:py-20 mb-8 border-y border-slate-800">
+        <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[100%] rounded-full bg-gradient-to-br from-teal-500/20 to-blue-600/20 blur-[100px]"></div>
+            <div className="absolute bottom-[0%] right-[0%] w-[40%] h-[80%] rounded-full bg-gradient-to-tl from-indigo-500/20 to-purple-600/20 blur-[120px]"></div>
+        </div>
+        <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-teal-500/10 text-teal-400 font-semibold text-sm mb-4 border border-teal-500/20">
+              <i className="fas fa-boxes mr-2"></i> WHOLESALE CATEGORY
             </span>
-            <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
-              {displayTitle}
+            <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+              Wholesale {displayTitle} in India
             </h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto font-medium">
-              Explore our premium selection of {displayTitle.toLowerCase()} products
+            <p className="text-lg text-slate-300 max-w-2xl mx-auto font-medium">
+              Explore our premium B2B selection of {displayTitle.toLowerCase()} products for hospitals and clinics.
             </p>
         </div>
       </section>
 
       {/* Subcategory Carousel */}
-      {subcategories.length > 0 && (
+      {subcategories.length > 0 && !currentSubcategoryObj && (
         <section className="bg-white border-y border-slate-200 py-6 mb-8">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
             <CategoryCarousel 
@@ -404,65 +430,38 @@ export default async function CategoryPage({
         {/* FAQs Section */}
         <div className="max-w-4xl mx-auto mt-16 mb-8 space-y-8">
           <style dangerouslySetInnerHTML={{__html: `
-            .rich-text-content {
-              font-family: inherit;
-              font-size: 0.95rem;
-              line-height: 1.8;
-              color: #334155;
-              word-wrap: break-word;
-              overflow-wrap: break-word;
-              word-break: break-word;
-            }
-            .rich-text-content * {
-              white-space: pre-wrap !important;
-              max-width: 100%;
-            }
-            .rich-text-content h1, .rich-text-content h2, .rich-text-content h3, .rich-text-content h4, .rich-text-content h5 { 
-              color: #0f172a; 
-              font-weight: 700; 
-              margin-top: 1.5em; 
-              margin-bottom: 0.75em; 
-            }
-            .rich-text-content p { margin-bottom: 1.25em; }
-            .rich-text-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25em; }
-            .rich-text-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.25em; }
-            .rich-text-content li { margin-bottom: 0.5em; }
-            .rich-text-content strong, .rich-text-content b { font-weight: 600; color: #1e293b; }
-            .rich-text-content a { color: #2563eb; text-decoration: underline; font-weight: 500; }
+            .rich-text-content h1, .rich-text-content h2, .rich-text-content h3, .rich-text-content h4, .rich-text-content h5 { color: #1e293b; font-bold; margin-top: 1.5em; margin-bottom: 0.5em; }
+            .rich-text-content p { margin-bottom: 1em; color: #475569; line-height: 1.7; }
+            .rich-text-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1em; color: #475569; }
+            .rich-text-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1em; color: #475569; }
+            .rich-text-content li { margin-bottom: 0.3em; }
+            .rich-text-content strong, .rich-text-content b { font-weight: 700; color: #0f172a; }
+            .rich-text-content a { color: #2563eb; text-decoration: underline; }
           `}} />
 
           {faqSource?.how_to_use && faqSource.how_to_use.trim() !== '' && (
-            <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-200">
-              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3 pb-4 border-b border-slate-100">
-                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                  <i className="fas fa-info-circle text-lg"></i>
-                </div>
-                How to Use {faqSource.name}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                <i className="fas fa-info-circle text-blue-600"></i> How to Use {faqSource.name}
               </h3>
               <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: faqSource.how_to_use }}></div>
             </div>
           )}
 
           {faqSource?.faq && faqSource.faq.trim() !== '' ? (
-            <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-200">
-              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3 pb-4 border-b border-slate-100">
-                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                  <i className="fas fa-question-circle text-lg"></i>
-                </div>
-                Frequently Asked Questions
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                <i className="fas fa-question-circle text-blue-600"></i> Frequently Asked Questions
               </h3>
               <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: faqSource.faq }}></div>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-slate-200">
-              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3 pb-4 border-b border-slate-100">
-                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
-                  <i className="fas fa-question-circle text-lg"></i>
-                </div>
-                Frequently Asked Questions about {displayTitle}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                <i className="fas fa-question-circle text-blue-600"></i> Frequently Asked Questions about {displayTitle}
               </h3>
               <div className="space-y-4">
-                {defaultFaqs.map((faq, idx) => (
+                {finalFaqs.map((faq, idx) => (
                   <div key={idx} className="border border-slate-100 rounded-xl p-5 bg-slate-50/50 hover:bg-slate-50 transition-colors">
                     <h4 className="text-base font-bold text-slate-900 mb-2 flex items-start gap-2">
                       <span className="text-blue-600 font-extrabold">Q.</span> {faq.question}

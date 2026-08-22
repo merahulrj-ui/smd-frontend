@@ -213,6 +213,28 @@ export default async function MainCategoryPage({
     },
   };
 
+  let customFaqs = null;
+  
+  if (baseCatSlug === 'x-ray-machines') {
+      customFaqs = [
+          { question: "What is the wholesale price of X-Ray machines in India?", answer: "At SMD Medicare, the wholesale price of X-Ray machines starts from ₹1.5 Lakhs for portable models to ₹8 Lakhs for high-frequency 300mA/500mA installations, depending on AERB certifications and bulk quantity." },
+          { question: "Are your X-Ray machines AERB approved?", answer: "Yes, all our X-Ray machines, including Sunmax 100mA and 300mA variants, are completely AERB approved and comply with strict radiation safety standards." },
+          { question: "Do you supply X-Ray machine spare parts globally?", answer: "Yes, we are a leading exporter of X-Ray spare parts, tubes, and diagnostic imaging equipment, supplying across India and worldwide." },
+          { question: "What is the warranty and installation support for bulk orders?", answer: "We provide standard 1-year warranty and pan-India installation support for all heavy diagnostic equipment." }
+      ];
+  } else if (baseCatSlug === 'hospital-furniture') {
+      customFaqs = [
+          { question: "Do you manufacture custom wholesale hospital furniture?", answer: "Yes, we provide bulk supply of ICU beds, fowler beds, examination tables, and medical cabinets with customization options for new hospital setups." },
+          { question: "What is the MOQ for ICU beds and ward furniture?", answer: "Our Minimum Order Quantity (MOQ) is flexible depending on your clinic or hospital size. However, we offer significant discounts on bulk orders of 10+ beds." },
+          { question: "Is pan-India delivery available for bulky hospital furniture?", answer: "Absolutely. We have a robust logistics network ensuring safe, damage-free delivery of bulky hospital furniture across India." }
+      ];
+  } else if (baseCatSlug === 'surgical-instruments') {
+      customFaqs = [
+          { question: "Can I buy surgical instruments in bulk at dealer prices?", answer: "Yes, we offer specialized dealer pricing for surgical instruments, OT equipment, and medical disposables for retailers and bulk purchasers." },
+          { question: "What grade of steel is used in your surgical instruments?", answer: "We supply premium, medical-grade stainless steel (304/316) surgical instruments that are autoclavable and rust-resistant." }
+      ];
+  }
+
   const defaultFaqs = [
     {
       question: `What is the wholesale price and minimum order quantity (MOQ) for ${categoryName}?`,
@@ -232,10 +254,12 @@ export default async function MainCategoryPage({
     }
   ];
 
+  const finalFaqs = customFaqs || defaultFaqs;
+
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: defaultFaqs.map(f => ({
+    mainEntity: finalFaqs.map(f => ({
       '@type': 'Question',
       name: f.question,
       acceptedAnswer: {
@@ -280,13 +304,13 @@ export default async function MainCategoryPage({
         </div>
         <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <span className="inline-block py-1.5 px-4 rounded-full bg-teal-500/10 text-teal-400 font-semibold text-sm mb-4 border border-teal-500/20">
-              <i className="fas fa-boxes mr-2"></i> EXPLORE CATEGORY
+              <i className="fas fa-boxes mr-2"></i> WHOLESALE CATEGORY
             </span>
             <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
-              {categoryName}
+              Wholesale {categoryName} in India
             </h1>
             <p className="text-lg text-slate-300 max-w-2xl mx-auto font-medium">
-              Explore our premium selection of {categoryName.toLowerCase()} products
+              Explore our premium B2B selection of {categoryName.toLowerCase()} products for hospitals and clinics.
             </p>
         </div>
       </section>
@@ -387,7 +411,7 @@ export default async function MainCategoryPage({
                 <i className="fas fa-question-circle text-blue-600"></i> Frequently Asked Questions about {categoryName}
               </h3>
               <div className="space-y-4">
-                {defaultFaqs.map((faq, idx) => (
+                {finalFaqs.map((faq, idx) => (
                   <div key={idx} className="border border-slate-100 rounded-xl p-5 bg-slate-50/50 hover:bg-slate-50 transition-colors">
                     <h4 className="text-base font-bold text-slate-900 mb-2 flex items-start gap-2">
                       <span className="text-blue-600 font-extrabold">Q.</span> {faq.question}

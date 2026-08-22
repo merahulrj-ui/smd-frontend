@@ -5,6 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import ClientCategoryImage from '@/components/ClientCategoryImage';
 import ClientCarousel from '@/components/ClientCarousel';
 import HeroPartnerButton from '@/components/HeroPartnerButton';
+import NewsletterForm from '@/components/NewsletterForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -456,18 +457,7 @@ export default async function Home() {
           <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl mx-auto font-light leading-relaxed">
             Subscribe to our newsletter to get the latest medical equipment reviews, industry news, and exclusive offers delivered straight to your inbox.
           </p>
-          <form className="flex flex-col sm:flex-row max-w-md mx-auto gap-3">
-            <input 
-              type="email" 
-              placeholder="Enter your email address" 
-              className="flex-grow px-5 py-4 rounded-xl bg-white/5 border border-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/10 text-white placeholder-slate-400 shadow-inner backdrop-blur-sm transition-all"
-              required
-              maxLength={100}
-            />
-            <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(37,99,235,0.3)] whitespace-nowrap">
-              Subscribe
-            </button>
-          </form>
+          <NewsletterForm />
           <p className="text-slate-500 text-xs mt-6">We care about your data in our <Link href="#" className="underline hover:text-slate-300 transition-colors">privacy policy</Link>.</p>
         </div>
       </section>

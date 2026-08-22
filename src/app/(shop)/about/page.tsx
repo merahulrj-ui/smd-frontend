@@ -68,11 +68,57 @@ export default async function AboutPage() {
     ],
   };
 
+  const aboutJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About SMD MEDICARE',
+    description: 'Learn about SMD Medicare\'s journey in healthcare excellence, wholesale medical equipment supply, and our dedicated mission to serve hospitals and labs across India and globally.',
+    url: 'https://www.smdmedicare.in/about',
+    mainEntity: {
+      '@type': 'Organization',
+      name: 'SMD MEDICARE',
+      alternateName: 'SMD Medicare India',
+      url: 'https://www.smdmedicare.in/',
+      logo: 'https://www.smdmedicare.in/icon-512.png',
+      description: 'A trusted B2B wholesale supplier and exporter of medical equipment, hospital furniture, and surgical instruments.',
+      foundingDate: '2015',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Shakumbari Vihar, Phase 2, Ganeshpur',
+        addressLocality: 'Roorkee',
+        addressRegion: 'Uttarakhand',
+        postalCode: '247667',
+        addressCountry: 'IN'
+      },
+      areaServed: [
+        { '@type': 'Country', name: 'Worldwide' },
+        { '@type': 'Country', name: 'India' }
+      ],
+      founder: {
+        '@type': 'Person',
+        name: 'Rahul Kumar',
+        jobTitle: 'Founder & CEO',
+        url: 'https://linkedin.com/in/merahulrj',
+        sameAs: ['https://linkedin.com/in/merahulrj']
+      },
+      sameAs: [
+        'https://facebook.com/smdmedicare',
+        'https://linkedin.com/company/smdmedicare',
+        'https://www.instagram.com/smd_medicare',
+        'https://x.com/smd_medicare'
+      ]
+    }
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-10 pt-[76px]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
       />
       {/* Breadcrumbs */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">
@@ -95,7 +141,7 @@ export default async function AboutPage() {
                 About <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-blue-600">SMD Medicare</span>
               </h1>
               <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto font-medium">
-                  A Decade of Innovation, Reliability, and Diagnostic Excellence in India.
+                  A Decade of Innovation, Reliability, and Diagnostic Excellence in India and Worldwide.
               </p>
           </div>
       </section>
@@ -104,7 +150,7 @@ export default async function AboutPage() {
       <section className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
           <h2 className="text-3xl font-bold text-slate-900 mb-8 inline-block pb-3 border-b-4 border-teal-500">Our Story</h2>
           <p className="text-lg text-slate-600 leading-relaxed font-medium">
-            At SMD Medicare, we believe that access to quality healthcare should not be a privilege, but a right. Established with a vision to revolutionize the way medical products and services reach people, SMD Medicare has grown into a trusted name in the healthcare and medical distribution industry. Headquartered in India, we are committed to making world-class healthcare solutions affordable, reliable, and accessible to hospitals, clinics, medical professionals, and individual customers alike.
+            At SMD Medicare, we believe that access to quality healthcare should not be a privilege, but a right. Established with a vision to revolutionize the way medical products and services reach people, SMD Medicare has grown into a trusted name in the healthcare and medical distribution industry. Headquartered in India with a growing global footprint, we are committed to making world-class healthcare solutions affordable, reliable, and accessible. As a leading supplier and exporter, we proudly serve hospitals, clinics, and medical professionals across the globe.
           </p>
       </section>
 
