@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useOTPAuth } from '@/hooks/useOTPAuth';
 import OTPVerificationFlow from '@/components/OTPVerificationFlow';
 
@@ -20,12 +20,23 @@ export default function ContactForm() {
     }
   }, [user]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
+    
+    if (!isVerified) {
+      setShowOtpModal(true);
+      return;
+    }
+
     setLoading(true);
     setStatus('');
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    
+    const data = {
+      name, email, phone, message: formRef.current?.message.value || ''
+    };
     
     try {
       const res = await fetch('/api/contact', {
@@ -35,7 +46,7 @@ export default function ContactForm() {
       });
       if (res.ok) {
         setStatus('success');
-        (e.target as HTMLFormElement).reset();
+        if (formRef.current) formRef.current.reset();
       } else {
         setStatus('error');
       }
@@ -46,8 +57,17 @@ export default function ContactForm() {
     }
   };
 
+  const handleVerified = (verifiedUser: any) => {
+      login({ ...verifiedUser, isVerified: true });
+      setShowOtpModal(false);
+      // Automatically submit after successful verification
+      setTimeout(() => {
+          handleSubmit();
+      }, 500);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
             <label className="text-sm font-bold text-slate-700 ml-1">Full Name <span className="text-red-500">*</span></label>
             <input 
@@ -104,29 +124,40 @@ export default function ContactForm() {
             ></textarea>
         </div>
 
-        {!isVerified ? (
-            <div className="mt-2 pt-2 border-t border-slate-100">
-                <OTPVerificationFlow 
-                    onVerified={(verifiedUser) => login({ ...verifiedUser, isVerified: true })} 
-                    title="Verify Your Details" 
-                    description="Before you can send a message, we need to verify your email." 
-                    prefilledData={{ name, email, phone }}
-                    hideInputs={true}
-                    context="SMD Medicare Contact Form"
-                />
+        <button 
+          type="submit" 
+          disabled={loading}
+          className="mt-2 w-full bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
+        >
+          {loading ? (
+             <><i className="fas fa-spinner fa-spin"></i> Sending...</>
+          ) : (
+             <><i className="fas fa-paper-plane"></i> Send Message</>
+          )}
+        </button>
+
+        {showOtpModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+                <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden relative animate-in fade-in zoom-in duration-200">
+                    <button 
+                      type="button" 
+                      onClick={() => setShowOtpModal(false)}
+                      className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-slate-100 text-slate-500 rounded-full hover:bg-slate-200 hover:text-slate-800 transition-colors z-10"
+                    >
+                        <i className="fas fa-times"></i>
+                    </button>
+                    <div className="p-6 md:p-8">
+                        <OTPVerificationFlow 
+                            onVerified={handleVerified} 
+                            title="Verify Your Details" 
+                            description="Please verify your email or phone to send this inquiry." 
+                            prefilledData={{ name, email, phone }}
+                            hideInputs={true}
+                            context="SMD Medicare Contact Form"
+                        />
+                    </div>
+                </div>
             </div>
-        ) : (
-            <button 
-              type="submit" 
-              disabled={loading}
-              className="mt-2 w-full bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-700 hover:to-blue-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
-            >
-              {loading ? (
-                 <><i className="fas fa-spinner fa-spin"></i> Sending...</>
-              ) : (
-                 <><i className="fas fa-paper-plane"></i> Send Message</>
-              )}
-            </button>
         )}
         
         {status === 'success' && (
