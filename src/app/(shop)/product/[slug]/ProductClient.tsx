@@ -306,22 +306,22 @@ export default function ProductClient({
   return (
     <div className="bg-slate-50 min-h-screen pt-[70px] sm:pt-[76px] pb-24 lg:pb-16">
       
-      {/* Breadcrumbs (Compact on Mobile) */}
-      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3">
-        <div className="text-[11px] sm:text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-0.5 flex items-center gap-1.5">
-          <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
-          <span className="text-slate-300">/</span>
-          <Link href="/categories" className="hover:text-blue-600 transition-colors">Categories</Link>
-          <span className="text-slate-300">/</span>
-          <Link href={`/category/${(product.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="hover:text-blue-600 transition-colors">{product.category}</Link>
+      {/* Unified Breadcrumbs Banner */}
+      <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8 mb-4 sm:mb-6">
+        <div className="max-w-[1400px] mx-auto text-sm text-slate-500 font-medium overflow-x-auto whitespace-nowrap custom-scrollbar pb-2 flex items-center">
+          <Link href="/" className="hover:text-blue-600 transition-colors shrink-0">Home</Link>
+          <span className="mx-2 text-slate-300">»</span>
+          <Link href="/categories" className="hover:text-blue-600 transition-colors shrink-0">Categories</Link>
+          <span className="mx-2 text-slate-300">»</span>
+          <Link href={`/category/${(product.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="hover:text-blue-600 transition-colors shrink-0">{product.category}</Link>
           {product.sub_category_name && (
             <>
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-600">{product.sub_category_name}</span>
+              <span className="mx-2 text-slate-300">»</span>
+              <span className="text-slate-600 shrink-0 hover:text-blue-600 cursor-pointer transition-colors">{product.sub_category_name}</span>
             </>
           )}
-          <span className="text-slate-300">/</span>
-          <span className="text-slate-800 font-semibold truncate max-w-[180px] sm:max-w-none">{product.name}</span>
+          <span className="mx-2 text-slate-300">»</span>
+          <span className="text-slate-900 font-semibold truncate max-w-[200px] sm:max-w-none">{product.name}</span>
         </div>
       </div>
 

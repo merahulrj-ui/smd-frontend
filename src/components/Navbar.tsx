@@ -106,11 +106,6 @@ export default function Navbar() {
                                   </Link>
                                 </li>
                               ))}
-                              <li className="pt-2">
-                                <Link href={`/category/${cat.slug}`} className="text-slate-500 text-[13px] hover:text-slate-800 transition-colors flex items-center gap-2">
-                                  <i className="fas fa-arrow-right text-[10px]"></i> View all {cat.subcategories.length} subcategories
-                                </Link>
-                              </li>
                             </ul>
                           ) : (
                             <p className="text-slate-500 text-sm mt-3">No subcategories available.</p>

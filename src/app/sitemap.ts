@@ -38,8 +38,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    // 1. Fetch Categories
-    const [categories] = await pool.query('SELECT slug FROM categories WHERE status = 1 OR status = "1"') as any[];
+    // 1. Fetch Categories (Only with active products)
+    const [categories] = await pool.query(`
+      SELECT DISTINCT c.slug 
+      FROM categories c 
+      INNER JOIN products p ON (p.category_id = c.id OR p.category = c.name) 
+      WHERE c.status = 1 AND p.status = 'live'
+    `) as any[];
     categories.forEach((cat: any) => {
       if (cat.slug) {
         sitemapData.push({
@@ -51,12 +56,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     });
 
-    // 2. Fetch Subcategories
+    // 2. Fetch Subcategories (Only with active products)
     const [subcategories] = await pool.query(`
-      SELECT sc.slug as sub_slug, c.slug as cat_slug 
+      SELECT DISTINCT sc.slug as sub_slug, c.slug as cat_slug 
       FROM sub_categories sc 
       JOIN categories c ON sc.category_id = c.id 
-      WHERE (sc.status = 1 OR sc.status = "1") AND (c.status = 1 OR c.status = "1")
+      INNER JOIN products p ON p.sub_category_id = sc.id
+      WHERE sc.status = 1 AND c.status = 1 AND p.status = 'live'
     `) as any[];
     subcategories.forEach((sub: any) => {
       if (sub.cat_slug && sub.sub_slug) {

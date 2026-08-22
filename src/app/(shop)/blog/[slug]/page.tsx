@@ -263,39 +263,39 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
       </div>
 
-      {/* Full-width Hero Header */}
-      <div className="w-full bg-white pt-16 pb-32 md:pt-24 md:pb-40 text-center relative overflow-hidden border-b border-slate-200">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-slate-50 to-indigo-50 opacity-80"></div>
-        {/* Decorative blur blobs */}
-        <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[150%] bg-blue-200/40 blur-3xl rounded-full mix-blend-multiply pointer-events-none"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[30%] h-[150%] bg-indigo-200/40 blur-3xl rounded-full mix-blend-multiply pointer-events-none"></div>
+      {/* Full-width Premium Dark Hero Header */}
+      <div className="w-full bg-slate-900 pt-16 pb-32 md:pt-24 md:pb-40 text-center relative overflow-hidden border-b border-slate-800">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[100%] rounded-full bg-gradient-to-br from-teal-500/20 to-blue-600/20 blur-[100px]"></div>
+            <div className="absolute bottom-[0%] right-[0%] w-[40%] h-[80%] rounded-full bg-gradient-to-tl from-indigo-500/20 to-purple-600/20 blur-[120px]"></div>
+        </div>
         
         <div className="relative z-10 px-4 sm:px-6 lg:px-8">
-          <span className="inline-block border border-blue-200 bg-blue-100 text-blue-700 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-8 shadow-sm">
-            <i className="fas fa-circle text-[0.5rem] mr-2 text-blue-500 animate-pulse"></i>
+          <span className="inline-block bg-teal-500/10 text-teal-400 border border-teal-500/20 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-8 shadow-sm">
+            <i className="fas fa-circle text-[0.5rem] mr-2 text-teal-400 animate-pulse"></i>
             MEDICAL & DIAGNOSTIC ARTICLE
           </span>
           
-          <h1 className="text-3xl md:text-5xl lg:text-[54px] font-extrabold text-slate-900 mb-8 leading-[1.1] max-w-5xl mx-auto tracking-tight">
+          <h1 className="text-3xl md:text-5xl lg:text-[54px] font-extrabold text-white mb-8 leading-[1.1] max-w-5xl mx-auto tracking-tight">
             {article.title}
           </h1>
           
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm md:text-base font-medium text-slate-600">
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-sm md:text-base font-medium text-slate-300">
             <div className="flex items-center gap-2">
-              <i className="far fa-user text-blue-600"></i>
-              <span className="text-slate-900 font-bold">{article.author_name || 'SMD Editorial'}</span>
-              {article.author_title && <span className="hidden sm:inline text-slate-500">({article.author_title})</span>}
+              <i className="far fa-user text-teal-400"></i>
+              <span className="text-white font-bold">{article.author_name || 'SMD Editorial'}</span>
+              {article.author_title && <span className="hidden sm:inline text-slate-400">({article.author_title})</span>}
             </div>
             <div className="flex items-center gap-2">
-              <i className="far fa-calendar-alt text-blue-600"></i>
+              <i className="far fa-calendar-alt text-teal-400"></i>
               <span>{formatDate(article.created_at)}</span>
             </div>
             <div className="flex items-center gap-2">
-              <i className="far fa-clock text-blue-600"></i>
+              <i className="far fa-clock text-teal-400"></i>
               <span>{article.read_time || '5'} mins read</span>
             </div>
             <div className="flex items-center gap-2">
-              <i className="far fa-eye text-blue-600"></i>
+              <i className="far fa-eye text-teal-400"></i>
               <span>{article.views + 1} views</span>
             </div>
           </div>

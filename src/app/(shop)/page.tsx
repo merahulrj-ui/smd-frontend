@@ -152,8 +152,8 @@ export default async function Home() {
               const finalImage = cat.image || cat.prod_image;
               
               return (
-                <Link key={cat.id} href={`/category/${catSlug}`} className="snap-start shrink-0 flex flex-col items-center group w-[120px]">
-                  <div className={`w-24 h-24 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 shadow-sm border border-slate-100 ${finalImage ? 'bg-white p-3' : bgColor + ' text-white text-2xl font-bold'}`}>
+                <Link key={cat.id} href={`/category/${catSlug}`} className="snap-start shrink-0 flex flex-col items-center group w-[140px] md:w-[190px]">
+                  <div className={`w-32 h-32 md:w-44 md:h-44 rounded-3xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-105 shadow-sm hover:shadow-md border border-slate-100 ${finalImage ? 'bg-white p-4 md:p-6' : bgColor + ' text-white text-3xl md:text-4xl font-bold'}`}>
                     <ClientCategoryImage 
                       primaryImage={cat.image} 
                       fallbackImage={cat.prod_image} 
@@ -161,7 +161,7 @@ export default async function Home() {
                       initials={initials} 
                     />
                   </div>
-                  <span className="text-[13px] font-semibold text-slate-700 text-center group-hover:text-blue-600 transition-colors line-clamp-2">{cat.name}</span>
+                  <span className="text-sm md:text-base font-bold text-slate-700 text-center group-hover:text-blue-600 transition-colors line-clamp-2 px-2">{cat.name}</span>
                 </Link>
               );
             })}

@@ -29,8 +29,20 @@ export default async function CategoriesPage() {
   let categoriesData: any[] = [];
   
   try {
-    const [categories] = await pool.query('SELECT id, name, slug FROM categories WHERE status = 1 ORDER BY name ASC') as any[];
-    const [subCategories] = await pool.query('SELECT id, category_id, name, slug FROM sub_categories WHERE status = 1 ORDER BY name ASC') as any[];
+    const [categories] = await pool.query(`
+      SELECT DISTINCT c.id, c.name, c.slug 
+      FROM categories c 
+      INNER JOIN products p ON (p.category_id = c.id OR p.category = c.name)
+      WHERE c.status = 1 AND p.status = 'live'
+      ORDER BY c.name ASC
+    `) as any[];
+    const [subCategories] = await pool.query(`
+      SELECT DISTINCT s.id, s.category_id, s.name, s.slug 
+      FROM sub_categories s
+      INNER JOIN products p ON p.sub_category_id = s.id
+      WHERE s.status = 1 AND p.status = 'live'
+      ORDER BY s.name ASC
+    `) as any[];
 
     categoriesData = categories.map((cat: any) => {
       const subs = subCategories.filter((sub: any) => sub.category_id === cat.id);
@@ -68,12 +80,33 @@ export default async function CategoriesPage() {
     ],
   };
 
+  const collectionJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Medical Equipment Categories & Supplies List | SMD MEDICARE',
+    description: 'Explore our complete list of medical equipment categories. Wholesale hospital supplies, ICU equipment, surgical instruments, and diagnostic test kits in India.',
+    url: 'https://www.smdmedicare.in/categories',
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: categoriesData.map((cat: any, index: number) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `https://www.smdmedicare.in/category/${cat.slug}`,
+        name: cat.name,
+      })),
+    }
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-6 pt-[76px]">
-      {/* Breadcrumb Schema */}
+      {/* Schemas */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
       />
       {/* Breadcrumbs Banner */}
       <div className="bg-white border-b border-slate-200 py-4 px-4 sm:px-6 lg:px-8">

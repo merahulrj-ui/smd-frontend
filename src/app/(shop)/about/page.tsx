@@ -129,21 +129,23 @@ export default async function AboutPage() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white mb-10 border-y border-slate-200">
-          <div className="absolute inset-0 bg-gradient-to-r from-teal-50 to-blue-50 opacity-70"></div>
-          {/* Decorative blur blobs */}
-          <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[150%] bg-teal-200/40 blur-3xl rounded-full mix-blend-multiply"></div>
-          <div className="absolute bottom-[-20%] right-[-10%] w-[30%] h-[150%] bg-blue-200/40 blur-3xl rounded-full mix-blend-multiply"></div>
-          
-          <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 text-center">
-              <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
-                About <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-blue-600">SMD Medicare</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto font-medium">
-                  A Decade of Innovation, Reliability, and Diagnostic Excellence in India and Worldwide.
-              </p>
-          </div>
+      {/* Premium Dark Hero Section */}
+      <section className="relative overflow-hidden bg-slate-900 py-16 lg:py-20 mb-10 border-y border-slate-800">
+        <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[100%] rounded-full bg-gradient-to-br from-teal-500/20 to-blue-600/20 blur-[100px]"></div>
+            <div className="absolute bottom-[0%] right-[0%] w-[40%] h-[80%] rounded-full bg-gradient-to-tl from-indigo-500/20 to-purple-600/20 blur-[120px]"></div>
+        </div>
+        <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-teal-500/10 text-teal-400 font-semibold text-sm mb-4 border border-teal-500/20">
+              <i className="fas fa-building mr-2"></i> OUR COMPANY
+            </span>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+              About SMD Medicare
+            </h1>
+            <p className="text-lg text-slate-300 max-w-2xl mx-auto font-medium">
+              A Decade of Innovation, Reliability, and Diagnostic Excellence in India and Worldwide.
+            </p>
+        </div>
       </section>
 
       {/* Company intro */}
