@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import SidebarFilter from '@/components/SidebarFilter';
 import CategoryCarousel from '@/components/CategoryCarousel';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }) {
   const resolvedParams = await params;

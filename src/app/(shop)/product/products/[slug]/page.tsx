@@ -2,7 +2,7 @@ import pool from '@/lib/db';
 import { notFound } from 'next/navigation';
 import ProductClient from './ProductClient';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;

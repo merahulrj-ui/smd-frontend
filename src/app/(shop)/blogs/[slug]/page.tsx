@@ -1,7 +1,7 @@
 import pool from '@/lib/db';
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
@@ -54,7 +54,7 @@ export default async function BlogDetail({ params }: { params: Promise<{ slug: s
         </div>
 
         {blog.blog_image && (
-          <img src={blog.blog_image.startsWith('http') ? blog.blog_image : (blog.blog_image.includes('/') ? `/backend-media/${blog.blog_image}` : `/backend-media/images/${blog.blog_image}`)} alt={blog.title} className="w-full rounded-2xl shadow-sm mb-10" onError={(e: any) => e.target.style.display='none'} />
+          <img src={blog.blog_image.startsWith('http') ? blog.blog_image : (blog.blog_image.includes('/') ? `/backend-media/${blog.blog_image}` : `/backend-media/images/${blog.blog_image}`)} alt={blog.title} className="w-full rounded-2xl shadow-sm mb-10" />
         )}
 
         <div className="prose prose-lg max-w-none prose-slate" dangerouslySetInnerHTML={{__html: blog.content}}></div>

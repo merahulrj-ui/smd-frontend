@@ -7,7 +7,7 @@ import ClientCarousel from '@/components/ClientCarousel';
 import HeroPartnerButton from '@/components/HeroPartnerButton';
 import NewsletterForm from '@/components/NewsletterForm';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // Cache homepage for 1 hour for extreme performance
 
 export default async function Home() {
   let products = [];
