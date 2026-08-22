@@ -221,7 +221,7 @@ export default function ContactPage() {
               </div>
 
               {/* Right form */}
-              <div className="flex-[1.2] bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-200">
+              <div className="flex-[1.2] flex flex-col bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-200">
                   <h2 className="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                         <i className="fas fa-paper-plane text-lg"></i>
@@ -244,7 +244,7 @@ export default function ContactPage() {
                       </span>
                   </div>
 
-                  <div className="bg-white rounded-xl">
+                  <div className="bg-white rounded-xl flex-grow flex flex-col">
                       <ContactForm />
                   </div>
               </div>
